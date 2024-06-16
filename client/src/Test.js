@@ -10,7 +10,7 @@ useEffect(
     () => {
         const fetchdata = async () => {
             try{
-                const response = await axios.get("https://portfolio-backend-fe7srliu9-tydos-projects.vercel.app/getitems");
+                const response = await axios.get("https://portfolio-backend-puce-six.vercel.app/getitems");
                 setVal(response.data);
                 console.log(response.data);
             }   
