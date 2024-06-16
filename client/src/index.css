@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
+
+
+h1 {
+    font-family: 'Monteserrat', sans-serif;
+    color:#7f8593;
+  }
+
+h2 {
+        font-family: 'Roboto Condensed', sans-serif;
+        color:#505560;
+    }
+
+body {
+    background-color: rgb(30, 41, 52);
+}  
+
+li {
+    font-family: 'Roboto Condensed', sans-serif;
+    word-spacing: 5px;
+    display: inline;
+}
+
+ul {
+    list-style-type: none;
+    margin: 10;
+    padding: 10;
+  }
+
+
+@layer base {
+    body {
+      @apply bg-gradient-to-r from-gray-800 to-gray-900;
+    }
+
+  }
+
+i {
+    margin-left: 5px;
+    
+  }
+
+.fa-brands {
+    color:rgb(95, 131, 161);
+  }
+
+.fa-regular {
+    color:rgb(95, 131, 161);
+  }
