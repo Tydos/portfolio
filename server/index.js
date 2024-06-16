@@ -12,7 +12,12 @@ app.use(express.json());
 // MongoDB connection string from .env file
 const MONGODB_URI = "mongodb+srv://prasadjawale:prasadjawale@atlascluster.za7y8ci.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
 const PORT = process.env.PORT || 3001;
-
+const corsOptions ={
+    origin:'https://portfolio-backend-fe7srliu9-tydos-projects.vercel.app/', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 // MongoDB Connection
