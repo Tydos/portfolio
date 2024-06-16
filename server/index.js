@@ -7,13 +7,15 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
 
 // Use cors() to handle CORS
 app.use(cors({
-  origin: 'https://portfolio-frontend-drab-two.vercel.app'
+  origin: ["https://portfolio-backend-puce-six.vercel.app"],
+  methods: ["POST","GET"],
+  credentials: true
 }));
 
+app.use(express.json());
 
 // MongoDB connection string from .env file
 const MONGODB_URI = "mongodb+srv://prasadjawale:prasadjawale@atlascluster.za7y8ci.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster";
