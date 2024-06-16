@@ -10,7 +10,7 @@ app.use(cors());
 
 // Use cors() to handle CORS
 app.use(cors({
-  origin: ["https://portfolio-backend-puce-six.vercel.app"],
+  origin: ["https://portfolio-frontend-drab-two.vercel.app/"],
   methods: ["POST","GET"],
   credentials: true
 }));
