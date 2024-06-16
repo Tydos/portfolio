@@ -1,9 +1,6 @@
 
 {
-    
-    "routes": [
-      { "src": "/api/(.*)", "dest": "server/index.js" },  
-        {"src": "/[^.]+", "dest": "/", "status": 200 }
-    ]
+    "builds": [ {"src": "./index.js", "use": "@vercel/node" }],
+    "routes": [ {"src": "/(.*)", "dest": "/", "status": 200 }]
   }
   
