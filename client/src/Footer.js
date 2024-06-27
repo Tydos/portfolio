@@ -1,34 +1,19 @@
-import React from 'react'
-import SocialMedia from './SocialMedia'
-
+import React from 'react';
+import SocialMedia from './SocialMedia';
 
 function Footer() {
   return (
-    <>
-        <footer class="bg-gray-900 w-full p-3">
-
-        <div class="flex">
-      <div class="w-1/2 p-2 ">
-    <div class="flex items-center justify-start">
-    <h1 class="text-gray-500">@Prasad Jawale. Based in Navi Mumbai</h1>
-    </div>
-  </div>
-  <div class="w-1/2">
-    <div class="flex items-center justify-end">
-      <SocialMedia></SocialMedia>
-    </div>
-  </div>
-</div>
-
-      
-               
-
-                
-            
-        </footer>
-    </>
-    
-  )
+    <footer className="w-full p-6 bg-white text-white">
+      <div className="container mx-auto flex flex-wrap justify-between items-center">
+        <div className="w-full md:w-1/2 p-2 text-center md:text-left">
+          <h1 className=" text-xl text-black">Prasad Jawale</h1>
+        </div>
+        <div className="w-full md:w-1/2 p-2 text-center md:text-right">
+          <SocialMedia />
+        </div>
+      </div>
+    </footer>
+  );
 }
 
-export default Footer
+export default Footer;

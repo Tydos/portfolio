@@ -40,7 +40,11 @@ const ItemSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
-    }
+    },
+    image: {
+        data: Buffer,
+        contentType: String
+      }
 });
 
 const Item = mongoose.model('Item', ItemSchema);
@@ -72,7 +76,6 @@ app.post('/additem', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
-
 
 // Simple API endpoint
 app.get('/hello', (req, res) => {

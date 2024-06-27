@@ -16,7 +16,6 @@ const photos = [
     { src: "https://res.cloudinary.com/duws62b88/image/upload/v1686629008/Photographs/IMG_20190214_070326123_yelnrg.jpg", width: 2000, height: 2000 },
     { src: "https://res.cloudinary.com/duws62b88/image/upload/v1686629011/Photographs/LRM_EXPORT_20190121_074405_1_vx3ous.jpg", width: 1600, height: 1600 },
     { src: "https://res.cloudinary.com/duws62b88/image/upload/v1686629013/Photographs/LRM_EXPORT_13289281781103_20190305_221122995_irpcxq.jpg", width: 1500, height: 2000 },
-    //insert links in comments in above format  
     { src: "https://res.cloudinary.com/duws62b88/image/upload/v1686629013/Photographs/LRM_EXPORT_11815796201153_20190803_230741124_ivn4fb.jpg", width: 2000, height: 3000 },
     { src: "https://res.cloudinary.com/duws62b88/image/upload/v1686629014/Photographs/LRM_EXPORT_59660737647644_20190702_142540469_k04zmf.jpg", width: 1500, height: 3000 },
     { src: "https://res.cloudinary.com/duws62b88/image/upload/v1686629013/Photographs/LRM_EXPORT_15674943912715_20190216_192351493_v5pska.jpg", width: 3000, height: 2000 },
@@ -78,7 +77,6 @@ const renderPhoto: RenderPhoto = ({ layout, layoutOptions, imageProps: { alt, st
                 color: "#fff",
             }}
         >
-            {/* {Math.round(layout.width) + " x " + Math.round(layout.height)} */}
         </div>
     </div>
 );
@@ -88,9 +86,7 @@ export default function Gallery() {
         <>
     
         <h2 class="text-2xl text-gray-400 font-bold justify-center text-center my-10">Gallery</h2>
-        {/* <div class="backdrop-blur-sm py-10 px-5"> */}
             <PhotoAlbum layout="masonry" photos={photos} padding={5} spacing={5} renderContainer={renderContainer} renderPhoto={renderPhoto} />
-            {/* </div> */}
         </>
     );
      
