@@ -6,7 +6,7 @@ function Splash() {
     return(
         <>
 <section id="start">
-
+{/* 
 <div class="flex items-center justify-center min-h-screen">
     <div class="grid grid-cols-1 justify-center">
         <div class="flex items-center justify-center m-8">
@@ -21,8 +21,8 @@ function Splash() {
         </div>
     </div>
 </div>
-
-</section>
+*/}
+</section> 
 
 <section>
 <div class="bg-gray-100 flex flex-row items-center min-h-screen p-10">

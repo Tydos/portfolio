@@ -4,10 +4,10 @@ function Contact() {
   return (
     <>
    <section id="contact"></section>
-    <div class="background py-10 items-start min-h-screen">
+    <div class=" bg-gray-100 py-10 items-start min-h-screen">
    <div class="py-10"></div> 
     <div class="w-3/4 mx-auto bg-white p-5 rounded-xl shadow-xl mt-10 ">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">Contact</h1>
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">CONTACT</h1>
     <form action="#" method="POST" class="space-y-4">
         <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
