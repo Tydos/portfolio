@@ -10,7 +10,7 @@ function Splash() {
 <div class="flex items-center justify-center min-h-screen">
     <div class="grid grid-cols-1 justify-center">
         <div class="flex items-center justify-center m-8">
-            <img src="https://media.licdn.com/dms/image/D4D03AQH8UU7LZWjuDQ/profile-displayphoto-shrink_400_400/0/1718251995961?e=1723680000&v=beta&t=5-BPkNqoMl7zxsDOlyjgD8Xq2RxYhMJ5UEmlyPvn1wg" alt="" width="250px" height="250px" class="rounded-full"></img>
+            <img src="https://res.cloudinary.com/duws62b88/image/upload/w_1000,ar_1:1,c_fill,g_auto,e_art:hokusai/v1737421606/myimg_x0kuyo.jpg" alt="" width="250px" height="250px" class="rounded-full"></img>
         </div>
         <div class="flex flex-col text-center justify-center gap-5 py-5 m-2">
             <h1 class="text-slate-500 text-6xl">Prasad Jawale</h1>
