@@ -4,7 +4,7 @@ function SocialMedia() {
   return (
     <>
 
-    <a href="https://www.instagram.com/mysticalflowerz/" target="_blank"> 
+    <a href="https://www.instagram.com/prasaadjawale/" target="_blank"> 
     <i class="fa-brands fa-instagram fa-fw fa-2xl"></i>
     </a>
 

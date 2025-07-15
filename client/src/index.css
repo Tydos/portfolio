@@ -53,12 +53,12 @@ ul {
   }
 
 
-@layer base {
+/* @layer base {
     body {
-      @apply bg-gradient-to-r from-indigo-200 to-fuchsia-100;
+       @apply bg-gradient-to-r from-gray-100 to-gray-200;
     }
 
-  }
+  } */
 @layer utilities {
     /* Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
@@ -72,12 +72,12 @@ ul {
 }
 
 i {
-    margin-left: 5px;
+    margin-right: 5px;
     
   }
 
 .fa-brands {
-    color:#55505b;
+    color:#ffffff;
   }
 
 .fa-regular {

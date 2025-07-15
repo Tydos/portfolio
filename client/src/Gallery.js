@@ -56,7 +56,7 @@ const renderContainer: RenderContainer = ({ containerProps, children, containerR
 const renderPhoto: RenderPhoto = ({ layout, layoutOptions, imageProps: { alt, style, ...restImageProps } }) => (
     <div
         style={{
-            border: "0px solid #1e1e1e",
+            border: "px solid #1e1e1e",
             borderRadius: "10px",
             boxSizing: "content-box",
             alignItems: "center",
@@ -84,9 +84,17 @@ const renderPhoto: RenderPhoto = ({ layout, layoutOptions, imageProps: { alt, st
 export default function Gallery() {
     return( 
         <>
-    
-        <h2 class="text-2xl text-gray-400 font-bold justify-center text-center my-10">Gallery</h2>
-            <PhotoAlbum layout="masonry" photos={photos} padding={5} spacing={5} renderContainer={renderContainer} renderPhoto={renderPhoto} />
+            <PhotoAlbum layout="masonry"
+             photos={photos} 
+             padding={5} 
+             columns={(containerWidth) => {
+                if (containerWidth < 500) return 1;
+                if (containerWidth < 900) return 2;
+                return 3;
+            }}
+              spacing={5}
+               renderContainer={renderContainer}
+                renderPhoto={renderPhoto} />
         </>
     );
      

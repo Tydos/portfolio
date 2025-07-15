@@ -3,19 +3,21 @@ import Splash from './Splash'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import Projects from './Projects'
-import Contact from './Contact'
 import Skills from './Skills'
 import Publications from './Publications'
+
+import Gallery from './Gallery'
 
 function Home() {
   return (
     <div>
-        <Navbar/> 
-        <Splash/> 
-        <Skills/>
+        <Navbar/>  
+        <Splash/>
+        {/* <Gallery/> */}
+        <Skills/> 
         <Projects/>
-        <Publications/>
-        <Contact/>
+       <Publications/>
+        {/* <Gallery/> */}
         <Footer/>
     </div>
   )
