@@ -269,7 +269,7 @@ const Navbar = ({ activeSection, setActiveSection }) => {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-md border-b border-slate-200 py-3 shadow-sm' : 'bg-transparent py-5'}`}>
       <div className="max-w-6xl mx-auto px-6 flex justify-between items-center">
         <div className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-rose-500 bg-clip-text text-transparent">
-          {DATA.name.split(' ')[0]}<span className="text-slate-900">.dev</span>
+          {DATA.name.split(' ')[0]}<span className="text-slate-900">.live</span>
         </div>
 
         <div className="hidden md:flex space-x-8">
@@ -380,11 +380,11 @@ const PhotoCard = ({ photo }) => (
         {/* <Aperture size={12} /> */}
         {/* <span>{photo.category}</span> */}
       </div>
-      <p className="text-white font-black text-xl leading-tight mb-1">{photo.title}</p>
+      {/* <p className="text-white font-black text-xl leading-tight mb-1">{photo.title}</p>
       <div className="flex items-center space-x-2 text-slate-400 text-xs font-medium">
         <Globe size={12} />
         <span>{photo.location}</span>
-      </div>
+      </div> */}
     </div>
   </div>
 );
