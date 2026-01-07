@@ -7,18 +7,21 @@ import Skills from './Skills'
 import Publications from './Publications'
 
 import Gallery from './Gallery'
+import NewPage from './NewPage'
+import TempPage from './TempPage'
 
 function Home() {
   return (
     <div>
-        <Navbar/>  
-        <Splash/>
-        {/* <Gallery/> */}
-        <Skills/> 
-        <Projects/>
-       <Publications/>
-        {/* <Gallery/> */}
-        <Footer/>
+      {/* <NewPage/> */}
+      <TempPage/>
+      {/* <Navbar /> */}
+      {/* <Splash /> */}
+      {/* <Gallery /> */}
+      {/* <Skills /> */}
+      {/* <Projects /> */}
+      {/* <Publications /> */}
+      {/* <Footer /> */}
     </div>
   )
 }
