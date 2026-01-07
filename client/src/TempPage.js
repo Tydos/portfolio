@@ -6,7 +6,7 @@ const DATA = {
   name: "Prasad",
   role: "Full Stack Engineer & AI Developer",
   about: {
-    story: "m a builder who thrives at the intersection of logic and creativity. My journey started in the command line, writing code and designing systems, and was sharpened through the lens of a camera, where composition and perspective taught me to think visually.I don’t just write software—I craft experiences. Every project I take on blends rigorous problem-solving with thoughtful design, ensuring that systems aren’t just functional, but intentional. Whether it’s building websites, training machine learning models, or capturing the world through photography, I aim to create work that resonates both intellectually and aesthetically.  When I’m not building or coding, you’ll find me exploring new photographic perspectives, experimenting with ML models, or diving into a book that sparks curiosity.",
+    story: "I am a developer who works at the intersection of logic and creativity. I started with code and system design, and later developed a visual way of thinking through photography. I focus on creating experiences, not just software, by combining strong problem solving with thoughtful design. Whether I am building websites, training machine learning models, or taking photographs, I aim to create work that is both purposeful and engaging.",
     motto: "Merging the precision of binary with the fluidity of light.",
     stats: [
     //   { label: "Years Exp", value: "6+" },
@@ -22,113 +22,221 @@ const DATA = {
     { name: "DevOps", items: ["Docker", "AWS", "Git", "CI/CD"], color: "amber" }
   ],
   projects: [
-    {
-      title: "NeuralCanvas",
-      description: "A generative AI platform that transforms text descriptions into high-fidelity 3D assets using stable diffusion pipelines.",
-      tags: ["React", "Python", "Diffusers", "AWS"],
-      link: "#",
-      github: "#",
-      type: "AI Product",
-      image: "https://res.cloudinary.com/duws62b88/image/upload/v1752601562/20221220_174214_jgjhpp.jpg"
-    }, 
-    {
-      title: "NeuralCanvas",
-      description: "A generative AI platform that transforms text descriptions into high-fidelity 3D assets using stable diffusion pipelines.",
-      tags: ["React", "Python", "Diffusers", "AWS"],
-      link: "#",
-      github: "#",
-      type: "AI Product",
-        image: "https://res.cloudinary.com/duws62b88/image/upload/v1752601562/20221220_174214_jgjhpp.jpg"
-    },
-    {
-      title: "NeuralCanvas",
-      description: "A generative AI platform that transforms text descriptions into high-fidelity 3D assets using stable diffusion pipelines.",
-      tags: ["React", "Python", "Diffusers", "AWS"],
-      link: "#",
-      github: "#",
-      type: "AI Product",
-      image: "https://res.cloudinary.com/duws62b88/image/upload/v1752601562/20221220_174214_jgjhpp.jpg"
-    },
-    {
-      title: "NeuralCanvas",
-      description: "A generative AI platform that transforms text descriptions into high-fidelity 3D assets using stable diffusion pipelines.",
-      tags: ["React", "Python", "Diffusers", "AWS"],
-      link: "#",
-      github: "#",
-      type: "AI Product",
-      image: "https://res.cloudinary.com/duws62b88/image/upload/v1752601562/20221220_174214_jgjhpp.jpg"
-    },
-    {
-      title: "QuantFlow",
-      description: "Real-time algorithmic trading dashboard with predictive sentiment analysis from social media feeds.",
-      tags: ["TypeScript", "FastAPI", "TensorFlow", "Redis"],
-      link: "#",
-      github: "#",
-      type: "Software",
-      image: "https://res.cloudinary.com/duws62b88/image/upload/v1752601562/20221220_174214_jgjhpp.jpg"
-    },
-    {
-      title: "DocuBrain",
-      description: "An intelligent RAG (Retrieval-Augmented Generation) system for querying massive internal knowledge bases.",
-      tags: ["LangChain", "Pinecone", "Next.js"],
-      link: "#",
-      github: "#",
-      type: "AI Infrastructure",
-      image: "https://res.cloudinary.com/duws62b88/image/upload/v1752601562/20221220_174214_jgjhpp.jpg"
-    }
-  ],
+  {
+    title: "Cyberbullying Detection using Deep Learning",
+    description:
+      "A deep learning system to identify derogatory tweets related to gender, race, age, religion, ethnicity, or sexual orientation. Built on a dataset of 110,000 tweets and evaluated using SVM, Random Forest, BERT, and an ensemble of BERT and LSTM models.",
+    tags: [
+      "Deep Learning",
+      "Natural Language Processing",
+      "BERT",
+      "LSTM",
+      "Text Classification",
+      "Social Media Analysis",
+      "Python"
+    ],
+    link: "https://github.com/Tydos/Cyberbullying-Detection",
+    github: "https://github.com/Tydos/Cyberbullying-Detection",
+    type: "Deep Learning",
+    image:
+      "https://raw.githubusercontent.com/Tydos/Cyberbullying-Detection/main/accuracy_comparison.jpg"
+  },
+  {
+    title: "Anuvadak: Indian Sign Language Recognition",
+    description:
+      "A deep learning based ISL recognition system using CNN-LSTM architectures. Data was captured via OpenCV, augmented, and processed using MediaPipe Holistic for feature extraction, achieving 85% accuracy. Includes Android deployment.",
+    tags: [
+      "Deep Learning",
+      "Computer Vision",
+      "Gesture Recognition",
+      "CNN",
+      "LSTM",
+      "MediaPipe",
+      "OpenCV"
+    ],
+    link: "https://github.com/Tydos/ISL",
+    github: "https://github.com/Tydos/ISL",
+    type: "Deep Learning",
+    image:
+      "https://res.cloudinary.com/duws62b88/image/upload/v1719502253/ssnop_g67nmy.png"
+  },
+  {
+    title: "Portfolio Website",
+    description:
+      "A full-stack MERN portfolio website styled with Tailwind CSS. Features dynamic project rendering from MongoDB and a photography showcase with images served via Cloudinary.",
+    tags: [
+      "Full Stack",
+      "MERN",
+      "React",
+      "MongoDB",
+      "Tailwind CSS",
+      "Cloudinary",
+      "Web Design"
+    ],
+    link: "https://github.com/Tydos/portfolio",
+    github: "https://github.com/Tydos/portfolio",
+    type: "Web Development",
+    image:
+      "https://res.cloudinary.com/duws62b88/image/upload/v1719500501/Screenshot_2024-06-27_203121_atzojq.png"
+  },
+  {
+    title: "Supply Chain Management of Pharmaceutical Drugs",
+    description:
+      "A machine learning solution to optimize shipment modes for pharmaceutical drugs. Trained on a 10,000-row supply chain dataset considering expiry dates, shipping costs, and drug types to determine the fastest and most cost-effective delivery method.",
+    tags: [
+      "Machine Learning",
+      "Optimization",
+      "Supply Chain",
+      "Predictive Modeling",
+      "Data Analysis",
+      "Python"
+    ],
+    link: "https://github.com/Arnav047/Supply-Chain-Management",
+    github: "https://github.com/Arnav047/Supply-Chain-Management",
+    type: "Machine Learning",
+    image:
+      "https://res.cloudinary.com/duws62b88/image/upload/v1719502354/summary_bzpbtl.png"
+  },
+  {
+    title: "DocSpot",
+    description:
+      "A document-sharing platform for students using MongoDB and ElasticSearch. PDFs are converted into embeddings using Google Gemini, enabling semantic retrieval. A fine-tuned Google T5 model acts as a chatbot over stored notes.",
+    tags: [
+      "Retrieval Augmented Generation",
+      "Semantic Search",
+      "NLP",
+      "ElasticSearch",
+      "MongoDB",
+      "Chatbot",
+      "Embeddings"
+    ],
+    link: "https://github.com/Tydos/DocSpot",
+    github: "https://github.com/Tydos/DocSpot",
+    type: "Web Development",
+    image:
+      "https://res.cloudinary.com/duws62b88/image/upload/v1719500204/Screenshot_2024-06-05_214207_k8psav.png"
+  },
+  {
+    title: "Guardify: Cyber Security Portal",
+    description:
+      "A cyber security portal for managing and reporting cyberbullying complaints. Integrates a machine learning classifier to categorize complaints and stores records in MongoDB for administrative review.",
+    tags: [
+      "Cybersecurity",
+      "Web Application",
+      "Machine Learning",
+      "Text Classification",
+      "MongoDB",
+      "Full Stack"
+    ],
+    link: "https://github.com/satts27/HackOverflow-1.0-BitbyBit",
+    github: "https://github.com/satts27/HackOverflow-1.0-BitbyBit",
+    type: "Web Development",
+    image:
+      "https://res.cloudinary.com/duws62b88/image/upload/v1719500441/acf91f47-97c8-42ed-b66a-a98844e1a0ad_ki38x1.jpg"
+  },
+  {
+    title: "CowSense",
+    description:
+      "A platform for Indian dairy farmers featuring a deep learning model trained on 5,000 cow images to detect lumpy skin disease. Includes image-based diagnosis and Google Maps integration for locating nearby veterinary clinics.",
+    tags: [
+      "Deep Learning",
+      "Computer Vision",
+      "Healthcare AI",
+      "Image Classification",
+      "Agritech",
+      "Google Maps API"
+    ],
+    link: "https://github.com/SinghShreyansh/LBS-Dairy",
+    github: "https://github.com/SinghShreyansh/LBS-Dairy",
+    type: "Deep Learning",
+    image:
+      "https://res.cloudinary.com/duws62b88/image/upload/v1719500136/Screenshot_2023-07-22_173642_zsk5l5.png"
+  }
+],
+
   photography: {
-    philosophy: "To me, photography is the ultimate form of debugging. It forces you to isolate the noise, find the signal, and wait for the perfect execution. It is where my technical patience meets my creative intuition.",
+    philosophy: "To me, photography is the ultimate form of debugging. It forces you to isolate the noise, find the signal, and wait for the perfect execution.",
     gallery: [
-      {
-        url: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=800",
-        title: "Alpine Silence",
-        location: "Swiss Alps",
-        category: "Landscape"
-      },
-      {
-        url: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800",
-        title: "Deep Forest",
-        location: "Oregon, USA",
-        category: "Nature"
-      },
-      {
-        url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=800",
-        title: "Golden Hour",
-        location: "Lofoten, Norway",
-        category: "Landscape"
-      },
-      {
-        url: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=800",
-        title: "Orbital View",
-        location: "The Stratosphere",
-        category: "Aero"
-      },
-      {
-        url: "https://images.unsplash.com/photo-1518005020250-6859b2827c17?auto=format&fit=crop&q=80&w=800",
-        title: "Urban Geometry",
-        location: "Tokyo, Japan",
-        category: "Architecture"
-      },
-      {
-        url: "https://images.unsplash.com/photo-1506744038736-83391884cfb0?auto=format&fit=crop&q=80&w=800",
-        title: "Crimson Valley",
-        location: "Utah, USA",
-        category: "Landscape"
-      },
-      {
-        url: "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&q=80&w=800",
-        title: "Celestial Paths",
-        location: "Atacama, Chile",
-        category: "Astrophotography"
-      },
-      {
-        url: "https://images.unsplash.com/photo-1493246507139-91e8bef99c1e?auto=format&fit=crop&q=80&w=800",
-        title: "Monolithic Echo",
-        location: "Iceland",
-        category: "Landscape"
-      }
-    ]
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629005/Photographs/DSC08656-01_kgqggd.jpg",
+    title: "Alpine Silence",
+    location: "Swiss Alps",
+    category: "Landscape"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629006/Photographs/20211126_154906_ge2g9t.jpg",
+    title: "Deep Forest",
+    location: "Oregon, USA",
+    category: "Nature"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629005/Photographs/DSC00018_q3fjzn.jpg",
+    title: "Golden Hour",
+    location: "Lofoten, Norway",
+    category: "Landscape"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629006/Photographs/20211124_123051_hclxud.jpg",
+    title: "Orbital View",
+    location: "The Stratosphere",
+    category: "Aero"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629006/Photographs/DSC00336-01_dkqmq1.jpg",
+    title: "Urban Geometry",
+    location: "Tokyo, Japan",
+    category: "Architecture"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629006/Photographs/IMG_0083_pm39pe.jpg",
+    title: "Crimson Valley",
+    location: "Utah, USA",
+    category: "Landscape"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629007/Photographs/HD_20200507_222920_NR-01-01_kqtjpi.jpg",
+    title: "Celestial Paths",
+    location: "Atacama, Chile",
+    category: "Astrophotography"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629007/Photographs/IMG_0257_jwbwb6.jpg",
+    title: "Monolithic Echo",
+    location: "Iceland",
+    category: "Landscape"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629007/Photographs/DSC09078-01_c2ixdk.jpg",
+    title: "Silent Corridor",
+    location: "Northern Europe",
+    category: "Minimalism"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629007/Photographs/IMG_0093_2_w82dy6.jpg",
+    title: "Neon Pulse",
+    location: "Urban Nightscape",
+    category: "Street"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629008/Photographs/IMG_20190305_215357_yank7x.jpg",
+    title: "Desert Bloom",
+    location: "Western India",
+    category: "Landscape"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629008/Photographs/IMG_20190214_070326123_yelnrg.jpg",
+    title: "Still Reflections",
+    location: "Coastal India",
+    category: "Travel"
+  },
+  {
+    url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629011/Photographs/LRM_EXPORT_20190121_074405_1_vx3ous.jpg",
+    title: "Morning Transit",
+    location: "South Asia",
+    category: "Street"
+  }
+]
+
   }
 };
 
@@ -433,7 +541,7 @@ function TempPage() {
                   <Camera size={20} />
                 <span className="text-xs font-black uppercase tracking-widest text-indigo-600 block">Photography</span>
                 </div>
-                <h2 className="text-6xl font-black mb-8 ">Photography</h2>
+                <h2 className="text-6xl text-white mb-8 ">Photography</h2>
                 <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full mb-10" />
                 <p className="text-slate-400 text-2xl font-light italic leading-relaxed">
                   "{DATA.photography.philosophy}"
@@ -442,12 +550,12 @@ function TempPage() {
               <div className="lg:col-span-6 lg:text-right text-left">
                 <div className="inline-grid grid-cols-2 gap-8">
                   <div>
-                    <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Selected Gear</span>
-                    <p className="text-sm text-slate-300 font-medium leading-relaxed">Sony A7R IV<br />35mm f/1.4 GM<br />85mm f/1.8 G</p>
+                    {/* <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Selected Gear</span> */}
+                    {/* <p className="text-sm text-slate-300 font-medium leading-relaxed">Sony A7R IV<br />35mm f/1.4 GM<br />85mm f/1.8 G</p> */}
                   </div>
                   <div>
                     <span className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2">Focus Areas</span>
-                    <p className="text-sm text-slate-300 font-medium leading-relaxed">Architectural Minimal<br />High-Altitude Landscape<br />Urban Nightscapes</p>
+                    <p className="text-sm text-slate-300 font-medium leading-relaxed">Astrophotgraphy<br />Landscapes<br />Urban Nightscapes</p>
                   </div>
                 </div>
               </div>
