@@ -6,7 +6,7 @@ const DATA = {
   name: "Prasad",
   role: "Full Stack Engineer & AI Developer",
   about: {
-    story: "I am a developer who works at the intersection of logic and creativity. I started with code and system design, and later developed a visual way of thinking through photography. I focus on creating experiences, not just software, by combining strong problem solving with thoughtful design. Whether I am building websites, training machine learning models, or taking photographs, I aim to create work that is both purposeful and engaging.",
+    story: "I am a developer who works at the intersection of logic and creativity. I focus on creating experiences, not just software, by combining strong problem solving with thoughtful design. Whether I am building websites, training machine learning models, or taking photographs, I aim to create work that is both purposeful and engaging.",
     motto: "Merging the precision of binary with the fluidity of light.",
     stats: [
     //   { label: "Years Exp", value: "6+" },
@@ -155,7 +155,7 @@ const DATA = {
 ],
 
   photography: {
-    philosophy: "To me, photography is the ultimate form of debugging. It forces you to isolate the noise, find the signal, and wait for the perfect execution.",
+    philosophy: "",
     gallery: [
   {
     url: "https://res.cloudinary.com/duws62b88/image/upload/v1686629005/Photographs/DSC08656-01_kgqggd.jpg",
