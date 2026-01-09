@@ -9,12 +9,14 @@ import Publications from './Publications'
 import Gallery from './Gallery'
 import NewPage from './NewPage'
 import TempPage from './TempPage'
+import TestPage from './TestPage'
 
 function Home() {
   return (
     <div>
       {/* <NewPage/> */}
       <TempPage/>
+      {/* <TestPage/> */}
       {/* <Navbar /> */}
       {/* <Splash /> */}
       {/* <Gallery /> */}

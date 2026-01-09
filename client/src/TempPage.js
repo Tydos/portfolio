@@ -1,6 +1,7 @@
 
-import React, { useState, useEffect } from 'react';
-import { Menu, X , User, Mail, Code,  Terminal,Camera,Wind,Linkedin,Globe, ChevronRight, Aperture, ExternalLink} from 'react-feather';
+import { useState, useEffect } from 'react';
+import { Menu, X , User, Mail, Code, Terminal, Camera,  Linkedin} from 'react-feather';
+
 
 const DATA = {
   name: "Prasad",
@@ -466,6 +467,21 @@ const Contact = () => {
 };
 function TempPage() {
     const [activeSection, setActiveSection] = useState('home');
+    const [projects, setProjects] = useState({});
+    
+      useEffect(() => {
+        fetch("https://portfolio-backend-server-phi.vercel.app/api/projects")
+          .then((res) => {
+            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+            return res.json();
+          })
+          .then((projects) => {
+            setProjects(projects);
+            console.log("Fetched projects:", projects);
+          })
+          .catch((err) => console.error("Error fetching data:", err));
+      }, []);
+    
     return (
    <>
     <div className="bg-white text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
@@ -513,21 +529,28 @@ function TempPage() {
                 <div className="h-2 w-20 bg-indigo-600 rounded-full" />
               </div>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {DATA.projects.map((project, idx) => (
-                <ProjectCard key={idx} project={project} />
-              ))}
-            </div>
+
+
+            {Object.keys(projects).length === 0 ? (
+            <p className="text-red-500 font-italic text-center">
+            Error fetching data from backend
+          </p>
+          ) :  (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {Object.entries(projects).map(([id, project]) => (
+            <ProjectCard key={id} project={project} />
+          ))}
+          </div>
+            )}
+
+
             <div className="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
-            
              <button className="px-10 py-4 bg-white text-slate-900 font-black text-[10px] uppercase tracking-[0.3em] rounded-full hover:bg-rose-500 hover:text-white transition-all">
                 View All Projects
               </button>
               </div>
           </div>
         </section>
-
-         
 
         {/* Creative Eye Section */}
         <section id="creative-eye" className="py-32 px-6 bg-slate-950 text-white overflow-hidden relative">
