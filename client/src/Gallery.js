@@ -86,7 +86,7 @@ export default function Gallery() {
         <>
             <PhotoAlbum layout="masonry"
              photos={photos} 
-             padding={5} 
+             padding={10} 
              columns={(containerWidth) => {
                 if (containerWidth < 500) return 1;
                 if (containerWidth < 900) return 2;
