@@ -1,14 +1,13 @@
 import React from 'react';
-import Photo from './Photo';
+import Photo from './Pages/Photo';
 import { Routes, Route } from 'react-router-dom';
 import Home from './Home';
-import Errorpage from './Errorpage';
-import Test from './Test';
+import Errorpage from './Pages/Errorpage'
+import Test from './Test/Test';
 
 function App() {
 
   return (
-
     <>
     <Routes>
       <Route path="/" element={<Home/>} />
@@ -17,7 +16,6 @@ function App() {
       <Route path="*" element={<Errorpage/>} />
     </Routes>
     </>
-  
   );
 }
 
