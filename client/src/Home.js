@@ -12,32 +12,31 @@ import Projects from './Components/Projects';
 function Home() {
     const [activeSection, setActiveSection] = useState('home');
     return (
-    <>
-    <div className="bg-white text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
-      <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
-      
-      <main>
+    <>     
+     <div className="bg-white text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
+       
+       <Navbar activeSection={activeSection} setActiveSection={setActiveSection} /> 
+       <main>
         <Splash />
         <About />
         <section id="skills" className="py-32 px-6">
           <Skills/>
         </section>
 
-        {/* Technical Eye Section */}
         <section id="technical-eye" className="py-32 px-6 bg-slate-50/50 relative overflow-hidden">
         <Projects/>
         </section>
 
-        {/* Creative Eye Section */}
+
         <section id="creative-eye" className="py-32 px-6 bg-slate-950 text-white overflow-hidden relative">
             <Photo/>
         </section>
 
         <Contact />
-      </main>
+      </main> 
 
-      <Footer />
-    </div>
+       <Footer />
+    </div> 
    </>
   )
 }
