@@ -27,7 +27,7 @@ function Projects() {
                   <div className="max-w-xl">
                     <div className="flex items-center space-x-2 text-indigo-600 font-bold text-[10px] uppercase tracking-[0.3em] mb-4">
                       <Terminal size={20} />
-                       <span className="text-xs font-black uppercase tracking-widest text-indigo-600 block">Projects</span>
+                       {/* <span className="text-xs font-black uppercase tracking-widest text-indigo-600 block">Projects</span> */}
                     </div>
                     <h2 className="text-5xl md:text-6xl font-black text-slate-900 mb-4">Projects</h2>
                     <div className="h-2 w-20 bg-indigo-600 rounded-full" />
