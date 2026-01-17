@@ -24,7 +24,7 @@ function Contact() {
                  <input type="text" placeholder="Name" className="w-full px-6 py-4 bg-white border border-slate-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all" />
                  <input type="email" placeholder="Email" className="w-full px-6 py-4 bg-white border border-slate-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all" />
                  <textarea placeholder="Message" rows="4" className="w-full px-6 py-4 bg-white border border-slate-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none transition-all"></textarea>
-                 <button className="w-full py-5 bg-indigo-600 text-white font-black text-[10px] uppercase tracking-widest rounded-2xl shadow-lg shadow-indigo-200">Sent Message</button>
+                 <button className="w-full py-5 bg-indigo-600 text-white font-black text-[10px] uppercase tracking-widest rounded-2xl shadow-lg shadow-indigo-200">Send a Message</button>
                </form>
              </div>
            </div>

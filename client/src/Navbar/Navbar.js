@@ -17,7 +17,7 @@ function Navbar({ activeSection, setActiveSection }) {
     { name: 'About', id: 'about' },
     { name: 'Projects', id: 'technical-eye' },
     { name: 'Photography', id: 'creative-eye' },
-    // { name: 'Resume', id: 'resume' },
+    { name: 'Resume', id: 'skills' },
     { name: 'Contact', id: 'contact' }
   ];
 

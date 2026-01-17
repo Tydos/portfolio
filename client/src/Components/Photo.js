@@ -28,7 +28,7 @@ function Photo() {
                   <div className="lg:col-span-6">
                     <div className="flex items-center space-x-2 text-rose-500 font-bold text-[10px] uppercase tracking-[0.4em] mb-6">
                       <Camera size={20} />
-                    <span className="text-xs font-black uppercase tracking-widest text-indigo-600 block">Photography</span>
+                    {/* <span className="text-xs font-black uppercase tracking-widest text-indigo-600 block">Photography</span> */}
                     </div>
                     <h2 className="text-6xl text-white mb-8 ">Photography</h2>
                     <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full mb-10" />
