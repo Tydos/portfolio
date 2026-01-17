@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu, X , User, Terminal, Camera, ChevronRight, Globe, GitHub, GitBranch} from 'react-feather';
+import {GitBranch} from 'react-feather';
 
 function ProjectCard({ project }) {
   return (
