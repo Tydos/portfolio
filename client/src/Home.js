@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import Contact from './Components/Contact';
 import Footer from './Footer/Footer';
 import Splash from './Components/Splash';
@@ -19,8 +19,6 @@ function Home() {
       <main>
         <Splash />
         <About />
-
-     
         <section id="skills" className="py-32 px-6">
           <Skills/>
         </section>
