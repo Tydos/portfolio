@@ -8,13 +8,14 @@ import Navbar from './Navbar/Navbar';
 import Skills from './Components/Skills';
 import Photo from './Components/Photo';
 import Projects from './Components/Projects';
-import PhotoUpdated from './Components/PhotoUpdated';
+import Background from './Components/Background';
 
 function Home() {
     const [activeSection, setActiveSection] = useState('home');
     return (
     <>     
-     <div className="bg-white text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
+    <Background/>
+     <div className="text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
        
        <Navbar activeSection={activeSection} setActiveSection={setActiveSection} /> 
        <main>
@@ -30,8 +31,8 @@ function Home() {
 
 
         <section id="creative-eye" className="py-32 px-6 bg-slate-950 text-white overflow-hidden relative">
-            {/* <Photo/> */}
-            <PhotoUpdated/>
+            <Photo/>
+            {/* <PhotoUpdated/> */}
         </section>
 
         <Contact />

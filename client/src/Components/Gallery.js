@@ -1,5 +1,4 @@
-import { PhotoAlbum, RenderContainer, RenderPhoto } from "react-photo-album";
-
+import { PhotoAlbum} from "react-photo-album";
 
 const photos = [
     { src: "https://res.cloudinary.com/duws62b88/image/upload/v1686629005/Photographs/DSC08656-01_kgqggd.jpg", width: 3000, height: 2000 },
@@ -35,68 +34,70 @@ const photos = [
     { src: "https://res.cloudinary.com/duws62b88/image/upload/v1686629028/Photographs/IMG_20190723_064504093_HDR_uv7kam.jpg     ", width: 2500, height: 3200 },
     
 ];
-
-const renderContainer: RenderContainer = ({ containerProps, children, containerRef }) => (
-    <div
-        style={{
-            border: "0px solid #84CC16",
-            borderRadius: "10px",
-            padding: "20px",
-            margin: "20px",
-            backdropFilter: "blur(5px)",
-        }}
-    >
-        <div ref={containerRef} {...containerProps}>
-            {children}
-        </div>
+const renderContainer = ({ containerProps, children, containerRef }) => (
+  <div
+    style={{
+      border: "0px solid #84CC16",
+      borderRadius: "10px",
+      padding: "10px",
+      margin: "10px",
+      backdropFilter: "blur(5px)",
+    }}
+  >
+    <div ref={containerRef} {...containerProps}>
+      {children}
     </div>
+  </div>
 );
 
+const renderPhoto = ({ layout, layoutOptions, imageProps }) => {
+  const { alt, style, ...rest } = imageProps;
 
-const renderPhoto: RenderPhoto = ({ layout, layoutOptions, imageProps: { alt, style, ...restImageProps } }) => (
+  return (
     <div
-        style={{
-            border: "px solid #1e1e1e",
-            borderRadius: "10px",
-            boxSizing: "content-box",
-            alignItems: "center",
-            width: style?.width,
-            padding: `${layoutOptions.padding - 2}px`,
-            paddingBottom: 0,
-            
-        }}
+      style={{
+        border: "px solid #1e1e1e",
+        borderRadius: "5px",
+        boxSizing: "content-box",
+        alignItems: "center",
+        width: style?.width,
+        padding: `${layoutOptions.padding - 2}px`,
+        paddingBottom: 0,
+      }}
     >
-        <img alt={alt} style={{ ...style, width: "100%", padding: 0, borderRadius: "10px" }} {...restImageProps} />
-        <div
-            style={{
-                paddingTop: "8px",
-                paddingBottom: "8px",
-                overflow: "visible",
-                whiteSpace: "nowrap",
-                textAlign: "center",
-                color: "#fff",
-            }}
-        >
-        </div>
+      <img
+        alt={alt}
+        style={{ ...style, width: "100%", padding: 0, borderRadius: "10px" }}
+        {...rest}
+      />
+      <div
+        style={{
+          paddingTop: "5px",
+          paddingBottom: "5px",
+          overflow: "visible",
+          whiteSpace: "nowrap",
+          textAlign: "center",
+          color: "#fff",
+        }}
+      ></div>
     </div>
-);
+  );
+};
 
 export default function Gallery() {
-    return( 
-        <>
-            <PhotoAlbum layout="masonry"
-             photos={photos} 
-             padding={10} 
-             columns={(containerWidth) => {
-                if (containerWidth < 500) return 1;
-                if (containerWidth < 900) return 2;
-                return 3;
-            }}
-              spacing={5}
-               renderContainer={renderContainer}
-                renderPhoto={renderPhoto} />
-        </>
-    );
-     
-    
+  return (
+    <PhotoAlbum
+      layout="masonry"
+      photos={photos}
+      padding={5}
+      columns={(containerWidth) => {
+        if (containerWidth < 500) return 1;
+        if (containerWidth < 900) return 2;
+        return 3;
+      }}
+      spacing={5}
+      renderContainer={renderContainer}
+      renderPhoto={renderPhoto}
+    />
+  );
 }

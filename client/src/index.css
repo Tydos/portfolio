@@ -1,89 +1,66 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Montserrat');
-@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed');
-@import url('https://fonts.googleapis.com/css2?family=Playwrite+CO');
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat");
+@import url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+CO");
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900;
+  }
+}
 
 html * {
-  font-family: 'Monteserrat', sans-serif;
-} 
+  font-family: "Monteserrat", sans-serif;
+}
 
 h1 {
-    font-family: 'Monteserrat', sans-serif;
-    color: #000000;
-  }
- 
-
- .background {
-  background-image: url('https://res.cloudinary.com/duws62b88/image/upload/v1719505508/WhatsApp_Image_2024-06-27_at_13.49.19_523d1678_ksnewi.jpg'); /* Adjust the path according to your project structure */
-  background-size: cover; /* Makes the background image cover the whole element */
-  background-repeat: no-repeat; /* Prevents the background image from repeating */
-  background-position: center; /* Centers the background image */
-  width: 100%;
-  height: 100vh; /* Sets the height to 100% of the viewport height */
+  font-family: "Monteserrat", sans-serif;
+  color: #000000;
 }
 
 h2 {
-        font-family: 'Bebas Neue', sans-serif;
-        color:#000000;
-    }
+  font-family: "Monteserrat", sans-serif;
+  color: #000000;
+}
 
 h3 {
-      font-family: 'Roboto', sans-serif;
-      font-style:italic;
-        color:#000000;
+  font-family: "Roboto", sans-serif;
+  font-style: italic;
+  color: #000000;
 }
 
 body {
-    background-color:#ffffff;
-}  
+  background-color: #ffffff;
+}
 
 li {
-    font-family: 'Roboto Condensed', sans-se  rif;
-    word-spacing: 5px;
-    display: inline;
+  font-family:
+    "Roboto Condensed",
+    sans-se rif;
+  word-spacing: 5px;
+  display: inline;
 }
 
 ul {
-    list-style-type: none;
-    margin: 10;
-    padding: 10;
+  list-style-type: none;
+  margin: 10;
+  padding: 10;
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
-
-/* @layer base {
-    body {
-       @apply bg-gradient-to-r from-gray-100 to-gray-200;
-    }
-
-  } */
-@layer utilities {
-    /* Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .no-scrollbar {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
-    }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
 
 i {
-    margin-right: 5px;
-    
-  }
-
-.fa-brands {
-    color:#ffffff;
-  }
-
-.fa-regular {
-    color:#55505b;
-  }
-
-.fa-solid {
-    color:#55505b;
-  }  
+  margin-right: 5px;
+}

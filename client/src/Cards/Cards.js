@@ -1,6 +1,6 @@
 // Card.js
 
-import React from 'react';
+import React from "react";
 
 const Cards = ({ name }) => {
   return (
