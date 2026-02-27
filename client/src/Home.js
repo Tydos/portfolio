@@ -8,6 +8,7 @@ import Navbar from './Navbar/Navbar';
 import Skills from './Components/Skills';
 import Photo from './Components/Photo';
 import Projects from './Components/Projects';
+import PhotoUpdated from './Components/PhotoUpdated';
 
 function Home() {
     const [activeSection, setActiveSection] = useState('home');
@@ -29,7 +30,8 @@ function Home() {
 
 
         <section id="creative-eye" className="py-32 px-6 bg-slate-950 text-white overflow-hidden relative">
-            <Photo/>
+            {/* <Photo/> */}
+            <PhotoUpdated/>
         </section>
 
         <Contact />
