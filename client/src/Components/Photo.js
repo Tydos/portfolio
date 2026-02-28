@@ -3,21 +3,30 @@ import { Camera } from "react-feather";
 import { useState, useEffect } from "react";
 import Gallery from "../Components/Gallery";
 
+
 function Photo() {
-  const [photography, setPhotography] = useState({});
-  useEffect(() => {
-    fetch("https://portfolio-backend-server-phi.vercel.app/api/photographs")
+  const [photos, setPhotos] = useState([]); 
+  
+    useEffect(() => {
+    fetch("https://portfolio-backend-server-phi.vercel.app/fetch?limit=100&offset=0")
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
       })
-      .then((photography) => {
-        setPhotography(photography);
-        console.log("Fetched photography:", photography);
+      .then((data) => {
+        // Map API data to Gallery format
+        const formattedPhotos = data.map((item) => ({
+          src: item.url,          // adjust if your API uses another key
+          width: item.width || 2000,
+          height: item.height || 2000,
+        }));
+
+        setPhotos(formattedPhotos);
+        console.log("Fetched photography:", formattedPhotos);
       })
       .catch((err) => console.error("Error fetching data:", err));
   }, []);
-  void photography;
+
   return (
     <>
       {/* Background Icon */}
@@ -36,26 +45,12 @@ function Photo() {
           <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
         </div>
 
-        {/* {!Object.keys(photography).length ? (
-      <p className="text-red-500 text-center italic">
-        Error fetching data from backend
-      </p>
-    ) : (
-      <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-2 space-y-6">
-        {Object.entries(photography).map(([id, photo]) => (
-          <PhotoCard key={id} photo={photo} />
-        ))}
-      </div>
-    )} */}
+  
         <div className="max-w-6xl mx-auto">
-          <Gallery />
+          <Gallery photos={photos}/>
         </div>
 
-        {/* <div className="mt-24 pt-12 border-t border-white/5 text-center">
-      <button className="px-10 py-4 bg-white text-slate-900 text-xs font-black uppercase tracking-widest rounded-full hover:bg-rose-500 hover:text-white transition">
-        View Full Gallery
-      </button>
-    </div> */}
+
       </div>
     </>
   );
