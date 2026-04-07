@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { fetchProjects } from "../api/api";
 
 function TestPage() {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    fetch("https://portfolio-backend-server-phi.vercel.app/api/projects")
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
+    fetchProjects()
       .then((data) => {
         setData(data);
         console.log("Fetched data:", data);

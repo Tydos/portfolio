@@ -2,15 +2,12 @@ import React from 'react'
 import { Camera } from 'react-feather';
 import PhotoCard from '../Cards/PhotoCard';
 import { useState, useEffect } from 'react';
+import { fetchPhotographs } from '../api/api';
 
 function PhotoUpdated() {
   const [photography, setPhotography] = useState([]);
   useEffect(() => {
-          fetch("https://portfolio-backend-server-phi.vercel.app/getphotographs?limit=10&offset=0")
-            .then((res) => {
-              if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-              return res.json();
-            })
+          fetchPhotographs(10, 0)
             .then((photography) => {
               setPhotography(photography);
               console.log("Fetched photography:", photography);

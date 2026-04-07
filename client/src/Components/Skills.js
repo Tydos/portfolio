@@ -8,6 +8,7 @@ import {
   ExternalLink,
   CheckCircle,
 } from "react-feather";
+import { fetchSkills } from "../api/api";
 
 const SectionHeader = ({ title, icon }) => (
   <div className="flex items-center gap-3 mb-8">
@@ -53,11 +54,7 @@ const ExperienceSection = ({ experience }) => (
 function Skills() {
   const [skills, setSkills] = useState({});
   useEffect(() => {
-    fetch("https://portfolio-backend-server-phi.vercel.app/api/skills")
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
+    fetchSkills()
       .then((skills) => {
         setSkills(skills);
         console.log("Fetched skills:", skills);

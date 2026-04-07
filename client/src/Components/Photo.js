@@ -2,25 +2,15 @@ import React from "react";
 import { Camera } from "react-feather";
 import { useState, useEffect } from "react";
 import Gallery from "../Components/Gallery";
+import { fetchPhotos } from "../api/api";
 
 
 function Photo() {
   const [photos, setPhotos] = useState([]); 
   
     useEffect(() => {
-    fetch("https://portfolio-backend-server-phi.vercel.app/fetch?limit=100&offset=0")
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        // Map API data to Gallery format
-        const formattedPhotos = data.map((item) => ({
-          src: item.url,          // adjust if your API uses another key
-          width: item.width || 2000,
-          height: item.height || 2000,
-        }));
-
+    fetchPhotos()
+      .then((formattedPhotos) => {
         setPhotos(formattedPhotos);
         console.log("Fetched photography:", formattedPhotos);
       })

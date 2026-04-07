@@ -2,15 +2,12 @@ import React from "react";
 import ProjectCard from "../Cards/ProjectCard";
 import { Terminal } from "react-feather";
 import { useState, useEffect } from "react";
+import { fetchProjects } from "../api/api";
 
 function Projects() {
   const [projects, setProjects] = useState({});
   useEffect(() => {
-    fetch("https://portfolio-backend-server-phi.vercel.app/api/projects")
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-        return res.json();
-      })
+    fetchProjects()
       .then((projects) => {
         setProjects(projects);
         console.log("Fetched projects:", projects);
