@@ -1,8 +1,8 @@
 import React from "react";
 import { Camera } from "react-feather";
 import { useState, useEffect } from "react";
-import Gallery from "../Components/Gallery";
-import { fetchPhotos } from "../api/api";
+import Gallery from "./Gallery";
+import { fetchPhotos } from "../../api/api";
 
 
 function Photo() {

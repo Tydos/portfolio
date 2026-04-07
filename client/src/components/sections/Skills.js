@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import SkillStack from "../Cards/SkillStack";
+import SkillStack from "../cards/SkillStack";
 import {
   Database,
   BookOpen,
@@ -8,7 +8,7 @@ import {
   ExternalLink,
   CheckCircle,
 } from "react-feather";
-import { fetchSkills } from "../api/api";
+import { fetchSkills } from "../../api/api";
 
 const SectionHeader = ({ title, icon }) => (
   <div className="flex items-center gap-3 mb-8">

@@ -1,20 +1,18 @@
 import React from 'react'
 import { useState} from 'react';
-import Contact from './Components/Contact';
-import Footer from './Footer/Footer';
-import Splash from './Components/Splash';
-import About from './Components/About';
-import Navbar from './Navbar/Navbar';
-import Skills from './Components/Skills';
-import Photo from './Components/Photo';
-import Projects from './Components/Projects';
-import Background from './Components/Background';
+import Contact from './components/sections/Contact';
+import Footer from './components/layout/Footer';
+import Splash from './components/sections/Splash';
+import About from './components/sections/About';
+import Navbar from './components/layout/Navbar';
+import Skills from './components/sections/Skills';
+import Photography from './components/sections/Photography';
+import Projects from './components/sections/Projects';
 
 function Home() {
     const [activeSection, setActiveSection] = useState('home');
     return (
     <>     
-    <Background/>
      <div className="text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
        
        <Navbar activeSection={activeSection} setActiveSection={setActiveSection} /> 
@@ -31,8 +29,7 @@ function Home() {
 
 
         <section id="creative-eye" className="py-32 px-6 bg-slate-950 text-white overflow-hidden relative">
-            <Photo/>
-            {/* <PhotoUpdated/> */}
+            <Photography/>
         </section>
 
         <Contact />

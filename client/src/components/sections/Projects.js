@@ -1,8 +1,8 @@
 import React from "react";
-import ProjectCard from "../Cards/ProjectCard";
+import ProjectCard from "../cards/ProjectCard";
 import { Terminal } from "react-feather";
 import { useState, useEffect } from "react";
-import { fetchProjects } from "../api/api";
+import { fetchProjects } from "../../api/api";
 
 function Projects() {
   const [projects, setProjects] = useState({});
