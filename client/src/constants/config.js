@@ -7,8 +7,8 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   SKILLS: "/api/skills",
   PROJECTS: "/api/projects",
-  PHOTOGRAPHS: "/getphotographs",
-  PHOTOS: "/fetch",
+  // PHOTOGRAPHS: "/getphotographs",
+  PHOTOS: "/api/images",
 };
 
 // Navigation items

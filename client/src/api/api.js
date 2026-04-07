@@ -14,11 +14,11 @@ export const fetchProjects = async () => {
   return res.json();
 };
 
-export const fetchPhotographs = async (limit = 10, offset = 0) => {
-  const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PHOTOGRAPHS}?limit=${limit}&offset=${offset}`);
-  if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-  return res.json();
-};
+// export const fetchPhotographs = async (limit = 10, offset = 0) => {
+//   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PHOTOGRAPHS}?limit=${limit}&offset=${offset}`);
+//   if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+//   return res.json();
+// };
 
 export const fetchPhotos = async (limit = 100, offset = 0) => {
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PHOTOS}?limit=${limit}&offset=${offset}`);
