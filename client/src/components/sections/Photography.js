@@ -38,7 +38,7 @@ function Photography() {
 
   
         <div className="max-w-6xl mx-auto">
-          <Gallery photos={photos}/>
+          <Gallery photos={photos.slice(0, 12)}/>
           <div className="mt-10 text-center">
             <Link
               to="/gallery"
