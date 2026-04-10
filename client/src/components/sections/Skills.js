@@ -52,14 +52,27 @@ const ExperienceSection = ({ experience }) => (
 );
 
 function Skills() {
-  const [skills, setSkills] = useState({});
+  const [skills, setSkills] = useState(null);
+  const [skillsFetchError, setSkillsFetchError] = useState(false);
+
   useEffect(() => {
+    let cancelled = false;
     fetchSkills()
-      .then((skills) => {
-        setSkills(skills);
-        console.log("Fetched skills:", skills);
+      .then((data) => {
+        if (cancelled) return;
+        setSkillsFetchError(false);
+        setSkills(data && typeof data === "object" && !Array.isArray(data) ? data : {});
       })
-      .catch((err) => console.error("Error fetching data:", err));
+      .catch((err) => {
+        console.error("Error fetching data:", err);
+        if (!cancelled) {
+          setSkillsFetchError(true);
+          setSkills({});
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const resumeData = {
@@ -135,10 +148,15 @@ function Skills() {
             <section>
               <SectionHeader title="Skills" icon={<CheckCircle size={18} />} />
               <div className="lg:col-span-8 grid sm:grid-cols-2 gap-10">
-                {Object.keys(skills).length === 0 ? (
-                  <p className="text-red-500 font-italic text-center">
-                    {" "}
-                    Error fetching data from backend
+                {skillsFetchError ? (
+                  <p className="text-red-500 italic text-center">
+                    Could not load skills from the server.
+                  </p>
+                ) : skills === null ? (
+                  <p className="text-slate-400 text-center text-sm">Loading skills…</p>
+                ) : Object.keys(skills).length === 0 ? (
+                  <p className="text-slate-500 text-center text-sm">
+                    No skills are listed yet.
                   </p>
                 ) : (
                   <div className="grid md:grid-cols-2 lg:grid-cols-4 col-span-4 gap-5">

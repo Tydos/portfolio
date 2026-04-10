@@ -10,7 +10,7 @@ import Photography from './components/sections/Photography';
 import Projects from './components/sections/Projects';
 
 function Home() {
-    const [activeSection, setActiveSection] = useState('home');
+    const [activeSection, setActiveSection] = useState("home");
     return (
     <>     
      <div className="text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">

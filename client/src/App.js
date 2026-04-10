@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './Home';
+import GalleryPage from './pages/GalleryPage';
 import Errorpage from './components/Errorpage'
 import { Analytics } from '@vercel/analytics/react';
 function App() {
@@ -9,6 +10,7 @@ function App() {
     <>
     <Routes>
       <Route path="/" element={<Home/>} />
+      <Route path="/gallery" element={<GalleryPage/>} />
       <Route path="*" element={<Errorpage/>} />
     </Routes>
       <Analytics />

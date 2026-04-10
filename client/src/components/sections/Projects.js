@@ -5,14 +5,29 @@ import { useState, useEffect } from "react";
 import { fetchProjects } from "../../api/api";
 
 function Projects() {
-  const [projects, setProjects] = useState({});
+  const [projects, setProjects] = useState(null);
+  const [projectsFetchError, setProjectsFetchError] = useState(false);
+
   useEffect(() => {
+    let cancelled = false;
     fetchProjects()
-      .then((projects) => {
-        setProjects(projects);
-        console.log("Fetched projects:", projects);
+      .then((data) => {
+        if (cancelled) return;
+        setProjectsFetchError(false);
+        setProjects(
+          data && typeof data === "object" && !Array.isArray(data) ? data : {}
+        );
       })
-      .catch((err) => console.error("Error fetching data:", err));
+      .catch((err) => {
+        console.error("Error fetching data:", err);
+        if (!cancelled) {
+          setProjectsFetchError(true);
+          setProjects({});
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
   return (
     <>
@@ -30,9 +45,15 @@ function Projects() {
 
           <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
         </div>
-        {Object.keys(projects).length === 0 ? (
-          <p className="text-red-500 font-italic text-center">
-            Error fetching data from backend
+        {projectsFetchError ? (
+          <p className="text-red-500 italic text-center">
+            Could not load projects from the server.
+          </p>
+        ) : projects === null ? (
+          <p className="text-slate-500 text-center text-sm">Loading projects…</p>
+        ) : Object.keys(projects).length === 0 ? (
+          <p className="text-slate-600 text-center text-sm">
+            No projects to show yet.
           </p>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-5">

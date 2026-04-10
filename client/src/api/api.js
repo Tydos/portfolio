@@ -28,5 +28,7 @@ export const fetchPhotos = async (limit = 100, offset = 0) => {
     src: item.url,
     width: item.width || 2000,
     height: item.height || 2000,
+    title: item.filename,
+    category: item.category,
   }));
 };

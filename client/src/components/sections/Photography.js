@@ -1,11 +1,12 @@
 import React from "react";
 import { Camera } from "react-feather";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Gallery from "./Gallery";
 import { fetchPhotos } from "../../api/api";
 
 
-function Photo() {
+function Photography() {
   const [photos, setPhotos] = useState([]); 
   
     useEffect(() => {
@@ -38,6 +39,14 @@ function Photo() {
   
         <div className="max-w-6xl mx-auto">
           <Gallery photos={photos}/>
+          <div className="mt-10 text-center">
+            <Link
+              to="/gallery"
+              className="inline-block text-xs font-black uppercase tracking-widest text-slate-400 hover:text-white border border-slate-700 hover:border-slate-400 px-6 py-3 rounded transition-all"
+            >
+              View Full Gallery →
+            </Link>
+          </div>
         </div>
 
 
@@ -46,4 +55,4 @@ function Photo() {
   );
 }
 
-export default Photo;
+export default Photography;

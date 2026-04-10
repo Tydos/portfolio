@@ -11,12 +11,12 @@ export const API_ENDPOINTS = {
   PHOTOS: "/api/images",
 };
 
-// Navigation items
+// Section ids must match elements in Home.js / section components (scroll + highlight).
 export const NAV_ITEMS = [
-  { id: "splash", label: "Home", href: "#splash" },
-  { id: "about", label: "About", href: "#about" },
-  { id: "skills", label: "Skills", href: "#skills" },
-  { id: "projects", label: "Projects", href: "#projects" },
-  { id: "photography", label: "Photography", href: "#photography" },
-  { id: "contact", label: "Contact", href: "#contact" },
+  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
+  { id: "technical-eye", label: "Projects" },
+  { id: "creative-eye", label: "Photography" },
+  { id: "skills", label: "Resume" },
+  { id: "contact", label: "Contact" },
 ];
