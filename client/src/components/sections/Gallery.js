@@ -64,8 +64,8 @@ export default function Gallery({ photos }) {
         return 3;
       }}
 
-      componentsProps={(containerWidth) => ({
-        image: { loading: (containerWidth || 0) > 600 ? "eager" : "lazy" }, 
+      componentsProps={() => ({
+        image: { loading: "lazy" },
       })}
 
     //avoid calculating layout sizes everytime a browser window is resized

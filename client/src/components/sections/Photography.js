@@ -10,7 +10,7 @@ function Photography() {
   const [photos, setPhotos] = useState([]); 
   
     useEffect(() => {
-    fetchPhotos()
+    fetchPhotos(12)
       .then((formattedPhotos) => {
         setPhotos(formattedPhotos);
         console.log("Fetched photography:", formattedPhotos);
