@@ -5,7 +5,7 @@ import Footer from './components/layout/Footer';
 import Splash from './components/sections/Splash';
 import About from './components/sections/About';
 import Navbar from './components/layout/Navbar';
-import Skills from './components/sections/Skills';
+import Resume from './components/sections/Resume';
 import Photography from './components/sections/Photography';
 import Projects from './components/sections/Projects';
 
@@ -19,8 +19,8 @@ function Home() {
        <main>
         <Splash />
         <About />
-        <section id="skills" className="py-32 px-6">
-          <Skills/>
+        <section id="resume" className="py-32 px-6">
+          <Resume/>
         </section>
 
         <section id="technical-eye" className="py-32 px-6 bg-slate-50/50 relative overflow-hidden">

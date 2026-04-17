@@ -2,16 +2,17 @@ import { API_CONFIG, API_ENDPOINTS } from "../constants/config";
 
 const BASE_URL = API_CONFIG.BASE_URL;
 
-export const fetchSkills = async () => {
-  const res = await fetch(`${BASE_URL}${API_ENDPOINTS.SKILLS}`);
-  if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-  return res.json();
-};
-
 export const fetchProjects = async () => {
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PROJECTS}`);
   if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-  return res.json();
+  const data = await res.json();
+  const raw = data?.projects !== undefined ? data.projects : data;
+  if (raw == null) return {};
+  if (Array.isArray(raw)) {
+    return Object.fromEntries(raw.map((p, i) => [String(i), p]));
+  }
+  if (typeof raw === "object") return raw;
+  return {};
 };
 
 export const fetchPhotos = async (limit = 100, offset = 0) => {

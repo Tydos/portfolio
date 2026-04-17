@@ -5,9 +5,7 @@ export const API_CONFIG = {
 
 // API Endpoints
 export const API_ENDPOINTS = {
-  SKILLS: "/api/skills",
   PROJECTS: "/api/projects",
-  // PHOTOGRAPHS: "/getphotographs",
   PHOTOS: "/api/images",
 };
 
@@ -15,8 +13,8 @@ export const API_ENDPOINTS = {
 export const NAV_ITEMS = [
   { id: "home", label: "Home" },
   { id: "about", label: "About" },
+  { id: "resume", label: "Resume" },
   { id: "technical-eye", label: "Projects" },
   { id: "creative-eye", label: "Photography" },
-  { id: "skills", label: "Resume" },
   { id: "contact", label: "Contact" },
 ];

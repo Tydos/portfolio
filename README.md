@@ -14,7 +14,6 @@ Base URL: `REACT_APP_API_URL` (no trailing slash), or fallback in [`client/src/c
 
 | Method | Path | Used for |
 |--------|------|----------|
-| GET | `/api/skills` | Skills list |
 | GET | `/api/projects` | Projects list |
 | GET | `/api/images?limit=&offset=` | Gallery images (`fetchPhotos` maps to `src` / `width` / `height`) |
 

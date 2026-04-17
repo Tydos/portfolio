@@ -2,16 +2,22 @@ import React from "react";
 import { Code } from "react-feather";
 
 function ProjectCard({ project }) {
+  const title = project.title?.trim() ? project.title : "Project";
+  const tags = Array.isArray(project.tags) ? project.tags : [];
+  const imageUrl = project.image?.trim() || "";
+
   return (
     <div className="relative group w-full rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-500">
 
       {/* Image */}
-      <div className="relative h-80 w-full overflow-hidden">
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-        />
+      <div className="relative h-80 w-full overflow-hidden bg-slate-200">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={title}
+            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : null}
 
         {/* Gradient Overlay only on Image */}
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
@@ -20,7 +26,7 @@ function ProjectCard({ project }) {
         <div className="absolute bottom-4 left-4 right-4 flex flex-col items-start gap-2 z-10">
           {/* Tags */}
           <div className="flex flex-wrap gap-2">
-            {project.tags.map((tag) => (
+            {tags.map((tag) => (
               <span
                 key={tag}
                 className="px-2 py-1 bg-white/30 text-white text-xs font-semibold rounded-full backdrop-blur-xl"
@@ -35,7 +41,7 @@ function ProjectCard({ project }) {
       {/* Title Bar Below Image, Solid Background */}
      <div className="bg-white p-4 border-t border-slate-200 flex flex-col items-start justify-center gap-2">
   <h2 className="text-slate-500 text-md md:text-md font-medium leading-snug text-center">
-    {project.title}
+    {title}
   </h2>
 
   {project.description && project.description.trim() !== "" && (
