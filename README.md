@@ -1,16 +1,16 @@
 # Portfolio
 
-Frontend-only SPA: **Create React App 5** (`react-scripts`), **React 18**, **Tailwind CSS 3**, **React Router v6**. Photo sections use **react-photo-album**. **@vercel/analytics** is mounted in `App.js`. This repo does not include the backend; the client reads JSON from an HTTP API.
+Frontend-only site: **Next.js 14**, **React 18**, **Tailwind CSS 3**. Photo sections use **react-photo-album**. **@vercel/analytics** is integrated. This repo does not include the backend; the client reads JSON from an HTTP API.
 
 **Stack (see `client/package.json`)**
 
-- Build: CRA / Webpack via `react-scripts`
+- Build: Next.js 14 with App Router
 - UI: `react`, `react-dom`, `react-feather`; Font Awesome loaded from `client/public/index.html`
-- Deploy: static `build/` on Vercel; `client/vercel.json` rewrites non-file routes to `/` for client-side routing
+- Deploy: Vercel (automatic static optimization and ISR)
 
 **API**
 
-Base URL: `REACT_APP_API_URL` (no trailing slash), or fallback in [`client/src/constants/config.js`](client/src/constants/config.js).
+Base URL: `NEXT_PUBLIC_API_URL` (no trailing slash), or fallback in [`client/constants/config.js`](client/constants/config.js).
 
 | Method | Path | Used for |
 |--------|------|----------|
@@ -22,20 +22,21 @@ Base URL: `REACT_APP_API_URL` (no trailing slash), or fallback in [`client/src/c
 ```bash
 cd client
 npm install
-npm start
+npm run dev
 ```
 
-Dev server defaults to port 3000. Set `REACT_APP_API_URL` in `client/.env.local` if the API is not the bundled default.
+Dev server defaults to port 3000. Set `NEXT_PUBLIC_API_URL` in `client/.env.local` if the API is not the bundled default.
 
 **Production build**
 
 ```bash
 cd client
 npm run build
+npm run start
 ```
 
-Artifacts: `client/build/`.
+Artifacts: `client/.next/`.
 
 **Vercel**
 
-Set **Root Directory** to `client`, framework preset Create React App (or `npm run build` / output `build`).
+Set **Root Directory** to `client` (automatic Next.js detection and deployment).

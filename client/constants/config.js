@@ -1,6 +1,6 @@
 // API Configuration
 export const API_CONFIG = {
-  BASE_URL: process.env.REACT_APP_API_URL || "https://portfolio-backend-server-phi.vercel.app",
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "https://portfolio-backend-server-phi.vercel.app",
 };
 
 // API Endpoints

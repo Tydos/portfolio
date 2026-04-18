@@ -19,7 +19,7 @@ function About() {
             </h2>
 
             <p className="text-slate-500 text-md md:text-md max-w-2xl font-medium leading-relaxed mb-6">
-             Hi, I'm Prasad. I'm pursuing my Master's in Data Science, where I focus on machine learning and building intelligent systems. I enjoy designing and developing websites, Android apps, and building APIs, and I'm interested in creating clean, minimalistic solutions that solve real problems. 
+             Hi, I'm Prasad. I'm pursuing my Master's in Data Science, where I focus on machine learning and building intelligent systems. I enjoy designing and developing websites, Android apps, and building APIs, and I'm interested in creating clean, minimalistic solutions that solve real problems.
              <br></br>
              Outside of tech, I'm passionate about photography, especially astrophotography and landscapes. I enjoy planning night shoots, working with long exposures, and refining images in Lightroom. I also like biking, playing guitar, and reading nonfiction, which keeps me curious and always learning.
             </p>

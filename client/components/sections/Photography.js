@@ -1,14 +1,16 @@
+'use client';
+
 import React from "react";
 import { Camera } from "react-feather";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import Gallery from "./Gallery";
-import { fetchPhotos } from "../../api/api";
+import { fetchPhotos } from "../../lib/api";
 
 
 function Photography() {
-  const [photos, setPhotos] = useState([]); 
-  
+  const [photos, setPhotos] = useState([]);
+
     useEffect(() => {
     fetchPhotos(12)
       .then((formattedPhotos) => {
@@ -36,12 +38,12 @@ function Photography() {
           <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
         </div>
 
-  
+
         <div className="max-w-6xl mx-auto">
           <Gallery photos={photos.slice(0, 12)}/>
           <div className="mt-10 text-center">
             <Link
-              to="/gallery"
+              href="/gallery"
               className="inline-block text-xs font-black uppercase tracking-widest text-slate-400 hover:text-white border border-slate-700 hover:border-slate-400 px-6 py-3 rounded transition-all"
             >
               View Full Gallery →

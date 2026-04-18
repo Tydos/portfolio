@@ -1,21 +1,23 @@
-import React from 'react'
-import { useState} from 'react';
-import Contact from './components/sections/Contact';
-import Footer from './components/layout/Footer';
-import Splash from './components/sections/Splash';
-import About from './components/sections/About';
-import Navbar from './components/layout/Navbar';
-import Resume from './components/sections/Resume';
-import Photography from './components/sections/Photography';
-import Projects from './components/sections/Projects';
+'use client';
 
-function Home() {
+import React from 'react'
+import { useState } from 'react';
+import Contact from './sections/Contact';
+import Footer from './layout/Footer';
+import Splash from './sections/Splash';
+import About from './sections/About';
+import Navbar from './layout/Navbar';
+import Resume from './sections/Resume';
+import Photography from './sections/Photography';
+import Projects from './sections/Projects';
+
+function HomeClient() {
     const [activeSection, setActiveSection] = useState("home");
     return (
-    <>     
+    <>
      <div className="text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
-       
-       <Navbar activeSection={activeSection} setActiveSection={setActiveSection} /> 
+
+       <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
        <main>
         <Splash />
         <About />
@@ -33,12 +35,12 @@ function Home() {
         </section>
 
         <Contact />
-      </main> 
+      </main>
 
        <Footer />
-    </div> 
+    </div>
    </>
   )
 }
 
-export default Home
+export default HomeClient
