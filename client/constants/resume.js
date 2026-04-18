@@ -20,8 +20,8 @@ export const RESUME_SKILL_GROUPS = [
 
 export const RESUME_SUMMARY_PARAGRAPHS = [
   "On the application side, I build backend systems using FastAPI and Flask, and create user interfaces with React and Tailwind. I work with databases such as PostgreSQL and MongoDB to design reliable data systems. I deploy projects using AWS, Docker, and CI/CD pipelines to ensure smooth, production-ready performance.",
-  "I’ve worked on ML projects using PyTorch and BERT for NLP tasks, including spam detection and topic modeling with BERTopic. My experience also covers distributed training and hyperparameter optimization with Optuna.",
-  "I’ve also explored search and retrieval systems using FAISS and Elasticsearch, and recently started experimenting with LangChain for LLM-based applications, along with blockchain-based projects to better understand decentralized system design.",
+  "I've worked on ML projects using PyTorch and BERT for NLP tasks, including spam detection and topic modeling with BERTopic. My experience also covers distributed training and hyperparameter optimization with Optuna.",
+  "I've also explored search and retrieval systems using FAISS and Elasticsearch, and recently started experimenting with LangChain for LLM-based applications, along with blockchain-based projects to better understand decentralized system design.",
 ];
 
 export const RESUME_EXPERIENCE = [

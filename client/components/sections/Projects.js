@@ -1,8 +1,10 @@
+'use client';
+
 import React from "react";
 import ProjectCard from "../cards/ProjectCard";
 import { Terminal } from "react-feather";
 import { useState, useEffect } from "react";
-import { fetchProjects } from "../../api/api";
+import { fetchProjects } from "../../lib/api";
 
 function Projects() {
   const [projects, setProjects] = useState(null);

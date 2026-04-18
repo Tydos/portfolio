@@ -1,3 +1,5 @@
+'use client';
+
 import { PhotoAlbum } from "react-photo-album";
 
 const renderContainer = ({ containerProps, children, containerRef }) => (

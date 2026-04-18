@@ -1,8 +1,10 @@
+'use client';
+
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Camera, Search } from "react-feather";
-import Gallery from "../components/sections/Gallery";
-import { fetchPhotos } from "../api/api";
+import Gallery from "../../components/sections/Gallery";
+import { fetchPhotos } from "../../lib/api";
 
 function GalleryPage() {
   const [photos, setPhotos] = useState([]);
@@ -30,7 +32,7 @@ function GalleryPage() {
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="px-6 py-5 max-w-6xl mx-auto">
         <Link
-          to="/"
+          href="/"
           className="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors"
         >
           ← Prasad Jawale

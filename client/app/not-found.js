@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 
 function ErrorPage() {
@@ -58,6 +60,4 @@ function ErrorPage() {
   );
 }
 
-export default function App() {
-  return <ErrorPage />;
-}
+export default ErrorPage;
