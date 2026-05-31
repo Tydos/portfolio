@@ -1,7 +1,12 @@
 import React from "react";
 import { Code } from "react-feather";
+import type { Project } from "../../types";
 
-function ProjectCard({ project }) {
+interface ProjectCardProps {
+  project: Project;
+}
+
+function ProjectCard({ project }: ProjectCardProps) {
   const title = project.title?.trim() ? project.title : "Project";
   const tags = Array.isArray(project.tags) ? project.tags : [];
   const imageUrl = project.image?.trim() || "";
@@ -39,27 +44,27 @@ function ProjectCard({ project }) {
       </div>
 
       {/* Title Bar Below Image, Solid Background */}
-     <div className="bg-white p-4 border-t border-slate-200 flex flex-col items-start justify-center gap-2">
-  <h2 className="text-slate-500 text-md md:text-md font-medium leading-snug text-center">
-    {title}
-  </h2>
+      <div className="bg-white p-4 border-t border-slate-200 flex flex-col items-start justify-center gap-2">
+        <h2 className="text-slate-500 text-md md:text-md font-medium leading-snug text-center">
+          {title}
+        </h2>
 
-  {project.description && project.description.trim() !== "" && (
-  <p className="text-slate-400 text-sm text-justify max-w-md">
-    {project.description}
-  </p>
-)}
+        {project.description && project.description.trim() !== "" && (
+          <p className="text-slate-400 text-sm text-justify max-w-md">
+            {project.description}
+          </p>
+        )}
 
-  {project.github && (
-    <a
-      href={project.github}
-      className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-full transition-all mt-1"
-    >
-      <Code size={14} />
-      Code
-    </a>
-  )}
-</div>
+        {project.github && (
+          <a
+            href={project.github}
+            className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-full transition-all mt-1"
+          >
+            <Code size={14} />
+            Code
+          </a>
+        )}
+      </div>
 
     </div>
   );

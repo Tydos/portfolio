@@ -1,21 +1,19 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Camera } from "react-feather";
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Gallery from "./Gallery";
 import { fetchPhotos } from "../../lib/api";
-
+import type { Photo } from "../../types";
 
 function Photography() {
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
 
-    useEffect(() => {
+  useEffect(() => {
     fetchPhotos(12)
       .then((formattedPhotos) => {
         setPhotos(formattedPhotos);
-        console.log("Fetched photography:", formattedPhotos);
       })
       .catch((err) => console.error("Error fetching data:", err));
   }, []);
@@ -38,9 +36,8 @@ function Photography() {
           <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
         </div>
 
-
         <div className="max-w-6xl mx-auto">
-          <Gallery photos={photos.slice(0, 12)}/>
+          <Gallery photos={photos.slice(0, 12)} />
           <div className="mt-10 text-center">
             <Link
               href="/gallery"
@@ -50,8 +47,6 @@ function Photography() {
             </Link>
           </div>
         </div>
-
-
       </div>
     </>
   );

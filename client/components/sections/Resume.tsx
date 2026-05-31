@@ -15,8 +15,18 @@ import {
   RESUME_PUBLICATION,
   RESUME_SECTION_LABELS,
 } from "../../constants/resume";
+import type { Experience } from "../../types";
 
-const SectionHeader = ({ title, icon }) => (
+interface SectionHeaderProps {
+  title: string;
+  icon: React.ReactNode;
+}
+
+interface ExperienceSectionProps {
+  experience: Experience[];
+}
+
+const SectionHeader = ({ title, icon }: SectionHeaderProps) => (
   <div className="flex items-center gap-3 mb-8">
     <div className="p-2 bg-neutral-100 rounded-lg text-neutral-600">{icon}</div>
     <h2 className="text-neutral-900 leading-none text-xl font-black text-slate-900">
@@ -25,7 +35,7 @@ const SectionHeader = ({ title, icon }) => (
   </div>
 );
 
-const ExperienceSection = ({ experience }) => (
+const ExperienceSection = ({ experience }: ExperienceSectionProps) => (
   <section>
     <SectionHeader
       title={RESUME_SECTION_LABELS.experience}

@@ -1,29 +1,27 @@
 import { API_CONFIG, API_ENDPOINTS } from "../constants/config";
+import type { Photo, Project } from "../types";
 
 const BASE_URL = API_CONFIG.BASE_URL;
 
-export const fetchProjects = async () => {
+export const fetchProjects = async (): Promise<Record<string, Project>> => {
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PROJECTS}`);
   if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
   const data = await res.json();
   const raw = data?.projects !== undefined ? data.projects : data;
   if (raw == null) return {};
   if (Array.isArray(raw)) {
-    return Object.fromEntries(raw.map((p, i) => [String(i), p]));
+    return Object.fromEntries(raw.map((p: Project, i: number) => [String(i), p]));
   }
-  if (typeof raw === "object") return raw;
+  if (typeof raw === "object") return raw as Record<string, Project>;
   return {};
 };
 
-export const fetchPhotos = async (limit = 100, offset = 0) => {
+export const fetchPhotos = async (limit = 100, offset = 0): Promise<Photo[]> => {
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PHOTOS}?limit=${limit}&offset=${offset}`);
   if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
   const data = await res.json();
-  return data.map((item) => ({
-    src: item.url.replace(
-      "/upload/",
-      "/upload/f_auto,q_auto,w_1200/"
-    ),
+  return data.map((item: { url: string; width?: number; height?: number; filename: string; category: string }) => ({
+    src: item.url.replace("/upload/", "/upload/f_auto,q_auto,w_1200/"),
     width: item.width || 2000,
     height: item.height || 2000,
     title: item.filename,

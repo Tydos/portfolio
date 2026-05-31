@@ -1,13 +1,17 @@
 'use client';
 
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, X } from "react-feather";
 import { NAV_ITEMS } from "../../constants/config";
 
 const NAV_OFFSET_PX = 96;
 
-function Navbar({ activeSection, setActiveSection }) {
+interface NavbarProps {
+  activeSection: string;
+  setActiveSection: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function Navbar({ activeSection, setActiveSection }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -39,7 +43,7 @@ function Navbar({ activeSection, setActiveSection }) {
     };
   }, [setActiveSection]);
 
-  const handleNavClick = (id) => {
+  const handleNavClick = (id: string) => {
     setActiveSection(id);
     setMobileMenuOpen(false);
     const el = document.getElementById(id);

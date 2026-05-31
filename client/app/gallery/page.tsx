@@ -5,17 +5,18 @@ import Link from "next/link";
 import { Camera, Search } from "react-feather";
 import Gallery from "../../components/sections/Gallery";
 import { fetchPhotos } from "../../lib/api";
+import type { Photo } from "../../types";
 
 function GalleryPage() {
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPhotos().then(setPhotos).catch(console.error);
   }, []);
 
-  const categories = [...new Set(photos.map((p) => p.category).filter(Boolean))];
+  const categories: string[] = [...new Set(photos.map((p) => p.category).filter(Boolean))];
 
   const filteredPhotos = photos.filter((p) => {
     const matchesQuery =

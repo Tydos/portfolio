@@ -1,5 +1,6 @@
-/** { title, items[] } for SkillStack */
-export const RESUME_SKILL_GROUPS = [
+import type { SkillGroup, Experience, Education, Publication } from "../types";
+
+export const RESUME_SKILL_GROUPS: SkillGroup[] = [
   {
     title: "Languages",
     items: ["Python", "C++", "SQL", "Bash", "Java"],
@@ -18,13 +19,13 @@ export const RESUME_SKILL_GROUPS = [
   },
 ];
 
-export const RESUME_SUMMARY_PARAGRAPHS = [
+export const RESUME_SUMMARY_PARAGRAPHS: string[] = [
   "On the application side, I build backend systems using FastAPI and Flask, and create user interfaces with React and Tailwind. I work with databases such as PostgreSQL and MongoDB to design reliable data systems. I deploy projects using AWS, Docker, and CI/CD pipelines to ensure smooth, production-ready performance.",
   "I've worked on ML projects using PyTorch and BERT for NLP tasks, including spam detection and topic modeling with BERTopic. My experience also covers distributed training and hyperparameter optimization with Optuna.",
   "I've also explored search and retrieval systems using FAISS and Elasticsearch, and recently started experimenting with LangChain for LLM-based applications, along with blockchain-based projects to better understand decentralized system design.",
 ];
 
-export const RESUME_EXPERIENCE = [
+export const RESUME_EXPERIENCE: Experience[] = [
   {
     role: "Data Analyst Intern (NLP)",
     company: "Wisconsin School of Business",
@@ -48,7 +49,7 @@ export const RESUME_EXPERIENCE = [
   },
 ];
 
-export const RESUME_EDUCATION = [
+export const RESUME_EDUCATION: Education[] = [
   {
     school: "University of Wisconsin - Madison",
     degree: "M.S. Data Science",
@@ -61,14 +62,14 @@ export const RESUME_EDUCATION = [
   },
 ];
 
-export const RESUME_PUBLICATION = {
+export const RESUME_PUBLICATION: Publication = {
   title:
     "LightGBM and Gradient Boosting for Optimizing Shipment Mode in Pharmaceutical Supply Chains",
   publisher: "Springer Singapore",
   url: "https://link.springer.com/chapter/10.1007/978-981-96-2179-8_36",
 };
 
-export const RESUME_SECTION_LABELS = {
+export const RESUME_SECTION_LABELS: Record<string, string> = {
   summary: "Summary",
   skills: "Skills",
   experience: "Experience",

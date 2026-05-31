@@ -1,12 +1,17 @@
 import React from "react";
+import type { Photo } from "../../types";
 
-function PhotoCard({ photo }) {
+interface PhotoCardProps {
+  photo: Photo;
+}
+
+function PhotoCard({ photo }: PhotoCardProps) {
   return (
     <>
       <div className="break-inside-avoid group cursor-pointer">
         <div className="relative overflow-hidden rounded-2xl bg-neutral-900">
           <img
-            src={photo.url}
+            src={photo.src}
             alt={photo.title}
             className="w-full h-auto object-cover transition duration-700 ease-out group-hover:scale-105"
           />

@@ -1,7 +1,12 @@
 import React from "react";
 import { Layers } from "react-feather";
+import type { SkillGroup } from "../../types";
 
-function SkillStack({ group }) {
+interface SkillStackProps {
+  group: SkillGroup;
+}
+
+function SkillStack({ group }: SkillStackProps) {
   return (
     <div className="flex h-full flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5">
       <div className="flex items-center gap-2.5">

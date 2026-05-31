@@ -1,13 +1,13 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ProjectCard from "../cards/ProjectCard";
 import { Terminal } from "react-feather";
-import { useState, useEffect } from "react";
 import { fetchProjects } from "../../lib/api";
+import type { Project } from "../../types";
 
 function Projects() {
-  const [projects, setProjects] = useState(null);
+  const [projects, setProjects] = useState<Record<string, Project> | null>(null);
   const [projectsFetchError, setProjectsFetchError] = useState(false);
 
   useEffect(() => {
@@ -31,6 +31,7 @@ function Projects() {
       cancelled = true;
     };
   }, []);
+
   return (
     <>
       <div className="absolute -top-24 -right-24 opacity-5 rotate-12 pointer-events-none">
@@ -64,12 +65,6 @@ function Projects() {
             ))}
           </div>
         )}
-
-        {/* <div className="mt-24 pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
-          <button className="px-10 py-4 bg-white text-slate-900 font-black text-[10px] uppercase tracking-[0.3em] rounded-full hover:bg-rose-500 hover:text-white transition-all">
-            View All Projects
-          </button>
-        </div> */}
       </div>
     </>
   );
