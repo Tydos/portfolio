@@ -11,8 +11,8 @@ function Contact() {
           <div className="grid lg:grid-cols-2 gap-16 relative z-10">
             <div>
               <span className="text-xs font-black uppercase tracking-widest text-indigo-600 block mb-6">Collab</span>
-              <h2 className="text-5xl font-black text-slate-900 mb-8 leading-none">Let's build <br /> something.</h2>
-              <p className="text-slate-600 text-lg mb-12">Let's connect over e-mail!</p>
+              <h2 className="text-5xl font-black text-slate-900 mb-8 leading-none">Let&apos;s build <br /> something.</h2>
+              <p className="text-slate-600 text-lg mb-12">Let&apos;s connect over e-mail!</p>
               <div className="space-y-4">
                 <div className="flex space-x-6 pt-4 text-slate-400">
                   <Code size={20} className="hover:text-slate-900 cursor-pointer transition-colors" />
