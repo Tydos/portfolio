@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { Code } from "react-feather";
 import type { Project } from "../../types";
 
@@ -17,10 +18,12 @@ function ProjectCard({ project }: ProjectCardProps) {
       {/* Image */}
       <div className="relative h-80 w-full overflow-hidden bg-slate-200">
         {imageUrl ? (
-          <img
+          <Image
             src={imageUrl}
             alt={title}
-            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+            fill
+            unoptimized
+            className="object-cover transform group-hover:scale-105 transition-transform duration-500"
           />
         ) : null}
 

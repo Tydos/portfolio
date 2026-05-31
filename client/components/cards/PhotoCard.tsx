@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import type { Photo } from "../../types";
 
 interface PhotoCardProps {
@@ -10,10 +11,13 @@ function PhotoCard({ photo }: PhotoCardProps) {
     <>
       <div className="break-inside-avoid group cursor-pointer">
         <div className="relative overflow-hidden rounded-2xl bg-neutral-900">
-          <img
+          <Image
             src={photo.src}
             alt={photo.title}
+            width={photo.width}
+            height={photo.height}
             className="w-full h-auto object-cover transition duration-700 ease-out group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
 
           {/* Cinematic Overlay */}

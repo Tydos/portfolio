@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { User, Code, Linkedin, Instagram } from "react-feather";
 
 function About() {
@@ -53,10 +54,13 @@ function About() {
           </div>
 
           <div className="lg:col-span-4 flex justify-center">
-            <img
+            <Image
               src="https://res.cloudinary.com/duws62b88/image/upload/v1737421606/myimg_x0kuyo.jpg"
               alt="Prasad Jawale"
+              width={320}
+              height={400}
               className="rounded-3xl shadow-xl w-full max-w-xs object-cover"
+              priority
             />
           </div>
         </div>
