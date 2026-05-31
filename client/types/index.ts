@@ -28,11 +28,14 @@ export interface Publication {
 }
 
 export interface Project {
+  slug: string;
   title: string;
   tags: string[];
   image?: string;
   description?: string;
   github?: string;
+  link?: string;
+  type?: string;
 }
 
 export interface Photo {

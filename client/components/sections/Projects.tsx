@@ -1,37 +1,20 @@
-'use client';
-
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ProjectCard from "../cards/ProjectCard";
 import { Terminal } from "react-feather";
-import { fetchProjects } from "../../lib/api";
 import type { Project } from "../../types";
+import dynamic from "next/dynamic";
 
-function Projects() {
-  const [projects, setProjects] = useState<Record<string, Project> | null>(null);
-  const [projectsFetchError, setProjectsFetchError] = useState(false);
+const GitHubCalendar = dynamic(
+  () => import("react-github-calendar").then((m) => m.GitHubCalendar),
+  { ssr: false }
+);
+import { GITHUB_USERNAME } from "../../constants/config";
 
-  useEffect(() => {
-    let cancelled = false;
-    fetchProjects()
-      .then((data) => {
-        if (cancelled) return;
-        setProjectsFetchError(false);
-        setProjects(
-          data && typeof data === "object" && !Array.isArray(data) ? data : {}
-        );
-      })
-      .catch((err) => {
-        console.error("Error fetching data:", err);
-        if (!cancelled) {
-          setProjectsFetchError(true);
-          setProjects({});
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+interface ProjectsProps {
+  projects: Project[];
+}
 
+function Projects({ projects }: ProjectsProps) {
   return (
     <>
       <div className="absolute -top-24 -right-24 opacity-5 rotate-12 pointer-events-none">
@@ -48,23 +31,25 @@ function Projects() {
 
           <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
         </div>
-        {projectsFetchError ? (
-          <p className="text-red-500 italic text-center">
-            Could not load projects from the server.
-          </p>
-        ) : projects === null ? (
-          <p className="text-slate-500 text-center text-sm">Loading projects…</p>
-        ) : Object.keys(projects).length === 0 ? (
-          <p className="text-slate-600 text-center text-sm">
-            No projects to show yet.
-          </p>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-5">
-            {Object.entries(projects).map(([id, project]) => (
-              <ProjectCard key={id} project={project} />
-            ))}
-          </div>
-        )}
+
+        <div className="github-calendar mb-16 flex justify-center">
+          <GitHubCalendar
+            username={GITHUB_USERNAME}
+            colorScheme="light"
+            theme={{
+              light: ["#fdfdfd", "#bbf7d0", "#4ade80", "#16a34a", "#14532d"],
+            }}
+            fontSize={12}
+            blockRadius={3}
+            blockMargin={9}
+          />
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {projects.map((project) => (
+            <ProjectCard key={project.slug} project={project} />
+          ))}
+        </div>
       </div>
     </>
   );

@@ -64,3 +64,7 @@ ul {
 i {
   margin-right: 5px;
 }
+
+.github-calendar text {
+  font-family: var(--font-geist-sans), sans-serif !important;
+}

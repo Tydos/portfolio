@@ -4,6 +4,8 @@ export const API_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_API_URL || "https://portfolio-backend-server-phi.vercel.app",
 };
 
+export const GITHUB_USERNAME = "Tydos";
+
 export const API_ENDPOINTS: Record<string, string> = {
   PROJECTS: "/api/projects",
   PHOTOS: "/api/images",

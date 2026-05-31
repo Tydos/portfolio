@@ -1,6 +1,7 @@
 import './globals.css';
 import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
+import { GeistSans } from 'geist/font/sans';
 
 export const metadata = {
   title: "Prasad's Portfolio",
@@ -18,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           strategy="lazyOnload"
         />
       </head>
-      <body>
+      <body className={`${GeistSans.variable} ${GeistSans.className}`}>
         {children}
         <Analytics />
       </body>

@@ -1,0 +1,108 @@
+[
+  {
+    "slug": "cyberbullying-detection",
+    "title": "Cyberbullying Detection using Deep Learning",
+    "description": "A deep learning system to identify derogatory tweets related to gender, race, age, religion, ethnicity, or sexual orientation. Built on a dataset of 110,000 tweets and evaluated using SVM, Random Forest, BERT, and an ensemble of BERT and LSTM models.",
+    "tags": [
+      "Deep Learning",
+      "Natural Language Processing",
+      "BERT",
+      "LSTM",
+      "Text Classification",
+      "Social Media Analysis",
+      "Python"
+    ],
+    "link": "https://github.com/Tydos/Cyberbullying-Detection",
+    "github": "https://github.com/Tydos/Cyberbullying-Detection",
+    "type": "Deep Learning",
+    "image": "https://raw.githubusercontent.com/Tydos/Cyberbullying-Detection/main/accuracy_comparison.jpg"
+  },
+  {
+    "slug": "anuvadak",
+    "title": "Anuvadak: Indian Sign Language Recognition",
+    "description": "A deep learning based ISL recognition system using CNN-LSTM architectures. Data was captured via OpenCV, augmented, and processed using MediaPipe Holistic for feature extraction, achieving 85% accuracy. Includes Android deployment.",
+    "tags": [
+      "Deep Learning",
+      "Computer Vision",
+      "Gesture Recognition",
+      "CNN",
+      "LSTM",
+      "MediaPipe",
+      "OpenCV"
+    ],
+    "link": "https://github.com/Tydos/ISL",
+    "github": "https://github.com/Tydos/ISL",
+    "type": "Deep Learning",
+    "image": "https://res.cloudinary.com/duws62b88/image/upload/v1719502253/ssnop_g67nmy.png"
+  },
+  {
+    "slug": "portfolio-website",
+    "title": "Portfolio Website",
+    "description": "A full-stack MERN portfolio website styled with Tailwind CSS. Features dynamic project rendering from MongoDB and a photography showcase with images served via Cloudinary.",
+    "tags": [
+      "Full Stack",
+      "MERN",
+      "React",
+      "MongoDB",
+      "Tailwind CSS",
+      "Cloudinary",
+      "Web Design"
+    ],
+    "link": "https://github.com/Tydos/portfolio",
+    "github": "https://github.com/Tydos/portfolio",
+    "type": "Web Development",
+    "image": "https://res.cloudinary.com/duws62b88/image/upload/v1719500501/Screenshot_2024-06-27_203121_atzojq.png"
+  },
+  {
+    "slug": "pharmaceutical-supply-chain",
+    "title": "Supply Chain Management of Pharmaceutical Drugs",
+    "description": "A machine learning solution to optimize shipment modes for pharmaceutical drugs. Trained on a 10,000-row supply chain dataset considering expiry dates, shipping costs, and drug types to determine the fastest and most cost-effective delivery method.",
+    "tags": [
+      "Machine Learning",
+      "Optimization",
+      "Supply Chain",
+      "Predictive Modeling",
+      "Data Analysis",
+      "Python"
+    ],
+    "link": "https://github.com/Arnav047/Supply-Chain-Management",
+    "github": "https://github.com/Arnav047/Supply-Chain-Management",
+    "type": "Machine Learning",
+    "image": "https://res.cloudinary.com/duws62b88/image/upload/v1719502354/summary_bzpbtl.png"
+  },
+  {
+    "slug": "docspot",
+    "title": "DocSpot",
+    "description": "A document-sharing platform for students using MongoDB and ElasticSearch. PDFs are converted into embeddings using Google Gemini, enabling semantic retrieval. A fine-tuned Google T5 model acts as a chatbot over stored notes.",
+    "tags": [
+      "Retrieval Augmented Generation",
+      "Semantic Search",
+      "NLP",
+      "ElasticSearch",
+      "MongoDB",
+      "Chatbot",
+      "Embeddings"
+    ],
+    "link": "https://github.com/Tydos/DocSpot",
+    "github": "https://github.com/Tydos/DocSpot",
+    "type": "Web Development",
+    "image": "https://res.cloudinary.com/duws62b88/image/upload/v1719500204/Screenshot_2024-06-05_214207_k8psav.png"
+  },
+  {
+    "slug": "guardify",
+    "title": "Guardify: Cyber Security Portal",
+    "description": "A cyber security portal for managing and reporting cyberbullying complaints. Integrates a machine learning classifier to categorize complaints and stores records in MongoDB for administrative review.",
+    "tags": [
+      "Cybersecurity",
+      "Web Application",
+      "Machine Learning",
+      "Text Classification",
+      "MongoDB",
+      "Full Stack"
+    ],
+    "link": "https://github.com/satts27/HackOverflow-1.0-BitbyBit",
+    "github": "https://github.com/satts27/HackOverflow-1.0-BitbyBit",
+    "type": "Web Development",
+    "image": "https://res.cloudinary.com/duws62b88/image/upload/v1719500441/acf91f47-97c8-42ed-b66a-a98844e1a0ad_ki38x1.jpg"
+  }
+]

@@ -3,12 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@vercel/analytics": "^1.6.1",
+    "geist": "^1.7.1",
+    "gray-matter": "^4.0.3",
+    "highlight.js": "^11.11.1",
     "next": "^14.2.0",
+    "next-mdx-remote": "^6.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
-    "react-photo-album": "^2.2.2"
+    "react-github-calendar": "^5.0.6",
+    "react-markdown": "^10.1.0",
+    "react-photo-album": "^2.2.2",
+    "rehype-highlight": "^7.0.2",
+    "remark-gfm": "^4.0.1"
   },
   "scripts": {
     "dev": "next dev",
@@ -20,6 +29,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@types/mdx": "^2.0.13",
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
