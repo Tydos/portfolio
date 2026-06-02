@@ -39,7 +39,11 @@ function Projects({ projects }: ProjectsProps) {
             theme={{
               light: ["#fdfdfd", "#bbf7d0", "#4ade80", "#16a34a", "#14532d"],
             }}
-            fontSize={12}
+            fontSize={12
+
+
+              
+            }
             blockRadius={3}
             blockMargin={9}
           />

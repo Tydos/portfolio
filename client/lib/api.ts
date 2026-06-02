@@ -15,3 +15,24 @@ export const fetchPhotos = async (limit = 100, offset = 0): Promise<Photo[]> => 
     category: item.category,
   }));
 };
+
+export interface UploadResult {
+  uploaded: { filename: string; url: string; category: string }[];
+  skipped: { filename: string; reason: string }[];
+  failed: { filename: string; error: string }[];
+}
+
+export const uploadPhotos = async (files: File[], category?: string): Promise<UploadResult> => {
+  const form = new FormData();
+  // Backend expects the field name "files" (FastAPI list[UploadFile]).
+  files.forEach((file) => form.append("files", file));
+  if (category) form.append("category", category);
+
+  // Let the browser set the multipart Content-Type (with boundary) automatically.
+  const res = await fetch(`${BASE_URL}${API_ENDPOINTS.UPLOAD}`, {
+    method: "POST",
+    body: form,
+  });
+  if (!res.ok) throw new Error(`Upload failed! Status: ${res.status}`);
+  return res.json();
+};

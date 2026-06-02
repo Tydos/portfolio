@@ -1,20 +1,48 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Camera, Search } from "react-feather";
+import { Camera, Search, Upload } from "react-feather";
 import Gallery from "../../components/sections/Gallery";
-import { fetchPhotos } from "../../lib/api";
+import { fetchPhotos, uploadPhotos } from "../../lib/api";
 import type { Photo } from "../../types";
 
 function GalleryPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMessage, setUploadMessage] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const loadPhotos = () => fetchPhotos().then(setPhotos).catch(console.error);
 
   useEffect(() => {
-    fetchPhotos().then(setPhotos).catch(console.error);
+    loadPhotos();
   }, []);
+
+  const handleFilesSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = ""; // allow re-selecting the same file later
+    if (files.length === 0) return;
+
+    setUploadError(null);
+    setUploadMessage(null);
+    setUploading(true);
+    try {
+      const result = await uploadPhotos(files, activeCategory ?? undefined);
+      const parts = [`${result.uploaded.length} uploaded`];
+      if (result.skipped.length) parts.push(`${result.skipped.length} skipped`);
+      if (result.failed.length) parts.push(`${result.failed.length} failed`);
+      setUploadMessage(parts.join(" · "));
+      if (result.uploaded.length) await loadPhotos();
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const categories: string[] = [...new Set(photos.map((p) => p.category).filter(Boolean))];
 
@@ -46,10 +74,40 @@ function GalleryPage() {
             <Camera size={500} />
           </div>
           <Camera size={20} className="text-rose-500 mb-6" />
-          <h1 className="text-4xl font-bold uppercase tracking-tight text-white mb-2">
-            Gallery
-          </h1>
-          <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="text-4xl font-bold uppercase tracking-tight text-white mb-2">
+                Gallery
+              </h1>
+              <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
+            </div>
+
+            <div className="flex flex-col items-end gap-1">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".jpg,.jpeg,image/jpeg"
+                multiple
+                onChange={handleFilesSelected}
+                className="hidden"
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold uppercase tracking-wider bg-rose-500 text-white hover:bg-rose-600 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+              >
+                <Upload size={16} />
+                {uploading ? "Uploading…" : "Upload Pictures"}
+              </button>
+              <p className="text-[10px] text-slate-500">JPEG only</p>
+              {uploadMessage && (
+                <p className="text-xs text-emerald-400 max-w-[16rem] text-right">{uploadMessage}</p>
+              )}
+              {uploadError && (
+                <p className="text-xs text-rose-400 max-w-[16rem] text-right">{uploadError}</p>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Search bar */}

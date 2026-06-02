@@ -1,42 +1,41 @@
-# Portfolio
+# Personal Portfolio
 
-Frontend-only site: **Next.js 14**, **React 18**, **Tailwind CSS 3**. Photo sections use **react-photo-album**. **@vercel/analytics** is integrated. This repo does not include the backend; the client reads JSON from an HTTP API.
+Full-stack portfolio site — Next.js frontend + FastAPI backend.
 
-**Stack (see `client/package.json`)**
+## Prerequisites
 
-- Build: Next.js 14 with App Router
-- UI: `react`, `react-dom`, `react-feather`; Font Awesome loaded from `client/public/index.html`
-- Deploy: Vercel (automatic static optimization and ISR)
+- Node.js 20+
+- Python 3.11+
 
-**API**
+## Setup
 
-Base URL: `NEXT_PUBLIC_API_URL` (no trailing slash), or fallback in [`client/constants/config.js`](client/constants/config.js).
+Copy the example env file and fill in your values:
 
-| Method | Path | Used for |
-|--------|------|----------|
-| GET | `/api/projects` | Projects list |
-| GET | `/api/images?limit=&offset=` | Gallery images (`fetchPhotos` maps to `src` / `width` / `height`) |
+```bash
+cp .env.example .env
+```
 
-**Run locally**
+## Running Locally
 
+**Frontend** (http://localhost:3000):
 ```bash
 cd client
 npm install
 npm run dev
 ```
 
-Dev server defaults to port 3000. Set `NEXT_PUBLIC_API_URL` in `client/.env.local` if the API is not the bundled default.
-
-**Production build**
-
+**Backend** (http://localhost:8000):
 ```bash
-cd client
-npm run build
-npm run start
+pip install -r app/requirements.txt
+uvicorn app.main:app --reload --port 8000
 ```
 
-Artifacts: `client/.next/`.
+## Tests
 
-**Vercel**
+```bash
+# Frontend
+cd client && npm run test:run
 
-Set **Root Directory** to `client` (automatic Next.js detection and deployment).
+# Backend
+cd app && pytest tests/ -v
+```

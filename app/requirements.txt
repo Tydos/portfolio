@@ -1,0 +1,20 @@
+#backend servers
+fastapi==0.133.1
+uvicorn[standard]==0.41.0
+httpx
+pytest
+
+#utils
+python-dotenv==1.2.1
+python-multipart
+pydantic==2.12.5
+
+#database
+psycopg2-binary==2.9.11
+
+#cloud storage
+cloudinary==1.44.1
+supabase
+Pillow
+
+#Measure API latencies: brew install wrk 
