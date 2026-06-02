@@ -7,7 +7,7 @@ from app.auth import verify_admin_key
 from app.data import photographs
 from app.services.database import db
 
-from app.services.cloud_storage import CloudinaryUploader, SupabaseUploader
+from app.services.cloud_storage import SupabaseUploader
 from app.services.photo_upload import PhotoUploadService
 
 router = APIRouter()
