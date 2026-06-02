@@ -1,3 +1,3 @@
-from app.auth.auth import verify_admin_key
+from auth.auth import verify_admin_key
 
 __all__ = ["verify_admin_key"]
