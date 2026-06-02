@@ -2,7 +2,7 @@
 
 from fastapi import Header, HTTPException
 
-from app.schemas.config import settings
+from schemas.config import settings
 
 
 def verify_admin_key(x_api_key: str = Header(..., alias="X-API-Key")) -> None:

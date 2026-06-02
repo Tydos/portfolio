@@ -6,8 +6,8 @@ from typing import Optional
 
 from psycopg2 import pool
 from psycopg2.extras import RealDictCursor
-from app.schemas.config import settings
-from app.schemas.photo import Photo
+from schemas.config import settings
+from schemas.photo import Photo
 
 logger = logging.getLogger("app").getChild(__name__)
 

@@ -1,17 +1,16 @@
 """API routes for portfolio data and photography management."""
 
+import logging
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 
-from app import logger as _pkg_logger
-from app.auth import verify_admin_key
-from app.data import photographs
-from app.services.database import db
-
-from app.services.cloud_storage import SupabaseUploader
-from app.services.photo_upload import PhotoUploadService
+from auth.auth import verify_admin_key
+from data import photographs
+from services.database import db
+from services.cloud_storage import SupabaseUploader
+from services.photo_upload import PhotoUploadService
 
 router = APIRouter()
-logger = _pkg_logger.getChild(__name__)
+logger = logging.getLogger(__name__)
 
 _uploader = SupabaseUploader()
 _upload_service = PhotoUploadService(_uploader, db)

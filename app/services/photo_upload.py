@@ -1,9 +1,10 @@
-from app import logger as _pkg_logger
-from app.schemas.photo import Photo
-from app.services.cloud_storage import SupabaseUploader
-from app.services.database import DatabaseManager
+import logging
 
-logger = _pkg_logger.getChild(__name__)
+from schemas.photo import Photo
+from services.cloud_storage import SupabaseUploader
+from services.database import DatabaseManager
+
+logger = logging.getLogger(__name__)
 
 
 class PhotoUploadService:

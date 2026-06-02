@@ -7,7 +7,7 @@ import httpx
 from PIL import Image
 from supabase import create_client, Client
 
-from app.schemas.config import settings
+from schemas.config import settings
 
 logger = logging.getLogger(__name__)
 
