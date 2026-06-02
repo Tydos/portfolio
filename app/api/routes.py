@@ -3,10 +3,9 @@
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 
 from app import logger as _pkg_logger
-from app.auth.auth import verify_admin_key
+from app.auth import verify_admin_key
 from app.data import photographs
 from app.services.database import db
-
 
 from app.services.cloud_storage import CloudinaryUploader, SupabaseUploader
 from app.services.photo_upload import PhotoUploadService
@@ -17,7 +16,7 @@ logger = _pkg_logger.getChild(__name__)
 _uploader = SupabaseUploader()
 _upload_service = PhotoUploadService(_uploader, db)
 
-@router.get("/images")
+@router.get("/api/images")
 def get_images(limit: int = Query(10, ge=1, le=100), offset: int = Query(0, ge=0)):
     # falls back to static data if DB is unavailable
     try:
@@ -27,7 +26,7 @@ def get_images(limit: int = Query(10, ge=1, le=100), offset: int = Query(0, ge=0
         return photographs
 
 
-@router.post("/upload", status_code=201, dependencies=[Depends(verify_admin_key)])
+@router.post("/api/upload", status_code=201, dependencies=[Depends(verify_admin_key)])
 async def upload(
     file: UploadFile = File(...),
     category: str = Form(default="nature"),
@@ -43,7 +42,7 @@ async def upload(
     return photo
 
 
-@router.post("/upload-batch", dependencies=[Depends(verify_admin_key)])
+@router.post("/api/upload-batch", dependencies=[Depends(verify_admin_key)])
 async def upload_batch(
     files: list[UploadFile] = File(...),
     category: str = Form(default="nature"),
@@ -69,7 +68,7 @@ async def upload_batch(
     return results
 
 
-@router.get("/health")
+@router.get("/api/health")
 def health():
     if not db.ping():
         raise HTTPException(
