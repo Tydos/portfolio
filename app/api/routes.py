@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 _uploader = SupabaseUploader()
 _upload_service = PhotoUploadService(_uploader, db)
 
-@router.get("/api/images")
+@router.get("/images")
 def get_images(limit: int = Query(10, ge=1, le=100), offset: int = Query(0, ge=0)):
     # falls back to static data if DB is unavailable
     try:
@@ -25,7 +25,7 @@ def get_images(limit: int = Query(10, ge=1, le=100), offset: int = Query(0, ge=0
         return photographs
 
 
-@router.post("/api/upload", status_code=201, dependencies=[Depends(verify_admin_key)])
+@router.post("/upload", status_code=201, dependencies=[Depends(verify_admin_key)])
 async def upload(
     file: UploadFile = File(...),
     category: str = Form(default="nature"),
@@ -41,7 +41,7 @@ async def upload(
     return photo
 
 
-@router.post("/api/upload-batch", dependencies=[Depends(verify_admin_key)])
+@router.post("/upload-batch", dependencies=[Depends(verify_admin_key)])
 async def upload_batch(
     files: list[UploadFile] = File(...),
     category: str = Form(default="nature"),
@@ -67,7 +67,7 @@ async def upload_batch(
     return results
 
 
-@router.get("/api/health")
+@router.get("/health")
 def health():
     if not db.ping():
         raise HTTPException(
