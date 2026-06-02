@@ -5,7 +5,7 @@
        "routePrefix": "/"
      },
      "api": {
-       "entrypoint": "main.py",
+       "entrypoint": "app/main.py",
        "routePrefix": "/api",
        "framework": "fastapi"
      }
