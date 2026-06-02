@@ -1,0 +1,17 @@
+[project]
+name = "portfolio-backend"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi==0.133.1",
+    "uvicorn[standard]==0.41.0",
+    "httpx",
+    "pytest",
+    "python-dotenv==1.2.1",
+    "python-multipart",
+    "pydantic==2.12.5",
+    "psycopg2-binary==2.9.11",
+    "cloudinary==1.44.1",
+    "supabase",
+    "pillow",
+]
