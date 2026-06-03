@@ -72,30 +72,6 @@ def test_upload_rejects_non_jpeg():
     assert r.status_code == 400
 
 
-def test_upload_batch_correct_key():
-    with patch("app.auth.auth.settings") as mock_settings, \
-         patch("app.api.routes._upload_service.upload_one") as mock_upload_one:
-        mock_settings.ADMIN_API_KEY = "test-key"
-        mock_upload_one.return_value = {
-            "id": 1,
-            "filename": "a.jpg",
-            "url": "https://example.supabase.co/storage/v1/object/public/images/a.jpg",
-            "width": 800,
-            "height": 600,
-            "category": "travel",
-        }
-        r = client.post(
-            "/upload-batch",
-            files=[("files", ("a.jpg", BytesIO(b"img"), "image/jpeg"))],
-            data={"category": "travel"},
-            headers={"X-API-Key": "test-key"},
-        )
-    assert r.status_code == 200
-    body = r.json()
-    assert len(body["uploaded"]) == 1
-    assert body["uploaded"][0]["filename"] == "a.jpg"
-
-
 def test_health_db_up():
     with patch("app.api.routes.db.ping", return_value=True):
         r = client.get("/health")

@@ -8,6 +8,9 @@ import type { Photo } from "../../types";
 
 interface GalleryProps {
   photos: Photo[];
+  deleteMode?: boolean;
+  deletingIds?: Set<number>;
+  onDelete?: (photo: Photo) => void;
 }
 
 function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
@@ -58,7 +61,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   );
 }
 
-export default function Gallery({ photos }: GalleryProps) {
+export default function Gallery({ photos, deleteMode, deletingIds, onDelete }: GalleryProps) {
   const [selected, setSelected] = useState<Photo | null>(null);
 
   return (
@@ -79,24 +82,42 @@ export default function Gallery({ photos }: GalleryProps) {
         }}
         breakpoints={[500, 900, 1200]}
         componentsProps={() => ({ imageProps: { loading: "lazy" } })}
-        renderPhoto={({ photo, layout, imageProps: { alt, style, src } }) => (
-          <div
-            style={{ width: style?.width, padding: "6px" }}
-            className="cursor-pointer"
-            onClick={() => setSelected(photo as Photo)}
-          >
-            <div className="relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-              <Image
-                src={src as string}
-                alt={alt}
-                width={layout.width}
-                height={layout.height}
-                unoptimized
-                style={{ width: "100%", height: "auto", display: "block" }}
-              />
+        renderPhoto={({ photo, layout, imageProps: { alt, style, src } }) => {
+          const p = photo as Photo;
+          const isDeleting = p.id != null && deletingIds?.has(p.id);
+          return (
+            <div
+              style={{ width: style?.width, padding: "6px" }}
+              className={deleteMode ? "cursor-default" : "cursor-pointer"}
+              onClick={() => { if (!deleteMode) setSelected(p); }}
+            >
+              <div className="relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                <Image
+                  src={src as string}
+                  alt={alt}
+                  width={layout.width}
+                  height={layout.height}
+                  unoptimized
+                  style={{ width: "100%", height: "auto", display: "block" }}
+                />
+                {deleteMode && (
+                  <div className="absolute inset-0 bg-black/40 flex items-start justify-end p-2">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); onDelete?.(p); }}
+                      disabled={isDeleting}
+                      className="w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 flex items-center justify-center transition-colors"
+                      aria-label="Delete photo"
+                    >
+                      {isDeleting
+                        ? <div className="w-3 h-3 border border-white/40 border-t-white rounded-full animate-spin" />
+                        : <X size={14} className="text-white" />}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        }}
       />
     </>
   );

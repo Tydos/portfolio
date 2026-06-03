@@ -10,7 +10,8 @@ export const GITHUB_USERNAME = "Tydos";
 export const API_ENDPOINTS: Record<string, string> = {
   PROJECTS: "/api/projects",
   PHOTOS: "/api/images",
-  UPLOAD: "/api/upload-batch",
+  UPLOAD: "/api/upload",
+  DELETE: "/api/delete",
 };
 
 // Section ids must match elements in Home.js / section components (scroll + highlight).

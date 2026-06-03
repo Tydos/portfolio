@@ -41,30 +41,14 @@ async def upload(
     return photo
 
 
-@router.post("/upload-batch", dependencies=[Depends(verify_admin_key)])
-async def upload_batch(
-    files: list[UploadFile] = File(...),
-    category: str = Form(default="nature"),
-):
-    """Upload many photos in one request. Returns a per-file summary; one bad
-    file never aborts the batch."""
-    results = {"uploaded": [], "skipped": [], "failed": []}
-    for file in files:
-        if not file.filename.lower().endswith((".jpg", ".jpeg")):
-            results["failed"].append(
-                {"filename": file.filename, "error": "Only .jpg/.jpeg files are accepted"}
-            )
-            continue
-        try:
-            file_bytes = await file.read()
-            photo = _upload_service.upload_one(file_bytes, file.filename, category)
-            results["uploaded"].append(photo)
-        except ValueError as e:
-            results["skipped"].append({"filename": file.filename, "reason": str(e)})
-        except Exception as e:
-            logger.exception("Failed to upload %s", file.filename)
-            results["failed"].append({"filename": file.filename, "error": str(e)})
-    return results
+
+@router.delete("/delete/{photo_id}", status_code=204, dependencies=[Depends(verify_admin_key)])
+async def delete_photo(photo_id: int):
+    try:
+        filename = db.delete_photo_by_id(photo_id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    _uploader.delete(filename)
 
 
 @router.get("/health")

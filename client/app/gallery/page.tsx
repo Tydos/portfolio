@@ -1,48 +1,66 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { Camera, Search, Upload } from "react-feather";
+import { Camera, Search, Upload, Trash2 } from "react-feather";
 import Gallery from "../../components/sections/Gallery";
-import { fetchPhotos, uploadPhotos } from "../../lib/api";
+import { fetchPhotos, uploadPhoto, deletePhoto } from "../../lib/api";
 import type { Photo } from "../../types";
 
 function GalleryPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const [showUpload, setShowUpload] = useState(false);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploadCategory, setUploadCategory] = useState("nature");
+  const [adminKey, setAdminKey] = useState("");
   const [uploading, setUploading] = useState(false);
-  const [uploadMessage, setUploadMessage] = useState<string | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const loadPhotos = () => fetchPhotos().then(setPhotos).catch(console.error);
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [deleteAdminKey, setDeleteAdminKey] = useState("");
+  const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
+  const [deleteStatus, setDeleteStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
   useEffect(() => {
-    loadPhotos();
+    fetchPhotos().then(setPhotos).catch(console.error);
   }, []);
 
-  const handleFilesSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    e.target.value = ""; // allow re-selecting the same file later
-    if (files.length === 0) return;
-
-    setUploadError(null);
-    setUploadMessage(null);
+  async function handleUpload(e: React.FormEvent) {
+    e.preventDefault();
+    if (!uploadFile || !adminKey) return;
     setUploading(true);
+    setUploadStatus(null);
     try {
-      const result = await uploadPhotos(files, activeCategory ?? undefined);
-      const parts = [`${result.uploaded.length} uploaded`];
-      if (result.skipped.length) parts.push(`${result.skipped.length} skipped`);
-      if (result.failed.length) parts.push(`${result.failed.length} failed`);
-      setUploadMessage(parts.join(" · "));
-      if (result.uploaded.length) await loadPhotos();
+      await uploadPhoto(uploadFile, uploadCategory, adminKey);
+      setUploadStatus({ ok: true, msg: "Uploaded successfully." });
+      setUploadFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      fetchPhotos().then(setPhotos).catch(console.error);
     } catch (err) {
-      setUploadError(err instanceof Error ? err.message : "Upload failed");
+      setUploadStatus({ ok: false, msg: err instanceof Error ? err.message : "Upload failed." });
     } finally {
       setUploading(false);
     }
-  };
+  }
+
+  async function handleDelete(photo: Photo) {
+    if (photo.id == null || !deleteAdminKey) return;
+    setDeletingIds((prev) => new Set(prev).add(photo.id!));
+    setDeleteStatus(null);
+    try {
+      await deletePhoto(photo.id, deleteAdminKey);
+      setDeleteStatus({ ok: true, msg: `Deleted "${photo.title}".` });
+      fetchPhotos().then(setPhotos).catch(console.error);
+    } catch (err) {
+      setDeleteStatus({ ok: false, msg: err instanceof Error ? err.message : "Delete failed." });
+    } finally {
+      setDeletingIds((prev) => { const s = new Set(prev); s.delete(photo.id!); return s; });
+    }
+  }
 
   const categories: string[] = [...new Set(photos.map((p) => p.category).filter(Boolean))];
 
@@ -74,39 +92,128 @@ function GalleryPage() {
             <Camera size={500} />
           </div>
           <Camera size={20} className="text-rose-500 mb-6" />
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <h1 className="text-4xl font-bold uppercase tracking-tight text-white mb-2">
-                Gallery
-              </h1>
-              <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
-            </div>
+          <div>
+            <h1 className="text-4xl font-bold uppercase tracking-tight text-white mb-2">
+              Gallery
+            </h1>
+            <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
+          </div>
+        </div>
 
-            <div className="flex flex-col items-end gap-1">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".jpg,.jpeg,image/jpeg"
-                multiple
-                onChange={handleFilesSelected}
-                className="hidden"
-              />
+        {/* Admin toolbar */}
+        <div className="mb-6 flex flex-wrap gap-3">
+          {/* Upload toggle */}
+          <div>
+          <button
+            onClick={() => { setShowUpload((v) => !v); setUploadStatus(null); }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400 text-xs font-semibold uppercase tracking-wider transition-colors"
+          >
+            <Upload size={14} />
+            {showUpload ? "Close" : "Upload Photo"}
+          </button>
+
+          {showUpload && (
+            <form
+              onSubmit={handleUpload}
+              className="mt-4 p-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col gap-4 max-w-md"
+            >
+              <div>
+                <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
+                  JPEG file
+                </label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".jpg,.jpeg"
+                  required
+                  onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)}
+                  className="w-full text-sm text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 cursor-pointer"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
+                  Category
+                </label>
+                <input
+                  type="text"
+                  value={uploadCategory}
+                  onChange={(e) => setUploadCategory(e.target.value)}
+                  placeholder="nature"
+                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
+                  Admin key
+                </label>
+                <input
+                  type="password"
+                  value={adminKey}
+                  onChange={(e) => setAdminKey(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+                />
+              </div>
+
+              {uploadStatus && (
+                <p className={`text-xs ${uploadStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
+                  {uploadStatus.msg}
+                </p>
+              )}
+
               <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold uppercase tracking-wider bg-rose-500 text-white hover:bg-rose-600 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                type="submit"
+                disabled={uploading || !uploadFile || !adminKey}
+                className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold uppercase tracking-wider transition-colors"
               >
-                <Upload size={16} />
-                {uploading ? "Uploading…" : "Upload Pictures"}
+                <Upload size={13} />
+                {uploading ? "Uploading…" : "Upload"}
               </button>
-              <p className="text-[10px] text-slate-500">JPEG only</p>
-              {uploadMessage && (
-                <p className="text-xs text-emerald-400 max-w-[16rem] text-right">{uploadMessage}</p>
-              )}
-              {uploadError && (
-                <p className="text-xs text-rose-400 max-w-[16rem] text-right">{uploadError}</p>
-              )}
-            </div>
+            </form>
+          )}
+          </div>
+
+          {/* Delete toggle */}
+          <div>
+            <button
+              onClick={() => { setDeleteMode((v) => !v); setDeleteStatus(null); }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-xs font-semibold uppercase tracking-wider transition-colors ${
+                deleteMode
+                  ? "border-rose-500 text-rose-400 bg-rose-500/10"
+                  : "border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400"
+              }`}
+            >
+              <Trash2 size={14} />
+              {deleteMode ? "Done" : "Delete Photos"}
+            </button>
+
+            {deleteMode && (
+              <div className="mt-4 p-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col gap-4 max-w-md">
+                <p className="text-xs text-slate-400">
+                  Enter your admin key, then click the <span className="text-rose-400">✕</span> on any photo to delete it.
+                </p>
+                <div>
+                  <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
+                    Admin key
+                  </label>
+                  <input
+                    type="password"
+                    value={deleteAdminKey}
+                    onChange={(e) => setDeleteAdminKey(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+                  />
+                </div>
+                {deleteStatus && (
+                  <p className={`text-xs ${deleteStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
+                    {deleteStatus.msg}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -158,7 +265,12 @@ function GalleryPage() {
             <p className="text-sm uppercase tracking-widest">No photos match your search</p>
           </div>
         ) : (
-          <Gallery photos={filteredPhotos} />
+          <Gallery
+            photos={filteredPhotos}
+            deleteMode={deleteMode}
+            deletingIds={deletingIds}
+            onDelete={handleDelete}
+          />
         )}
       </main>
     </div>

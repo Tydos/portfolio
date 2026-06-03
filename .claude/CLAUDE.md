@@ -18,9 +18,9 @@ npm run dev       # http://localhost:3000
 ### Backend (FastAPI)
 ```bash
 pip install -r app/requirements.txt        # first time only
-uvicorn app.main:app --reload --port 8000  # http://localhost:8000
+cd app && uvicorn main:app --reload --port 8000  # http://localhost:8000
 ```
-Must run from the **repo root** — all imports use `app.*` package paths.
+Must run from the **`app/` directory** — internal imports use bare module names relative to `app/`.
 
 ### Environment Variables
 Copy `.env.example` to `.env` at the repo root and fill in values:
@@ -107,7 +107,7 @@ Mounted at `/_/app` on the combined Vercel deployment.
 | GET | `/api/health` | — | Health check with DB connectivity status |
 | GET | `/` | — | Welcome message |
 
-Admin endpoints require `X-Admin-Key: <ADMIN_API_KEY>` header.
+Admin endpoints require `X-API-Key: <ADMIN_API_KEY>` header.
 
 ---
 

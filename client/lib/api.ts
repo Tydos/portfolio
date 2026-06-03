@@ -7,7 +7,8 @@ export const fetchPhotos = async (limit = 100, offset = 0): Promise<Photo[]> => 
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PHOTOS}?limit=${limit}&offset=${offset}`);
   if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
   const data = await res.json();
-  return data.map((item: { url: string; width?: number; height?: number; filename: string; category: string }) => ({
+  return data.map((item: { id?: number; url: string; width?: number; height?: number; filename: string; category: string }) => ({
+    id: item.id,
     src: item.url.replace("/upload/", "/upload/f_auto,q_auto,w_1200/"),
     width: item.width || 2000,
     height: item.height || 2000,
@@ -16,23 +17,35 @@ export const fetchPhotos = async (limit = 100, offset = 0): Promise<Photo[]> => 
   }));
 };
 
-export interface UploadResult {
-  uploaded: { filename: string; url: string; category: string }[];
-  skipped: { filename: string; reason: string }[];
-  failed: { filename: string; error: string }[];
-}
+export const deletePhoto = async (id: number, adminKey: string): Promise<void> => {
+  const res = await fetch(`${BASE_URL}${API_ENDPOINTS.DELETE}/${id}`, {
+    method: "DELETE",
+    headers: { "X-API-Key": adminKey },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail ?? "Delete failed");
+  }
+};
 
-export const uploadPhotos = async (files: File[], category?: string): Promise<UploadResult> => {
+export const uploadPhoto = async (
+  file: File,
+  category: string,
+  adminKey: string
+): Promise<void> => {
   const form = new FormData();
-  // Backend expects the field name "files" (FastAPI list[UploadFile]).
-  files.forEach((file) => form.append("files", file));
-  if (category) form.append("category", category);
+  form.append("file", file);
+  form.append("category", category);
 
-  // Let the browser set the multipart Content-Type (with boundary) automatically.
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.UPLOAD}`, {
     method: "POST",
+    headers: { "X-API-Key": adminKey },
     body: form,
   });
-  if (!res.ok) throw new Error(`Upload failed! Status: ${res.status}`);
-  return res.json();
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(err.detail ?? "Upload failed");
+  }
 };
+

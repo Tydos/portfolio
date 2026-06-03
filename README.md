@@ -48,7 +48,7 @@ npm run dev
 **Backend** (http://localhost:8000):
 ```bash
 pip install -r app/requirements.txt
-uvicorn app.main:app --reload --port 8000
+cd app && uvicorn main:app --reload --port 8000
 ```
 
 ## Tests

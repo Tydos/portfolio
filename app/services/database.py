@@ -112,6 +112,24 @@ class DatabaseManager:
                 logger.exception("Failed to upload photo to database")
                 raise
 
+    def delete_photo_by_id(self, photo_id: int) -> str:
+        """Delete a photo row and return its filename for storage cleanup."""
+        with self._connection() as conn:
+            try:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        "DELETE FROM photographs WHERE id = %s RETURNING filename;",
+                        (photo_id,)
+                    )
+                    row = cur.fetchone()
+                conn.commit()
+                if row is None:
+                    raise ValueError(f"Photo {photo_id} not found")
+                return row[0]
+            except Exception:
+                conn.rollback()
+                raise
+
     def fetch_photographs(self, limit: int, offset: int):
         with self._connection() as conn:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
