@@ -2,26 +2,31 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { Camera, Search, Upload, Trash2 } from "react-feather";
+import { Camera, Search, Upload, Trash2, GitHub, LogOut } from "react-feather";
+import type { Session } from "@supabase/supabase-js";
 import Gallery from "../../components/sections/Gallery";
 import { fetchPhotos, uploadPhoto, deletePhoto } from "../../lib/api";
+import { supabase } from "../../lib/supabase";
 import type { Photo } from "../../types";
+
+const ADMIN_GITHUB_USERNAME = "Tydos";
 
 function GalleryPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
+  const [session, setSession] = useState<Session | null>(null);
+  const isAdmin = session?.user?.user_metadata?.user_name === ADMIN_GITHUB_USERNAME;
+
   const [showUpload, setShowUpload] = useState(false);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadCategory, setUploadCategory] = useState("nature");
-  const [adminKey, setAdminKey] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [deleteMode, setDeleteMode] = useState(false);
-  const [deleteAdminKey, setDeleteAdminKey] = useState("");
   const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
   const [deleteStatus, setDeleteStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
@@ -29,13 +34,34 @@ function GalleryPage() {
     fetchPhotos().then(setPhotos).catch(console.error);
   }, []);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleSignIn() {
+    await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: { redirectTo: `${window.location.origin}/gallery` },
+    });
+  }
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    setShowUpload(false);
+    setDeleteMode(false);
+  }
+
   async function handleUpload(e: React.FormEvent) {
     e.preventDefault();
-    if (!uploadFile || !adminKey) return;
+    if (!uploadFile || !session?.access_token) return;
     setUploading(true);
     setUploadStatus(null);
     try {
-      await uploadPhoto(uploadFile, uploadCategory, adminKey);
+      await uploadPhoto(uploadFile, uploadCategory, session.access_token);
       setUploadStatus({ ok: true, msg: "Uploaded successfully." });
       setUploadFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -48,11 +74,11 @@ function GalleryPage() {
   }
 
   async function handleDelete(photo: Photo) {
-    if (photo.id == null || !deleteAdminKey) return;
+    if (photo.id == null || !session?.access_token) return;
     setDeletingIds((prev) => new Set(prev).add(photo.id!));
     setDeleteStatus(null);
     try {
-      await deletePhoto(photo.id, deleteAdminKey);
+      await deletePhoto(photo.id, session.access_token);
       setDeleteStatus({ ok: true, msg: `Deleted "${photo.title}".` });
       fetchPhotos().then(setPhotos).catch(console.error);
     } catch (err) {
@@ -100,122 +126,124 @@ function GalleryPage() {
           </div>
         </div>
 
-        {/* Admin toolbar */}
-        <div className="mb-6 flex flex-wrap gap-3">
-          {/* Upload toggle */}
-          <div>
-          <button
-            onClick={() => { setShowUpload((v) => !v); setUploadStatus(null); }}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400 text-xs font-semibold uppercase tracking-wider transition-colors"
-          >
-            <Upload size={14} />
-            {showUpload ? "Close" : "Upload Photo"}
-          </button>
-
-          {showUpload && (
-            <form
-              onSubmit={handleUpload}
-              className="mt-4 p-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col gap-4 max-w-md"
-            >
-              <div>
-                <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
-                  JPEG file
-                </label>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".jpg,.jpeg"
-                  required
-                  onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)}
-                  className="w-full text-sm text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 cursor-pointer"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
-                  Category
-                </label>
-                <input
-                  type="text"
-                  value={uploadCategory}
-                  onChange={(e) => setUploadCategory(e.target.value)}
-                  placeholder="nature"
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
-                  Admin key
-                </label>
-                <input
-                  type="password"
-                  value={adminKey}
-                  onChange={(e) => setAdminKey(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
-                />
-              </div>
-
-              {uploadStatus && (
-                <p className={`text-xs ${uploadStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
-                  {uploadStatus.msg}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={uploading || !uploadFile || !adminKey}
-                className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold uppercase tracking-wider transition-colors"
-              >
-                <Upload size={13} />
-                {uploading ? "Uploading…" : "Upload"}
-              </button>
-            </form>
-          )}
-          </div>
-
-          {/* Delete toggle */}
-          <div>
+        {/* Auth bar */}
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          {!session ? (
             <button
-              onClick={() => { setDeleteMode((v) => !v); setDeleteStatus(null); }}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-xs font-semibold uppercase tracking-wider transition-colors ${
-                deleteMode
-                  ? "border-rose-500 text-rose-400 bg-rose-500/10"
-                  : "border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400"
-              }`}
+              onClick={handleSignIn}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400 text-xs font-semibold uppercase tracking-wider transition-colors"
             >
-              <Trash2 size={14} />
-              {deleteMode ? "Done" : "Delete Photos"}
+              <GitHub size={14} />
+              Sign in with GitHub
             </button>
-
-            {deleteMode && (
-              <div className="mt-4 p-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col gap-4 max-w-md">
-                <p className="text-xs text-slate-400">
-                  Enter your admin key, then click the <span className="text-rose-400">✕</span> on any photo to delete it.
-                </p>
-                <div>
-                  <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
-                    Admin key
-                  </label>
-                  <input
-                    type="password"
-                    value={deleteAdminKey}
-                    onChange={(e) => setDeleteAdminKey(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
-                  />
-                </div>
-                {deleteStatus && (
-                  <p className={`text-xs ${deleteStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
-                    {deleteStatus.msg}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-slate-500">
+                @{session.user.user_metadata?.user_name}
+              </span>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-white transition-colors"
+              >
+                <LogOut size={12} />
+                Sign out
+              </button>
+            </div>
+          )}
         </div>
+
+        {/* Admin controls — only shown to the admin account */}
+        {isAdmin && (
+          <div className="mb-6 flex flex-wrap gap-3">
+            {/* Upload */}
+            <div>
+              <button
+                onClick={() => { setShowUpload((v) => !v); setUploadStatus(null); }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400 text-xs font-semibold uppercase tracking-wider transition-colors"
+              >
+                <Upload size={14} />
+                {showUpload ? "Close" : "Upload Photo"}
+              </button>
+
+              {showUpload && (
+                <form
+                  onSubmit={handleUpload}
+                  className="mt-4 p-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col gap-4 max-w-md"
+                >
+                  <div>
+                    <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
+                      JPEG file
+                    </label>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".jpg,.jpeg"
+                      required
+                      onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)}
+                      className="w-full text-sm text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 cursor-pointer"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
+                      Category
+                    </label>
+                    <input
+                      type="text"
+                      value={uploadCategory}
+                      onChange={(e) => setUploadCategory(e.target.value)}
+                      placeholder="nature"
+                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+                    />
+                  </div>
+
+                  {uploadStatus && (
+                    <p className={`text-xs ${uploadStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
+                      {uploadStatus.msg}
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={uploading || !uploadFile}
+                    className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold uppercase tracking-wider transition-colors"
+                  >
+                    <Upload size={13} />
+                    {uploading ? "Uploading…" : "Upload"}
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Delete */}
+            <div>
+              <button
+                onClick={() => { setDeleteMode((v) => !v); setDeleteStatus(null); }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  deleteMode
+                    ? "border-rose-500 text-rose-400 bg-rose-500/10"
+                    : "border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400"
+                }`}
+              >
+                <Trash2 size={14} />
+                {deleteMode ? "Done" : "Delete Photos"}
+              </button>
+
+              {deleteMode && (
+                <div className="mt-4 p-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col gap-4 max-w-md">
+                  <p className="text-xs text-slate-400">
+                    Click the <span className="text-rose-400">✕</span> on any photo to delete it.
+                  </p>
+                  {deleteStatus && (
+                    <p className={`text-xs ${deleteStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
+                      {deleteStatus.msg}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Search bar */}
         <div className="mb-6 relative">

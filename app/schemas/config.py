@@ -17,14 +17,11 @@ class Settings:
     # Database Configuration
     DATABASE_URL = os.getenv("DATABASE_URL")
 
-    # Cloudinary Configuration
-    CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME")
-    CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY")
-    CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET")
-
-    # Supabase Configuration
-    SUPABASE_URL = os.getenv("SUPABASE_URL")
-    SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+    # Supabase Configuration (NEXT_PUBLIC_ vars are shared with the frontend)
+    SUPABASE_URL = os.getenv("NEXT_PUBLIC_SUPABASE_URL") or os.getenv("SUPABASE_URL")
+    SUPABASE_KEY = os.getenv("NEXT_PUBLIC_SUPABASE_ANON_KEY") or os.getenv(
+        "SUPABASE_KEY"
+    )
     SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "images")
 
     # CORS Configuration
@@ -35,5 +32,9 @@ class Settings:
 
     # Admin Authentication
     ADMIN_API_KEY = os.getenv("ADMIN_API_KEY")
+
+    # Supabase Auth (GitHub OAuth)
+    ADMIN_GITHUB_USERNAME = os.getenv("ADMIN_GITHUB_USERNAME", "Tydos")
+
 
 settings = Settings()

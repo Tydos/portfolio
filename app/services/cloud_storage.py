@@ -1,8 +1,6 @@
 import logging
 from io import BytesIO
 
-import cloudinary
-import cloudinary.uploader
 import httpx
 from PIL import Image
 from supabase import create_client, Client
@@ -12,27 +10,7 @@ from schemas.config import settings
 logger = logging.getLogger(__name__)
 
 
-class CloudinaryUploader:
-
-    def upload(self, file_path: str, folder: str) -> dict:
-        response = cloudinary.uploader.upload(file_path, folder=folder)
-        return {
-            "url": response["secure_url"],
-            "width": response.get("width"),
-            "height": response.get("height"),
-        }
-
-    def delete(self, public_id: str) -> bool:
-        try:
-            result = cloudinary.uploader.destroy(public_id)
-            return result.get("result") == "ok"
-        except Exception:
-            logger.exception("Failed to delete %s", public_id)
-            return False
-
-
 class SupabaseUploader:
-
     def __init__(self):
         self._client: Client = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
         self._bucket = settings.SUPABASE_BUCKET

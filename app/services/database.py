@@ -24,9 +24,7 @@ class DatabaseManager:
             raise RuntimeError("Missing DATABASE_URL environment variable")
         if self.connection_pool is None:
             self.connection_pool = pool.ThreadedConnectionPool(
-                minconn=2,
-                maxconn=10,
-                dsn=self.db_url
+                minconn=2, maxconn=10, dsn=self.db_url
             )
         return self.connection_pool
 
@@ -84,12 +82,20 @@ class DatabaseManager:
             return False
 
     def _photo_to_tuple(self, photo: Photo) -> tuple:
-        return (photo.filename.lower(), str(photo.url), photo.category, photo.width, photo.height)
+        return (
+            photo.filename.lower(),
+            str(photo.url),
+            photo.category,
+            photo.width,
+            photo.height,
+        )
 
     def filename_exists(self, filename: str) -> bool:
         with self._connection() as conn:
             with conn.cursor() as cur:
-                cur.execute("SELECT 1 FROM photographs WHERE filename = %s LIMIT 1", (filename,))
+                cur.execute(
+                    "SELECT 1 FROM photographs WHERE filename = %s LIMIT 1", (filename,)
+                )
                 return cur.fetchone() is not None
 
     def upload_photo_to_db(self, photo: Photo) -> int:
@@ -102,7 +108,7 @@ class DatabaseManager:
                         VALUES (%s, %s, %s, %s, %s)
                         RETURNING id;
                         """,
-                        self._photo_to_tuple(photo)
+                        self._photo_to_tuple(photo),
                     )
                     result = cur.fetchone()
                 conn.commit()
@@ -119,7 +125,7 @@ class DatabaseManager:
                 with conn.cursor() as cur:
                     cur.execute(
                         "DELETE FROM photographs WHERE id = %s RETURNING filename;",
-                        (photo_id,)
+                        (photo_id,),
                     )
                     row = cur.fetchone()
                 conn.commit()
@@ -140,7 +146,7 @@ class DatabaseManager:
                     ORDER BY id
                     LIMIT %s OFFSET %s;
                     """,
-                    (limit, offset)
+                    (limit, offset),
                 )
                 return [dict(r) for r in cur.fetchall()]
 

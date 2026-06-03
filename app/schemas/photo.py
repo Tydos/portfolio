@@ -13,17 +13,26 @@ class Photo(BaseModel):
     width: int = Field(default=1080, gt=0, description="Image width in pixels")
     height: int = Field(default=1920, gt=0, description="Image height in pixels")
     category: Literal[
-        "nature", "landscape", "urban", "portrait", "abstract", "other",
-        "aero", "architecture", "astrophotography", "minimalism", "street", "travel"
-    ] = Field(
-        default="nature",
-        description="Photo category"
-    )
+        "nature",
+        "landscape",
+        "urban",
+        "portrait",
+        "abstract",
+        "other",
+        "aero",
+        "architecture",
+        "astrophotography",
+        "minimalism",
+        "street",
+        "travel",
+    ] = Field(default="nature", description="Photo category")
 
-    @field_validator('filename')
+    @field_validator("filename")
     @classmethod
     def validate_filename_no_traversal(cls, v: str) -> str:
         """Reject path traversal characters in filename."""
-        if '..' in v or '/' in v or '\\' in v:
-            raise ValueError("Filename cannot contain path traversal characters (.., /, \\)")
+        if ".." in v or "/" in v or "\\" in v:
+            raise ValueError(
+                "Filename cannot contain path traversal characters (.., /, \\)"
+            )
         return v

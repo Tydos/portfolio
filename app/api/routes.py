@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 _uploader = SupabaseUploader()
 _upload_service = PhotoUploadService(_uploader, db)
 
+
 @router.get("/images")
 def get_images(limit: int = Query(10, ge=1, le=100), offset: int = Query(0, ge=0)):
     # falls back to static data if DB is unavailable
@@ -31,7 +32,9 @@ async def upload(
     category: str = Form(default="nature"),
 ):
     if not file.filename.lower().endswith((".jpg", ".jpeg")):
-        raise HTTPException(status_code=400, detail="Only .jpg/.jpeg files are accepted")
+        raise HTTPException(
+            status_code=400, detail="Only .jpg/.jpeg files are accepted"
+        )
 
     file_bytes = await file.read()
     try:
@@ -41,8 +44,9 @@ async def upload(
     return photo
 
 
-
-@router.delete("/delete/{photo_id}", status_code=204, dependencies=[Depends(verify_admin_key)])
+@router.delete(
+    "/delete/{photo_id}", status_code=204, dependencies=[Depends(verify_admin_key)]
+)
 async def delete_photo(photo_id: int):
     try:
         filename = db.delete_photo_by_id(photo_id)
@@ -56,7 +60,7 @@ def health():
     if not db.ping():
         raise HTTPException(
             status_code=503,
-            detail={"message": "server active", "database": "connection failed"}
+            detail={"message": "server active", "database": "connection failed"},
         )
     return {"message": "server active", "database": "connected"}
 

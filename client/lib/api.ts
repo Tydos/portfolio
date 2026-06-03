@@ -17,10 +17,10 @@ export const fetchPhotos = async (limit = 100, offset = 0): Promise<Photo[]> => 
   }));
 };
 
-export const deletePhoto = async (id: number, adminKey: string): Promise<void> => {
+export const deletePhoto = async (id: number, token: string): Promise<void> => {
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.DELETE}/${id}`, {
     method: "DELETE",
-    headers: { "X-API-Key": adminKey },
+    headers: { "Authorization": `Bearer ${token}` },
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({ detail: res.statusText }));
@@ -31,7 +31,7 @@ export const deletePhoto = async (id: number, adminKey: string): Promise<void> =
 export const uploadPhoto = async (
   file: File,
   category: string,
-  adminKey: string
+  token: string
 ): Promise<void> => {
   const form = new FormData();
   form.append("file", file);
@@ -39,7 +39,7 @@ export const uploadPhoto = async (
 
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.UPLOAD}`, {
     method: "POST",
-    headers: { "X-API-Key": adminKey },
+    headers: { "Authorization": `Bearer ${token}` },
     body: form,
   });
 
@@ -48,4 +48,3 @@ export const uploadPhoto = async (
     throw new Error(err.detail ?? "Upload failed");
   }
 };
-
