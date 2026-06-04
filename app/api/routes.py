@@ -6,14 +6,14 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, Upload
 from auth.auth import verify_admin_key
 from data import photographs
 from services.database import db
-from services.cloud_storage import SupabaseUploader
-from services.photo_upload import PhotoUploadService
+from services.storage import SupabaseUploader
+from services.photo_operations import PhotoStorageService
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
 _uploader = SupabaseUploader()
-_upload_service = PhotoUploadService(_uploader, db)
+_upload_service = PhotoStorageService(_uploader, db)
 
 
 @router.get("/images")
@@ -49,10 +49,9 @@ async def upload(
 )
 async def delete_photo(photo_id: int):
     try:
-        filename = db.delete_photo_by_id(photo_id)
+        _upload_service.delete_one(photo_id)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
-    _uploader.delete(filename)
 
 
 @router.get("/health")

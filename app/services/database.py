@@ -5,6 +5,7 @@ from contextlib import contextmanager
 from typing import Optional
 
 from psycopg2 import pool
+from psycopg2.errors import UniqueViolation
 from psycopg2.extras import RealDictCursor
 from schemas.config import settings
 from schemas.photo import Photo
@@ -56,7 +57,7 @@ class DatabaseManager:
                     cur.execute("""
                         CREATE TABLE IF NOT EXISTS photographs (
                             id SERIAL PRIMARY KEY,
-                            filename VARCHAR(255) NOT NULL,
+                            filename VARCHAR(255) NOT NULL UNIQUE,
                             url VARCHAR(2048) NOT NULL,
                             category VARCHAR(50) DEFAULT 'nature' NOT NULL,
                             width INTEGER NOT NULL DEFAULT 1080,
@@ -90,14 +91,6 @@ class DatabaseManager:
             photo.height,
         )
 
-    def filename_exists(self, filename: str) -> bool:
-        with self._connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(
-                    "SELECT 1 FROM photographs WHERE filename = %s LIMIT 1", (filename,)
-                )
-                return cur.fetchone() is not None
-
     def upload_photo_to_db(self, photo: Photo) -> int:
         with self._connection() as conn:
             try:
@@ -112,14 +105,21 @@ class DatabaseManager:
                     )
                     result = cur.fetchone()
                 conn.commit()
-                return result[0] if result else 0
+                if result is None:
+                    raise RuntimeError(
+                        "INSERT returned no id — this should never happen"
+                    )
+                return result[0]
+            except UniqueViolation:
+                conn.rollback()
+                raise ValueError(f"Duplicate filename: {photo.filename}")
             except Exception:
                 conn.rollback()
                 logger.exception("Failed to upload photo to database")
                 raise
 
+    # Returns the filename of the deleted photo that is used to clear storage file
     def delete_photo_by_id(self, photo_id: int) -> str:
-        """Delete a photo row and return its filename for storage cleanup."""
         with self._connection() as conn:
             try:
                 with conn.cursor() as cur:
