@@ -3,11 +3,21 @@ import type { Photo } from "../types";
 
 const BASE_URL = API_CONFIG.BASE_URL;
 
-export const fetchPhotos = async (limit = 100, offset = 0): Promise<Photo[]> => {
+const CACHE_TTL_MS = 5 * 60 * 1000;
+let photosCache: { data: Photo[]; ts: number } | null = null;
+
+export const clearPhotosCache = () => { photosCache = null; };
+
+export const fetchPhotos = async (limit = 100, offset = 0, bust = false): Promise<Photo[]> => {
+  const now = Date.now();
+  if (!bust && photosCache && now - photosCache.ts < CACHE_TTL_MS) {
+    return photosCache.data;
+  }
+
   const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PHOTOS}?limit=${limit}&offset=${offset}`);
   if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
   const data = await res.json();
-  return data.map((item: { id?: number; url: string; width?: number; height?: number; filename: string; category: string }) => ({
+  const photos = data.map((item: { id?: number; url: string; width?: number; height?: number; filename: string; category: string }) => ({
     id: item.id,
     src: item.url.replace("/upload/", "/upload/f_auto,q_auto,w_1200/"),
     width: item.width || 2000,
@@ -15,6 +25,9 @@ export const fetchPhotos = async (limit = 100, offset = 0): Promise<Photo[]> => 
     title: item.filename,
     category: item.category,
   }));
+
+  photosCache = { data: photos, ts: now };
+  return photos;
 };
 
 export const deletePhoto = async (id: number, token: string): Promise<void> => {

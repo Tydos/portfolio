@@ -31,7 +31,7 @@ function GalleryPage() {
   const [deleteStatus, setDeleteStatus] = useState<{ ok: boolean; msg: string } | null>(null);
 
   useEffect(() => {
-    fetchPhotos().then(setPhotos).catch(console.error);
+    fetchPhotos(100, 0, true).then(setPhotos).catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ function GalleryPage() {
       setUploadStatus({ ok: true, msg: "Uploaded successfully." });
       setUploadFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
-      fetchPhotos().then(setPhotos).catch(console.error);
+      fetchPhotos(100, 0, true).then(setPhotos).catch(console.error);
     } catch (err) {
       setUploadStatus({ ok: false, msg: err instanceof Error ? err.message : "Upload failed." });
     } finally {
@@ -80,7 +80,7 @@ function GalleryPage() {
     try {
       await deletePhoto(photo.id, session.access_token);
       setDeleteStatus({ ok: true, msg: `Deleted "${photo.title}".` });
-      fetchPhotos().then(setPhotos).catch(console.error);
+      fetchPhotos(100, 0, true).then(setPhotos).catch(console.error);
     } catch (err) {
       setDeleteStatus({ ok: false, msg: err instanceof Error ? err.message : "Delete failed." });
     } finally {

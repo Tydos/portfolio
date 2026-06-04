@@ -1,10 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { fetchPhotos } from "./api";
+import { fetchPhotos, clearPhotosCache } from "./api";
 
 const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 
-beforeEach(() => mockFetch.mockReset());
+beforeEach(() => {
+  mockFetch.mockReset();
+  clearPhotosCache();
+});
 
 describe("fetchPhotos", () => {
   it("calls the correct relative URL", async () => {
