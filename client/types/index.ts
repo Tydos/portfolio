@@ -35,7 +35,6 @@ export interface Project {
   description?: string;
   github?: string;
   link?: string;
-  type?: string;
 }
 
 export interface Photo {

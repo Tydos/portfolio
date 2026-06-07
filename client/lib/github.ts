@@ -42,3 +42,29 @@ export async function fetchGithubProject(slug: string): Promise<Project | null> 
   const repo: GithubRepo = await res.json();
   return repoToProject(repo);
 }
+
+function parseGithubUrl(url: string): { owner: string; repo: string } | null {
+  try {
+    const { pathname } = new URL(url);
+    const [, owner, repo] = pathname.split("/");
+    if (!owner || !repo) return null;
+    return { owner, repo };
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchReadme(githubUrl: string): Promise<string | null> {
+  const parsed = parseGithubUrl(githubUrl);
+  if (!parsed) return null;
+  const { owner, repo } = parsed;
+  const res = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/readme`,
+    {
+      headers: { Accept: "application/vnd.github.raw+json" },
+      next: { revalidate: 3600 },
+    }
+  );
+  if (!res.ok) return null;
+  return res.text();
+}

@@ -6,36 +6,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import type { Components } from "react-markdown";
-import { fetchGithubProject, fetchGithubProjects } from "../../../lib/github";
+import { fetchGithubProject, fetchGithubProjects, fetchReadme } from "../../../lib/github";
 import "highlight.js/styles/github-dark.css";
-
-function parseGithubUrl(url: string): { owner: string; repo: string } | null {
-  try {
-    const { pathname } = new URL(url);
-    const [, owner, repo] = pathname.split("/");
-    if (!owner || !repo) return null;
-    return { owner, repo };
-  } catch {
-    return null;
-  }
-}
-
-async function fetchReadme(githubUrl: string): Promise<string | null> {
-  const parsed = parseGithubUrl(githubUrl);
-  if (!parsed) return null;
-
-  const { owner, repo } = parsed;
-  const res = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}/readme`,
-    {
-      headers: { Accept: "application/vnd.github.raw+json" },
-      next: { revalidate: 3600 },
-    }
-  );
-
-  if (!res.ok) return null;
-  return res.text();
-}
 
 function cleanReadme(raw: string): string {
   return raw

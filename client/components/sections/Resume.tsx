@@ -29,7 +29,7 @@ interface ExperienceSectionProps {
 const SectionHeader = ({ title, icon }: SectionHeaderProps) => (
   <div className="flex items-center gap-3 mb-8">
     <div className="p-2 bg-neutral-100 rounded-lg text-neutral-600">{icon}</div>
-    <h2 className="text-neutral-900 leading-none text-xl font-black text-slate-900">
+    <h2 className="leading-none text-xl font-black text-slate-900">
       {title}
     </h2>
   </div>
@@ -71,8 +71,7 @@ const ExperienceSection = ({ experience }: ExperienceSectionProps) => (
 
 function Resume() {
   return (
-    <>
-      <div className="max-w-6xl mx-auto">
+    <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-12 gap-16">
           <div className="lg:col-span-4">
             <div className="sticky top-32">
@@ -160,8 +159,7 @@ function Resume() {
             </div>
           </div>
         </div>
-      </div>
-    </>
+    </div>
   );
 }
 

@@ -1,8 +1,7 @@
-import { API_CONFIG, API_ENDPOINTS } from "../constants/config";
+import { supabase } from "./supabase";
 import type { Photo } from "../types";
 
-const BASE_URL = API_CONFIG.BASE_URL;
-
+const BUCKET = process.env.NEXT_PUBLIC_SUPABASE_BUCKET!;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 let photosCache: { data: Photo[]; ts: number } | null = null;
 
@@ -14,12 +13,17 @@ export const fetchPhotos = async (limit = 100, offset = 0, bust = false): Promis
     return photosCache.data;
   }
 
-  const res = await fetch(`${BASE_URL}${API_ENDPOINTS.PHOTOS}?limit=${limit}&offset=${offset}`);
-  if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
-  const data = await res.json();
-  const photos = data.map((item: { id?: number; url: string; width?: number; height?: number; filename: string; category: string }) => ({
+  const { data, error } = await supabase
+    .from("photographs")
+    .select("id, filename, url, category, width, height")
+    .order("id")
+    .range(offset, offset + limit - 1);
+
+  if (error) throw new Error(error.message);
+
+  const photos: Photo[] = (data ?? []).map((item) => ({
     id: item.id,
-    src: item.url.replace("/upload/", "/upload/f_auto,q_auto,w_1200/"),
+    src: item.url,
     width: item.width || 2000,
     height: item.height || 2000,
     title: item.filename,
@@ -30,34 +34,59 @@ export const fetchPhotos = async (limit = 100, offset = 0, bust = false): Promis
   return photos;
 };
 
-export const deletePhoto = async (id: number, token: string): Promise<void> => {
-  const res = await fetch(`${BASE_URL}${API_ENDPOINTS.DELETE}/${id}`, {
-    method: "DELETE",
-    headers: { "Authorization": `Bearer ${token}` },
+async function getImageDimensions(file: File): Promise<{ width: number; height: number }> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
+      URL.revokeObjectURL(objectUrl);
+    };
+    img.onerror = () => {
+      resolve({ width: 2000, height: 2000 });
+      URL.revokeObjectURL(objectUrl);
+    };
+    img.src = objectUrl;
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(err.detail ?? "Delete failed");
+}
+
+export const uploadPhoto = async (file: File, category: string): Promise<void> => {
+  const filename = `${Date.now()}_${file.name.toLowerCase()}`;
+  const { width, height } = await getImageDimensions(file);
+
+  const { error: storageError } = await supabase.storage
+    .from(BUCKET)
+    .upload(filename, file, { contentType: "image/jpeg" });
+
+  if (storageError) throw new Error(storageError.message);
+
+  const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(filename);
+
+  const { error: dbError } = await supabase
+    .from("photographs")
+    .insert({ filename, url: urlData.publicUrl, category, width, height });
+
+  if (dbError) {
+    await supabase.storage.from(BUCKET).remove([filename]);
+    throw new Error(dbError.message);
   }
 };
 
-export const uploadPhoto = async (
-  file: File,
-  category: string,
-  token: string
-): Promise<void> => {
-  const form = new FormData();
-  form.append("file", file);
-  form.append("category", category);
+export const deletePhoto = async (id: number): Promise<void> => {
+  const { data, error: fetchError } = await supabase
+    .from("photographs")
+    .select("filename")
+    .eq("id", id)
+    .single();
 
-  const res = await fetch(`${BASE_URL}${API_ENDPOINTS.UPLOAD}`, {
-    method: "POST",
-    headers: { "Authorization": `Bearer ${token}` },
-    body: form,
-  });
+  if (fetchError) throw new Error(fetchError.message);
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(err.detail ?? "Upload failed");
-  }
+  const { error: deleteError } = await supabase
+    .from("photographs")
+    .delete()
+    .eq("id", id);
+
+  if (deleteError) throw new Error(deleteError.message);
+
+  await supabase.storage.from(BUCKET).remove([data.filename]);
 };

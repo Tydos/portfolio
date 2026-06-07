@@ -1,11 +1,9 @@
-import React from "react";
 import Image from "next/image";
 import { User, Code, Linkedin, Instagram } from "react-feather";
 
 function About() {
   return (
-    <div>
-      <section id="about" className="py-24 px-6">
+    <section id="about" className="py-24 px-6">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-8">
             <div className="flex items-center gap-3 mb-6 text-slate-400">
@@ -21,7 +19,7 @@ function About() {
 
             <p className="text-slate-500 text-md md:text-md max-w-2xl font-medium leading-relaxed mb-6">
              Hi, I&apos;m Prasad. I&apos;m pursuing my Master&apos;s in Data Science, where I focus on machine learning and building intelligent systems. I enjoy designing and developing websites, Android apps, and building APIs, and I&apos;m interested in creating clean, minimalistic solutions that solve real problems.
-             <br></br>
+             <br />
              Outside of tech, I&apos;m passionate about photography, especially astrophotography and landscapes. I enjoy planning night shoots, working with long exposures, and refining images in Lightroom. I also like biking, playing guitar, and reading nonfiction, which keeps me curious and always learning.
             </p>
 
@@ -64,8 +62,7 @@ function About() {
             />
           </div>
         </div>
-      </section>
-    </div>
+    </section>
   );
 }
 

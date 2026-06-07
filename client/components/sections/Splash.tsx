@@ -1,12 +1,9 @@
-import React from "react";
-
 function Splash() {
   return (
-    <>
-      <section
-        id="home"
-        className="min-h-screen relative overflow-hidden  flex flex-col justify-center items-center px-6"
-      >
+    <section
+      id="home"
+      className="min-h-screen relative overflow-hidden flex flex-col justify-center items-center px-6"
+    >
         <div className="absolute inset-0 z-0 pointer-events-none">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
           <div className="absolute -top-[10%] -left-[10%] w-[500px] h-[500px] bg-indigo-500/30 rounded-full mix-blend-multiply filter blur-[96px] animate-pulse [animation-duration:4s]"></div>
@@ -46,8 +43,7 @@ function Splash() {
             I read, play, and see the world through a lens.
           </p>
         </div>
-      </section>
-    </>
+    </section>
   );
 }
 

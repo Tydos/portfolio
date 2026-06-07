@@ -6,42 +6,32 @@ import { NAV_ITEMS } from "../../constants/config";
 
 const NAV_OFFSET_PX = 96;
 
-interface NavbarProps {
-  activeSection: string;
-  setActiveSection: React.Dispatch<React.SetStateAction<string>>;
-}
-
-function Navbar({ activeSection, setActiveSection }: NavbarProps) {
+function Navbar() {
+  const [activeSection, setActiveSection] = useState(NAV_ITEMS[0]?.id ?? "home");
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
 
-  useEffect(() => {
-    const syncActiveFromScroll = () => {
       let current = NAV_ITEMS[0]?.id ?? "home";
       for (const { id } of NAV_ITEMS) {
         const el = document.getElementById(id);
         if (!el) continue;
-        if (el.getBoundingClientRect().top <= NAV_OFFSET_PX) {
-          current = id;
-        }
+        if (el.getBoundingClientRect().top <= NAV_OFFSET_PX) current = id;
       }
       setActiveSection(current);
     };
 
-    syncActiveFromScroll();
-    window.addEventListener("scroll", syncActiveFromScroll, { passive: true });
-    window.addEventListener("resize", syncActiveFromScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
     return () => {
-      window.removeEventListener("scroll", syncActiveFromScroll);
-      window.removeEventListener("resize", syncActiveFromScroll);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
     };
-  }, [setActiveSection]);
+  }, []);
 
   const handleNavClick = (id: string) => {
     setActiveSection(id);
@@ -51,8 +41,7 @@ function Navbar({ activeSection, setActiveSection }: NavbarProps) {
   };
 
   return (
-    <>
-      <nav
+    <nav
         className={`fixed top-0 w-full z-50 transition-all duration-300 ${
           isScrolled
             ? "bg-white/80 backdrop-blur-md border-b border-slate-200 py-3 shadow-sm"
@@ -104,8 +93,7 @@ function Navbar({ activeSection, setActiveSection }: NavbarProps) {
             ))}
           </div>
         )}
-      </nav>
-    </>
+    </nav>
   );
 }
 

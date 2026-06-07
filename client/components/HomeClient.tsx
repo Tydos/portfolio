@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useState } from 'react';
 import Contact from './sections/Contact';
 import Footer from './layout/Footer';
 import Splash from './sections/Splash';
@@ -16,11 +15,9 @@ interface HomeClientProps {
 }
 
 function HomeClient({ projects }: HomeClientProps) {
-  const [activeSection, setActiveSection] = useState("home");
   return (
-    <>
-      <div className="text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
-        <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+    <div className="text-slate-800 selection:bg-indigo-600 selection:text-white font-sans scroll-smooth">
+        <Navbar />
         <main>
           <Splash />
           <About />
@@ -40,8 +37,7 @@ function HomeClient({ projects }: HomeClientProps) {
         </main>
 
         <Footer />
-      </div>
-    </>
+    </div>
   );
 }
 

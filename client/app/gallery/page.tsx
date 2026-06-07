@@ -6,10 +6,9 @@ import { Camera, Search, Upload, Trash2, GitHub, LogOut } from "react-feather";
 import type { Session } from "@supabase/supabase-js";
 import Gallery from "../../components/sections/Gallery";
 import { fetchPhotos, uploadPhoto, deletePhoto } from "../../lib/api";
-import { supabase } from "../../lib/supabase";
+import { getSession, onAuthStateChange, signInWithGithub, signOut as authSignOut } from "../../lib/auth";
 import type { Photo } from "../../types";
-
-const ADMIN_GITHUB_USERNAME = "Tydos";
+import { GITHUB_USERNAME } from "../../constants/config";
 
 function GalleryPage() {
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -17,72 +16,70 @@ function GalleryPage() {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const [session, setSession] = useState<Session | null>(null);
-  const isAdmin = session?.user?.user_metadata?.user_name === ADMIN_GITHUB_USERNAME;
+  const isAdmin = session?.user?.user_metadata?.user_name === GITHUB_USERNAME;
 
   const [showUpload, setShowUpload] = useState(false);
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadCategory, setUploadCategory] = useState("nature");
   const [uploading, setUploading] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [actionStatus, setActionStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [deleteMode, setDeleteMode] = useState(false);
   const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
-  const [deleteStatus, setDeleteStatus] = useState<{ ok: boolean; msg: string } | null>(null);
+
+  function loadPhotos() {
+    fetchPhotos(100, 0, true).then(setPhotos).catch(() => {});
+  }
 
   useEffect(() => {
-    fetchPhotos(100, 0, true).then(setPhotos).catch(console.error);
+    loadPhotos();
   }, []);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
-      setSession(s);
-    });
+    getSession().then(({ data }) => setSession(data.session));
+    const { data: { subscription } } = onAuthStateChange((_event, s) => setSession(s));
     return () => subscription.unsubscribe();
   }, []);
 
   async function handleSignIn() {
-    await supabase.auth.signInWithOAuth({
-      provider: "github",
-      options: { redirectTo: `${window.location.origin}/gallery` },
-    });
+    await signInWithGithub(`${window.location.origin}/gallery`);
   }
 
   async function handleSignOut() {
-    await supabase.auth.signOut();
+    await authSignOut();
     setShowUpload(false);
     setDeleteMode(false);
   }
 
   async function handleUpload(e: React.FormEvent) {
     e.preventDefault();
-    if (!uploadFile || !session?.access_token) return;
+    if (!uploadFile || !isAdmin) return;
     setUploading(true);
-    setUploadStatus(null);
+    setActionStatus(null);
     try {
-      await uploadPhoto(uploadFile, uploadCategory, session.access_token);
-      setUploadStatus({ ok: true, msg: "Uploaded successfully." });
+      await uploadPhoto(uploadFile, uploadCategory);
+      setActionStatus({ ok: true, msg: "Uploaded successfully." });
       setUploadFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
-      fetchPhotos(100, 0, true).then(setPhotos).catch(console.error);
+      loadPhotos();
     } catch (err) {
-      setUploadStatus({ ok: false, msg: err instanceof Error ? err.message : "Upload failed." });
+      setActionStatus({ ok: false, msg: err instanceof Error ? err.message : "Upload failed." });
     } finally {
       setUploading(false);
     }
   }
 
   async function handleDelete(photo: Photo) {
-    if (photo.id == null || !session?.access_token) return;
+    if (photo.id == null || !isAdmin) return;
     setDeletingIds((prev) => new Set(prev).add(photo.id!));
-    setDeleteStatus(null);
+    setActionStatus(null);
     try {
-      await deletePhoto(photo.id, session.access_token);
-      setDeleteStatus({ ok: true, msg: `Deleted "${photo.title}".` });
-      fetchPhotos(100, 0, true).then(setPhotos).catch(console.error);
+      await deletePhoto(photo.id);
+      setActionStatus({ ok: true, msg: `Deleted "${photo.title}".` });
+      loadPhotos();
     } catch (err) {
-      setDeleteStatus({ ok: false, msg: err instanceof Error ? err.message : "Delete failed." });
+      setActionStatus({ ok: false, msg: err instanceof Error ? err.message : "Delete failed." });
     } finally {
       setDeletingIds((prev) => { const s = new Set(prev); s.delete(photo.id!); return s; });
     }
@@ -158,7 +155,7 @@ function GalleryPage() {
             {/* Upload */}
             <div>
               <button
-                onClick={() => { setShowUpload((v) => !v); setUploadStatus(null); }}
+                onClick={() => { setShowUpload((v) => !v); setActionStatus(null); }}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400 text-xs font-semibold uppercase tracking-wider transition-colors"
               >
                 <Upload size={14} />
@@ -197,9 +194,9 @@ function GalleryPage() {
                     />
                   </div>
 
-                  {uploadStatus && (
-                    <p className={`text-xs ${uploadStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
-                      {uploadStatus.msg}
+                  {actionStatus && (
+                    <p className={`text-xs ${actionStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
+                      {actionStatus.msg}
                     </p>
                   )}
 
@@ -218,7 +215,7 @@ function GalleryPage() {
             {/* Delete */}
             <div>
               <button
-                onClick={() => { setDeleteMode((v) => !v); setDeleteStatus(null); }}
+                onClick={() => { setDeleteMode((v) => !v); setActionStatus(null); }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-xs font-semibold uppercase tracking-wider transition-colors ${
                   deleteMode
                     ? "border-rose-500 text-rose-400 bg-rose-500/10"
@@ -234,9 +231,9 @@ function GalleryPage() {
                   <p className="text-xs text-slate-400">
                     Click the <span className="text-rose-400">✕</span> on any photo to delete it.
                   </p>
-                  {deleteStatus && (
-                    <p className={`text-xs ${deleteStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
-                      {deleteStatus.msg}
+                  {actionStatus && (
+                    <p className={`text-xs ${actionStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
+                      {actionStatus.msg}
                     </p>
                   )}
                 </div>

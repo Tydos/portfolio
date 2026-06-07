@@ -23,6 +23,16 @@ Merged frontend and backend instances into a single Vercel project for easy mana
 - **Deployment:** Single Vercel project  
 - **CI:** GitHub Actions (Vitest, pytest, ruff)
 
+## Supabase Setup Notes
+
+- **Use the anon key** (`eyJ...` JWT) for the frontend — it is safe to expose publicly via `NEXT_PUBLIC_*` env vars.
+- **Database table access:** Grant the `anon` role CRUD permissions on each table and enable RLS with matching policies, otherwise PostgREST returns 403.
+  ```sql
+  GRANT SELECT, INSERT, UPDATE, DELETE ON your_table TO anon;
+  CREATE POLICY "Public access" ON your_table FOR ALL TO anon USING (true) WITH CHECK (true);
+  ```
+- **Supabase Storage bucket access:** Storage buckets also require CRUD access policies set in the Storage → Policies section, otherwise uploads/reads return 403.
+
 ## Prerequisites
 
 - Node.js 20+

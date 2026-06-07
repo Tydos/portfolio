@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Camera } from "react-feather";
 import Link from "next/link";
 import Gallery from "./Gallery";
@@ -15,7 +15,7 @@ function Photography() {
       .then((formattedPhotos) => {
         setPhotos(formattedPhotos);
       })
-      .catch((err) => console.error("Error fetching data:", err));
+      .catch(() => {});
   }, []);
 
   return (
