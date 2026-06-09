@@ -97,7 +97,6 @@ export default function Gallery({ photos, deleteMode, deletingIds, onDelete }: G
                   alt={alt}
                   width={layout.width}
                   height={layout.height}
-                  unoptimized
                   style={{ width: "100%", height: "auto", display: "block" }}
                 />
                 {deleteMode && (

@@ -29,9 +29,7 @@ interface ExperienceSectionProps {
 const SectionHeader = ({ title, icon }: SectionHeaderProps) => (
   <div className="flex items-center gap-3 mb-8">
     <div className="p-2 bg-neutral-100 rounded-lg text-neutral-600">{icon}</div>
-    <h2 className="leading-none text-xl font-black text-slate-900">
-      {title}
-    </h2>
+    <h2 className="leading-none text-xl font-black text-slate-900">{title}</h2>
   </div>
 );
 
@@ -72,30 +70,30 @@ const ExperienceSection = ({ experience }: ExperienceSectionProps) => (
 function Resume() {
   return (
     <div className="max-w-6xl mx-auto">
-        <div className="grid lg:grid-cols-12 gap-16">
-          <div className="lg:col-span-4">
-            <div className="sticky top-32">
-              <h2 className="text-3xl tracking-tighter leading-[1.1] uppercase font-bold text-slate-900 mb-6 border-b-4 border-indigo-500 pb-2 inline-block">
-                {RESUME_SECTION_LABELS.summary}
-              </h2>
-              <p className="text-slate-500 text-md md:text-md max-w-2xl mx-auto font-medium leading-relaxed">
-                {RESUME_SUMMARY_PARAGRAPHS.map((paragraph, i) => (
-                  <React.Fragment key={i}>
-                    {i > 0 && (
-                      <>
-                        <br />
-                        <br />
-                      </>
-                    )}
-                    {paragraph}
-                  </React.Fragment>
-                ))}
-              </p>
-            </div>
+      <div className="grid lg:grid-cols-12 gap-16">
+        <div className="lg:col-span-4">
+          <div className="sticky top-32">
+            <h2 className="text-3xl tracking-tighter leading-[1.1] uppercase font-bold text-slate-900 mb-6 border-b-4 border-indigo-500 pb-2 inline-block">
+              {RESUME_SECTION_LABELS.summary}
+            </h2>
+            <p className="text-slate-500 text-md md:text-md max-w-2xl mx-auto font-medium leading-relaxed">
+              {RESUME_SUMMARY_PARAGRAPHS.map((paragraph, i) => (
+                <React.Fragment key={i}>
+                  {i > 0 && (
+                    <>
+                      <br />
+                      <br />
+                    </>
+                  )}
+                  {paragraph}
+                </React.Fragment>
+              ))}
+            </p>
           </div>
+        </div>
 
-          <div className="lg:col-span-8 flex flex-col gap-16">
-            <section>
+        <div className="lg:col-span-8 flex flex-col gap-16">
+          {/* <section>
               <SectionHeader
                 title={RESUME_SECTION_LABELS.skills}
                 icon={<CheckCircle size={18} />}
@@ -107,58 +105,53 @@ function Resume() {
                   ))}
                 </div>
               </div>
+            </section> */}
+
+          <ExperienceSection experience={RESUME_EXPERIENCE} />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <section>
+              <SectionHeader
+                title={RESUME_SECTION_LABELS.education}
+                icon={<BookOpen size={18} />}
+              />
+              <div className="space-y-6">
+                {RESUME_EDUCATION.map((edu, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-indigo-400 p-6 rounded-xl border border-neutral-100 hover:border-neutral-200 transition-colors"
+                  >
+                    <h4 className="font-bold text-white">{edu.school}</h4>
+                    <p className="font-medium text-white mb-2">{edu.degree}</p>
+                    <p className="font-medium text-white mb-2">{edu.period}</p>
+                  </div>
+                ))}
+              </div>
             </section>
 
-            <ExperienceSection experience={RESUME_EXPERIENCE} />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <section>
-                <SectionHeader
-                  title={RESUME_SECTION_LABELS.education}
-                  icon={<BookOpen size={18} />}
-                />
-                <div className="space-y-6">
-                  {RESUME_EDUCATION.map((edu, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-indigo-400 p-6 rounded-xl border border-neutral-100 hover:border-neutral-200 transition-colors"
-                    >
-                      <h4 className="font-bold text-white">{edu.school}</h4>
-                      <p className="font-medium text-white mb-2">
-                        {edu.degree}
-                      </p>
-                      <p className="font-medium text-white mb-2">
-                        {edu.period}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section>
-                <SectionHeader
-                  title={RESUME_SECTION_LABELS.publications}
-                  icon={<Cpu size={18} />}
-                />
-                <div className="bg-indigo-400 p-6 rounded-xl text-neutral-300 text-sm leading-relaxed shadow-lg flex flex-col justify-center">
-                  <p className="text-xl font-bold mb-4 text-white">
-                    {RESUME_PUBLICATION.title}
-                  </p>
-                  <p className="font-medium text-white mb-2">
-                    {RESUME_PUBLICATION.publisher}
-                  </p>
-                  <a
-                    href={RESUME_PUBLICATION.url}
-                    className="inline-flex items-center gap-2 text-white hover:text-blue-300 transition-colors text-xs font-bold uppercase tracking-wider"
-                  >
-                    {RESUME_SECTION_LABELS.readPaper}{" "}
-                    <ExternalLink size={12} />
-                  </a>
-                </div>
-              </section>
-            </div>
+            <section>
+              <SectionHeader
+                title={RESUME_SECTION_LABELS.publications}
+                icon={<Cpu size={18} />}
+              />
+              <div className="bg-indigo-400 p-6 rounded-xl text-neutral-300 text-sm leading-relaxed shadow-lg flex flex-col justify-center">
+                <p className="text-xl font-bold mb-4 text-white">
+                  {RESUME_PUBLICATION.title}
+                </p>
+                <p className="font-medium text-white mb-2">
+                  {RESUME_PUBLICATION.publisher}
+                </p>
+                <a
+                  href={RESUME_PUBLICATION.url}
+                  className="inline-flex items-center gap-2 text-white hover:text-blue-300 transition-colors text-xs font-bold uppercase tracking-wider"
+                >
+                  {RESUME_SECTION_LABELS.readPaper} <ExternalLink size={12} />
+                </a>
+              </div>
+            </section>
           </div>
         </div>
+      </div>
     </div>
   );
 }

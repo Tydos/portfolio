@@ -109,7 +109,7 @@ function GalleryPage() {
         </Link>
       </header>
 
-      <main className="px-6 pb-32 max-w-6xl mx-auto">
+      <main className="px-6 pb-12 max-w-6xl mx-auto">
         <div className="mb-16 relative overflow-hidden">
           <div className="absolute -top-24 -right-24 opacity-5 rotate-12 pointer-events-none">
             <Camera size={500} />
