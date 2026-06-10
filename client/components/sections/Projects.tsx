@@ -1,19 +1,28 @@
+"use client";
+
+import { useState } from "react";
 import ProjectCard from "../cards/ProjectCard";
-import { Terminal } from "react-feather";
+import { Terminal, ChevronDown, ChevronUp } from "react-feather";
 import type { Project } from "../../types";
 import dynamic from "next/dynamic";
 
 const GitHubCalendar = dynamic(
   () => import("react-github-calendar").then((m) => m.GitHubCalendar),
-  { ssr: false }
+  { ssr: false },
 );
 import { GITHUB_USERNAME } from "../../constants/config";
+
+const INITIAL_COUNT = 6;
 
 interface ProjectsProps {
   projects: Project[];
 }
 
 function Projects({ projects }: ProjectsProps) {
+  const [showAll, setShowAll] = useState(false);
+  const visible = showAll ? projects : projects.slice(0, INITIAL_COUNT);
+  const hasMore = projects.length > INITIAL_COUNT;
+
   return (
     <>
       <div className="absolute -top-24 -right-24 opacity-5 rotate-12 pointer-events-none">
@@ -45,10 +54,30 @@ function Projects({ projects }: ProjectsProps) {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {projects.map((project) => (
+          {visible.map((project) => (
             <ProjectCard key={project.slug} project={project} />
           ))}
         </div>
+
+        {hasMore && (
+          <div className="flex justify-center mt-10">
+            <button
+              onClick={() => setShowAll((prev) => !prev)}
+              className="inline-flex items-center gap-2 px-6 py-2.5 border border-slate-200 hover:border-slate-400 text-slate-600 hover:text-slate-900 text-sm font-semibold rounded-full transition-colors"
+            >
+              {showAll ? (
+                <>
+                  Show Less <ChevronUp size={15} />
+                </>
+              ) : (
+                <>
+                  View More ({projects.length - INITIAL_COUNT} more){" "}
+                  <ChevronDown size={15} />
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
