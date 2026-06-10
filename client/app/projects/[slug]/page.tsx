@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import type { Components } from "react-markdown";
-import { fetchGithubProject, fetchGithubProjects, fetchReadme } from "../../../lib/github";
+import { fetchGithubProject, fetchGithubProjects, fetchReadme } from "../../../lib/projects";
 import "highlight.js/styles/github-dark.css";
 
 function cleanReadme(raw: string): string {

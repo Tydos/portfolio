@@ -1,5 +1,5 @@
 import HomeClient from '../components/HomeClient';
-import { fetchGithubProjects } from '../lib/github';
+import { fetchGithubProjects } from '../lib/projects';
 
 export default async function Page() {
   const projects = await fetchGithubProjects();

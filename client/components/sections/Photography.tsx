@@ -1,22 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Camera } from "react-feather";
 import Link from "next/link";
 import Gallery from "./Gallery";
-import { fetchPhotos } from "../../lib/api";
-import type { Photo } from "../../types";
+import { usePhotos } from "../../lib/usePhotos";
 
 function Photography() {
-  const [photos, setPhotos] = useState<Photo[]>([]);
-
-  useEffect(() => {
-    fetchPhotos(12)
-      .then((formattedPhotos) => {
-        setPhotos(formattedPhotos);
-      })
-      .catch(() => {});
-  }, []);
+  const { photos, loading } = usePhotos(12);
 
   return (
     <>
@@ -37,15 +27,23 @@ function Photography() {
         </div>
 
         <div className="max-w-6xl mx-auto">
-          <Gallery photos={photos.slice(0, 10)} />
-          <div className="mt-10 text-center">
-            <Link
-              href="/gallery"
-              className="inline-block text-xs font-black uppercase tracking-widest text-slate-400 hover:text-white border border-slate-700 hover:border-slate-400 px-6 py-3 rounded transition-all"
-            >
-              View Full Gallery →
-            </Link>
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center py-32">
+              <span className="w-8 h-8 rounded-full border-2 border-slate-700 border-t-rose-500 animate-spin" />
+            </div>
+          ) : (
+            <>
+              <Gallery photos={photos} />
+              <div className="mt-10 text-center">
+                <Link
+                  href="/gallery"
+                  className="inline-block text-xs font-black uppercase tracking-widest text-slate-400 hover:text-white border border-slate-700 hover:border-slate-400 px-6 py-3 rounded transition-all"
+                >
+                  View Full Gallery →
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>
