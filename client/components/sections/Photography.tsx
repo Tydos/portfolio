@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import { Camera } from "react-feather";
@@ -37,7 +37,7 @@ function Photography() {
         </div>
 
         <div className="max-w-6xl mx-auto">
-          <Gallery photos={photos.slice(0, 12)} />
+          <Gallery photos={photos.slice(0, 10)} />
           <div className="mt-10 text-center">
             <Link
               href="/gallery"

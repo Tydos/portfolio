@@ -19,9 +19,10 @@ function GalleryPage() {
   const isAdmin = session?.user?.user_metadata?.user_name === GITHUB_USERNAME;
 
   const [showUpload, setShowUpload] = useState(false);
-  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [uploadFiles, setUploadFiles] = useState<File[]>([]);
   const [uploadCategory, setUploadCategory] = useState("nature");
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null);
   const [actionStatus, setActionStatus] = useState<{ ok: boolean; msg: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -54,20 +55,36 @@ function GalleryPage() {
 
   async function handleUpload(e: React.FormEvent) {
     e.preventDefault();
-    if (!uploadFile || !isAdmin) return;
+    if (uploadFiles.length === 0 || !isAdmin) return;
     setUploading(true);
     setActionStatus(null);
-    try {
-      await uploadPhoto(uploadFile, uploadCategory);
-      setActionStatus({ ok: true, msg: "Uploaded successfully." });
-      setUploadFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-      loadPhotos();
-    } catch (err) {
-      setActionStatus({ ok: false, msg: err instanceof Error ? err.message : "Upload failed." });
-    } finally {
-      setUploading(false);
+    setUploadProgress({ done: 0, total: uploadFiles.length });
+
+    const total = uploadFiles.length;
+    const errors: string[] = [];
+    for (let i = 0; i < total; i++) {
+      try {
+        await uploadPhoto(uploadFiles[i], uploadCategory);
+      } catch (err) {
+        errors.push(`${uploadFiles[i].name}: ${err instanceof Error ? err.message : "failed"}`);
+      }
+      setUploadProgress({ done: i + 1, total });
     }
+
+    setUploadFiles([]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setUploadProgress(null);
+    loadPhotos();
+
+    if (errors.length === 0) {
+      setActionStatus({ ok: true, msg: `${total === 1 ? "Photo" : `All ${total} photos`} uploaded successfully.` });
+    } else if (errors.length < total) {
+      setActionStatus({ ok: false, msg: `${total - errors.length} uploaded, ${errors.length} failed: ${errors.join("; ")}` });
+    } else {
+      setActionStatus({ ok: false, msg: `All uploads failed: ${errors.join("; ")}` });
+    }
+
+    setUploading(false);
   }
 
   async function handleDelete(photo: Photo) {
@@ -169,16 +186,20 @@ function GalleryPage() {
                 >
                   <div>
                     <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">
-                      JPEG file
+                      JPEG files
                     </label>
                     <input
                       ref={fileInputRef}
                       type="file"
                       accept=".jpg,.jpeg"
+                      multiple
                       required
-                      onChange={(e) => setUploadFile(e.target.files?.[0] ?? null)}
+                      onChange={(e) => setUploadFiles(Array.from(e.target.files ?? []))}
                       className="w-full text-sm text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 cursor-pointer"
                     />
+                    {uploadFiles.length > 1 && (
+                      <p className="mt-1 text-xs text-slate-500">{uploadFiles.length} files selected</p>
+                    )}
                   </div>
 
                   <div>
@@ -194,7 +215,13 @@ function GalleryPage() {
                     />
                   </div>
 
-                  {actionStatus && (
+                  {uploadProgress && (
+                    <p className="text-xs text-slate-400">
+                      Uploading {uploadProgress.done} / {uploadProgress.total}…
+                    </p>
+                  )}
+
+                  {actionStatus && !uploadProgress && (
                     <p className={`text-xs ${actionStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>
                       {actionStatus.msg}
                     </p>
@@ -202,11 +229,11 @@ function GalleryPage() {
 
                   <button
                     type="submit"
-                    disabled={uploading || !uploadFile}
+                    disabled={uploading || uploadFiles.length === 0}
                     className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold uppercase tracking-wider transition-colors"
                   >
                     <Upload size={13} />
-                    {uploading ? "Uploading…" : "Upload"}
+                    {uploading ? `Uploading…` : uploadFiles.length > 1 ? `Upload ${uploadFiles.length} photos` : "Upload"}
                   </button>
                 </form>
               )}
@@ -282,8 +309,10 @@ function GalleryPage() {
             Showing {filteredPhotos.length} of {photos.length} photos
           </p>
         )}
+      </main>
 
-        {/* Empty state */}
+      {/* Full-width gallery */}
+      <section className="px-6 pb-12">
         {filteredPhotos.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-slate-600">
             <Camera size={48} className="mb-4" />
@@ -297,7 +326,7 @@ function GalleryPage() {
             onDelete={handleDelete}
           />
         )}
-      </main>
+      </section>
     </div>
   );
 }
