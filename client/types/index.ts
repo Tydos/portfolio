@@ -45,3 +45,13 @@ export interface Photo {
   title: string;
   category: string;
 }
+
+export interface GithubRepo {
+  name: string;
+  description: string | null;
+  html_url: string;
+  homepage: string | null;
+  topics: string[];
+  fork: boolean;
+  language: string | null;
+}
