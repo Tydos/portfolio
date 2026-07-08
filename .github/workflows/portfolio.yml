@@ -1,0 +1,27 @@
+name: Portfolio Build
+
+on:
+  push:
+    branches: [main, feature/**]
+    paths:
+      - "apps/portfolio/**"
+      - ".github/workflows/portfolio.yml"
+  pull_request:
+    paths:
+      - "apps/portfolio/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/portfolio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - run: npm ci
+        working-directory: .
+      - run: npm run build -w apps/portfolio
