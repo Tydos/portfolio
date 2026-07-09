@@ -1,46 +1,28 @@
 {
-  "name": "portfolio-website",
-  "version": "0.1.0",
+  "name": "image-hosting-client",
   "private": true,
-  "dependencies": {
-    "@tailwindcss/typography": "^0.5.19",
-    "@supabase/supabase-js": "^2.49.0",
-    "@vercel/analytics": "^1.6.1",
-    "geist": "^1.7.1",
-    "gray-matter": "^4.0.3",
-    "highlight.js": "^11.11.1",
-    "next": "^14.2.0",
-    "next-mdx-remote": "^6.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-feather": "^2.0.10",
-    "react-github-calendar": "^5.0.6",
-    "react-markdown": "^10.1.0",
-    "react-photo-album": "^2.2.2",
-    "rehype-highlight": "^7.0.2",
-    "remark-gfm": "^4.0.1"
-  },
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "vitest",
-    "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "dev": "vite --port 3001",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-feather": "^2.0.10",
+    "react-router-dom": "^7.1.0"
   },
   "devDependencies": {
-    "@types/mdx": "^2.0.13",
-    "@types/node": "^25.9.1",
-    "@types/react": "^19.2.15",
-    "@types/react-dom": "^19.2.3",
-    "@vitest/coverage-v8": "^3.2.0",
-    "autoprefixer": "^10.4.23",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^3.4.19",
-    "typescript": "^6.0.3",
-    "vitest": "^3.2.0"
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.5"
   }
 }

@@ -2,8 +2,9 @@ name: Python Lint and API Tests
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, feature/image-hosting-python]
+  pull_request:
+    branches: [main]
 
 jobs:
   test:
@@ -20,7 +21,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt pytest ruff
+        run: pip install -r requirements.txt pytest ruff httpx
 
       - name: Lint
         run: ruff check .

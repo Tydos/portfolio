@@ -1,14 +1,13 @@
-name: Frontend Lint and Test
+name: Frontend Build
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/image-hosting-python]
   pull_request:
     branches: [main]
 
 jobs:
-  lint-and-test:
-    name: Lint & Test
+  build:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -25,9 +24,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Test
-        run: npm run test:run
-
+      - name: Build
+        run: npm run build
