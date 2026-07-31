@@ -36,7 +36,7 @@ const mdComponents: Components = {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-indigo-600 hover:text-indigo-800 underline underline-offset-2"
+      className="text-accent hover:text-accent-hover underline underline-offset-2"
     >
       {children}
     </a>
@@ -53,7 +53,7 @@ const mdComponents: Components = {
   ),
   li: ({ children }) => <li className="leading-relaxed">{children}</li>,
   blockquote: ({ children }) => (
-    <blockquote className="border-l-4 border-indigo-200 pl-4 italic text-slate-500 my-4">
+    <blockquote className="border-l-2 border-accent/30 pl-4 italic text-ink-muted my-4">
       {children}
     </blockquote>
   ),
@@ -141,8 +141,8 @@ export default async function ProjectPage({
     <main className="min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-6 py-16">
         <Link
-          href="/#projects"
-          className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-700 transition-colors mb-12"
+          href="/#technical-eye"
+          className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded transition-colors mb-12"
         >
           <ArrowLeft size={15} />
           Back to projects

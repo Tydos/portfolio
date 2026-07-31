@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { PhotoAlbum } from "react-photo-album";
 import { X } from "react-feather";
@@ -15,9 +15,12 @@ interface GalleryProps {
 
 function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   const [loaded, setLoaded] = useState(false);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setLoaded(false);
+    closeRef.current?.focus();
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -27,20 +30,26 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Photo: ${photo.title}`}
       className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <button
-        className="absolute top-5 right-5 text-white/50 hover:text-white transition-colors"
+        ref={closeRef}
+        type="button"
+        className="absolute top-5 right-5 text-white/70 hover:text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white rounded min-h-[44px] min-w-[44px] flex items-center justify-center"
         onClick={onClose}
-        aria-label="Close"
+        aria-label="Close photo"
       >
-        <X size={24} />
+        <X size={24} aria-hidden="true" />
       </button>
 
       {!loaded && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none" role="status">
           <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+          <span className="sr-only">Loading photo</span>
         </div>
       )}
 
@@ -49,13 +58,13 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
         alt={photo.title}
         width={photo.width}
         height={photo.height}
-        className={`max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+        className={`max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
         style={{ width: "auto", height: "auto" }}
         onClick={(e) => e.stopPropagation()}
         onLoad={() => setLoaded(true)}
       />
       {photo.category && (
-        <p className="absolute bottom-6 text-xs font-semibold uppercase tracking-widest text-white/40">
+        <p className="absolute bottom-6 text-xs font-medium uppercase tracking-wide text-white/60">
           {photo.category}
         </p>
       )}
@@ -70,11 +79,12 @@ export default function Gallery({
   onDelete,
 }: GalleryProps) {
   const [selected, setSelected] = useState<Photo | null>(null);
+  const closeLightbox = useCallback(() => setSelected(null), []);
 
   return (
     <>
       {selected && (
-        <Lightbox photo={selected} onClose={() => setSelected(null)} />
+        <Lightbox photo={selected} onClose={closeLightbox} />
       )}
 
       <PhotoAlbum
@@ -84,50 +94,64 @@ export default function Gallery({
         spacing={0}
         columns={(containerWidth) => {
           if (containerWidth < 500) return 1;
-          if (containerWidth < 1200) return 3;
+          if (containerWidth < 900) return 2;
+          if (containerWidth < 1400) return 3;
           return 4;
         }}
-        breakpoints={[500, 900, 1200]}
+        breakpoints={[500, 900, 1400]}
         componentsProps={() => ({ imageProps: { loading: "lazy" } })}
         renderPhoto={({ photo, layout, imageProps: { alt, style, src } }) => {
           const p = photo as Photo;
           const isDeleting = p.id != null && deletingIds?.has(p.id);
-          return (
-            <div
-              style={{ width: style?.width, padding: "6px" }}
-              className={deleteMode ? "cursor-default" : "cursor-pointer"}
-              onClick={() => {
-                if (!deleteMode) setSelected(p);
-              }}
-            >
-              <div className="relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                <Image
-                  src={src as string}
-                  alt={alt}
-                  width={layout.width}
-                  height={layout.height}
-                  style={{ width: "100%", height: "auto", display: "block" }}
-                />
-                {deleteMode && (
+          const label = alt || p.title || "View photo";
+
+          if (deleteMode) {
+            return (
+              <div style={{ width: style?.width, padding: "6px" }}>
+                <div className="relative rounded-xl overflow-hidden shadow-sm">
+                  <Image
+                    src={src as string}
+                    alt={label}
+                    width={layout.width}
+                    height={layout.height}
+                    style={{ width: "100%", height: "auto", display: "block" }}
+                  />
                   <div className="absolute inset-0 bg-black/40 flex items-start justify-end p-2">
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDelete?.(p);
-                      }}
+                      type="button"
+                      onClick={() => onDelete?.(p)}
                       disabled={isDeleting}
-                      className="w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 flex items-center justify-center transition-colors"
-                      aria-label="Delete photo"
+                      className="w-9 h-9 rounded-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 flex items-center justify-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      aria-label={`Delete ${label}`}
                     >
                       {isDeleting ? (
                         <div className="w-3 h-3 border border-white/40 border-t-white rounded-full animate-spin" />
                       ) : (
-                        <X size={14} className="text-white" />
+                        <X size={14} className="text-white" aria-hidden="true" />
                       )}
                     </button>
                   </div>
-                )}
+                </div>
               </div>
+            );
+          }
+
+          return (
+            <div style={{ width: style?.width, padding: "6px" }}>
+              <button
+                type="button"
+                onClick={() => setSelected(p)}
+                className="block w-full text-left rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                aria-label={`View ${label}`}
+              >
+                <Image
+                  src={src as string}
+                  alt={label}
+                  width={layout.width}
+                  height={layout.height}
+                  style={{ width: "100%", height: "auto", display: "block" }}
+                />
+              </button>
             </div>
           );
         }}

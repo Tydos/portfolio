@@ -1,57 +1,33 @@
 'use client';
 
-import React from "react";
+import Link from "next/link";
+import { ArrowLeft, Home } from "react-feather";
 
 function ErrorPage() {
   return (
     <main className="grid min-h-screen place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">
       <div className="text-center">
-        <p className="text-base font-semibold text-indigo-400">404</p>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <p className="text-base font-semibold text-accent">404</p>
+        <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl">
           Page not found
         </h1>
-        <p className="mt-6 text-base leading-7 text-gray-400">
+        <p className="mt-6 text-base leading-7 text-slate-500">
           Sorry, we couldn&apos;t find the page you&apos;re looking for.
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <button
-            onClick={() => (window.location.href = "/")}
-            className="rounded-md bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400 flex items-center gap-2 transition-colors"
+          <Link
+            href="/"
+            className="rounded-md bg-accent px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-accent-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent flex items-center gap-2 transition-colors"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-              />
-            </svg>
+            <Home size={16} />
             Go back home
-          </button>
+          </Link>
           <button
+            type="button"
             onClick={() => window.history.back()}
-            className="text-sm font-semibold text-black hover:text-indigo-300 flex items-center gap-2 transition-colors"
+            className="text-sm font-semibold text-ink hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded flex items-center gap-2 transition-colors"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-              />
-            </svg>
+            <ArrowLeft size={16} />
             Go back
           </button>
         </div>

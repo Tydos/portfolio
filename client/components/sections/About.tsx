@@ -1,71 +1,45 @@
 import Image from "next/image";
-import { User, Code, Linkedin, Instagram } from "react-feather";
+import Link from "next/link";
+import { HERO } from "../../constants/config";
 
 function About() {
   return (
-    <section id="about" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12 items-center">
-        <div className="lg:col-span-8">
-          {/* <div className="flex items-center gap-3 mb-6 text-slate-400">
-              <User className="text-indigo-600" size={20} />
-              <span className="text-sm font-black uppercase tracking-widest">
-                Prasad Jawale
-              </span>
-            </div> */}
-
-          <h2 className="text-3xl tracking-tighter leading-[1.1] uppercase font-bold text-slate-900 mb-6 border-b-4 border-indigo-500 pb-2 inline-block">
-            About Me
-          </h2>
-
-          <p className="text-slate-500 text-md md:text-md max-w-2xl font-medium leading-relaxed mb-6">
-            Hi, I&apos;m Prasad. I&apos;m pursuing my Master&apos;s in Data
-            Science, where I focus on machine learning and building intelligent
-            systems. I enjoy designing and developing websites, Android apps,
-            and building APIs, and I&apos;m interested in creating clean,
-            minimalistic solutions that solve real problems.
-            <br />
-            Outside of tech, I&apos;m passionate about photography, especially
-            astrophotography and landscapes. I enjoy planning night shoots,
-            working with long exposures, and refining images in Lightroom. I
-            also like biking, playing guitar, and reading nonfiction, which
-            keeps me curious and always learning.
+    <section id="about" className="pt-28 md:pt-32 pb-16 md:pb-20 px-6 scroll-mt-24">
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        <div className="lg:col-span-7 order-2 lg:order-1">
+          <h1 className="text-4xl sm:text-5xl font-bold text-ink tracking-tight leading-[1.05]">
+            {HERO.name}
+          </h1>
+          <p className="mt-3 text-lg sm:text-xl text-accent font-medium">
+            {HERO.role}
+          </p>
+          <p className="mt-6 text-base text-ink-muted max-w-prose leading-relaxed">
+            {HERO.proof}
           </p>
 
-          <div className="flex items-center gap-4 mt-4">
-            <a
-              href="https://github.com/Tydos"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-600 hover:text-indigo-600 transition-colors text-2xl"
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="#resume"
+              className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 bg-accent hover:bg-accent-hover text-white text-sm font-semibold rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              <Code />
-            </a>
-            <a
-              href="https://www.instagram.com/prasaadjawale/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-600 hover:text-indigo-600 transition-colors text-2xl"
+              View resume
+            </Link>
+            <Link
+              href="#technical-eye"
+              className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 border border-slate-200 hover:border-slate-300 text-ink text-sm font-semibold rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              <Instagram />
-            </a>
-            <a
-              href="https://linkedin.com/in/prasadjawale"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-slate-600 hover:text-indigo-600 transition-colors text-2xl"
-            >
-              <Linkedin />
-            </a>
+              View projects
+            </Link>
           </div>
         </div>
 
-        <div className="lg:col-span-4 flex justify-center">
+        <div className="lg:col-span-5 flex justify-center order-1 lg:order-2">
           <Image
             src="https://res.cloudinary.com/duws62b88/image/upload/v1737421606/myimg_x0kuyo.jpg"
-            alt="Prasad Jawale"
-            width={320}
-            height={400}
-            className="rounded-3xl shadow-xl w-full max-w-xs object-cover"
+            alt="Portrait of Prasad Jawale"
+            width={360}
+            height={440}
+            className="rounded-2xl shadow-md w-full max-w-[280px] sm:max-w-xs object-cover aspect-[4/5]"
             priority
           />
         </div>

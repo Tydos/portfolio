@@ -3,7 +3,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/:path*",
+        source: "/api/:path((?!images$).*)",
         destination: "http://localhost:8000/:path*",
       },
     ];

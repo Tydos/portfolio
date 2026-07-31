@@ -25,13 +25,11 @@ Merged frontend and backend instances into a single Vercel project for easy mana
 
 ## Supabase Setup Notes
 
-- **Use the anon key** (`eyJ...` JWT) for the frontend — it is safe to expose publicly via `NEXT_PUBLIC_*` env vars.
-- **Database table access:** Grant the `anon` role CRUD permissions on each table and enable RLS with matching policies, otherwise PostgREST returns 403.
-  ```sql
-  GRANT SELECT, INSERT, UPDATE, DELETE ON your_table TO anon;
-  CREATE POLICY "Public access" ON your_table FOR ALL TO anon USING (true) WITH CHECK (true);
-  ```
-- **Supabase Storage bucket access:** Storage buckets also require CRUD access policies set in the Storage → Policies section, otherwise uploads/reads return 403.
+Gallery **reads** go through `/api/images` on the Next.js server using `SUPABASE_URL` + `SUPABASE_KEY` (or `SUPABASE_ANON_KEY`) from `client/.env`. Those vars are server-only — do not copy the service-role key into `NEXT_PUBLIC_*`.
+
+- **Frontend public vars** (`client/.env.local`): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_BUCKET` (and anon key only if you add client-side Supabase auth later).
+- **Read-only RLS (recommended for anon key):** run [`supabase/read-only-photographs.sql`](supabase/read-only-photographs.sql) in the Supabase SQL editor.
+- **Storage:** keep the `images` bucket public, or add a Storage policy allowing `SELECT` for anonymous reads.
 
 ## Prerequisites
 

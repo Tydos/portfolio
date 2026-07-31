@@ -52,23 +52,15 @@ export default function GalleryPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-white text-ink">
       <header className="px-6 py-5 max-w-6xl mx-auto">
-        <Link href="/" className="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors">
-          ← Prasad Jawale
+        <Link href="/#creative-eye" className="text-sm font-medium text-ink-muted hover:text-accent transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded">
+          ← Back to portfolio
         </Link>
       </header>
 
       <main className="px-6 pb-12 max-w-6xl mx-auto">
-        {/* Title */}
-        <div className="mb-16 relative overflow-hidden">
-          <div className="absolute -top-24 -right-24 opacity-5 rotate-12 pointer-events-none">
-            <Camera size={500} />
-          </div>
-          <Camera size={20} className="text-rose-500 mb-6" />
-          <h1 className="text-4xl font-bold uppercase tracking-tight text-white mb-2">Gallery</h1>
-          <div className="h-2 w-20 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-full" />
-        </div>
+        <h1 className="text-section font-bold text-ink mb-10 pb-3 border-b-2 border-accent">Gallery</h1>
 
         {/* Admin controls */}
         {isAdmin && (
@@ -76,38 +68,40 @@ export default function GalleryPage() {
             <div>
               <button
                 onClick={() => { setShowUpload(v => !v); setActionStatus(null); }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400 text-xs font-semibold uppercase tracking-wider transition-colors"
+                className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-lg border border-slate-200 text-ink-muted hover:border-accent hover:text-accent text-sm font-medium transition-colors"
               >
                 <Upload size={14} />
-                {showUpload ? "Close" : "Upload Photo"}
+                {showUpload ? "Close upload" : "Upload photos"}
               </button>
 
               {showUpload && (
-                <form onSubmit={handleUpload} className="mt-4 p-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col gap-4 max-w-md">
+                <form onSubmit={handleUpload} className="mt-4 p-5 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-4 max-w-md">
                   <div>
-                    <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">JPEG files</label>
+                    <label htmlFor="gallery-upload" className="block text-sm text-ink-muted mb-1">JPEG files</label>
                     <input
+                      id="gallery-upload"
                       ref={fileInputRef}
                       type="file" accept=".jpg,.jpeg" multiple required
                       onChange={e => setUploadFiles(Array.from(e.target.files ?? []))}
-                      className="w-full text-sm text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 cursor-pointer"
+                      className="w-full text-sm text-ink file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-white file:text-ink file:border file:border-slate-200 cursor-pointer"
                     />
-                    {uploadFiles.length > 1 && <p className="mt-1 text-xs text-slate-500">{uploadFiles.length} files selected</p>}
+                    {uploadFiles.length > 1 && <p className="mt-1 text-xs text-ink-muted">{uploadFiles.length} files selected</p>}
                   </div>
                   <div>
-                    <label className="block text-xs text-slate-400 mb-1 uppercase tracking-wider">Category</label>
+                    <label htmlFor="gallery-category" className="block text-sm text-ink-muted mb-1">Category</label>
                     <input
+                      id="gallery-category"
                       type="text" value={uploadCategory} onChange={e => setUploadCategory(e.target.value)} placeholder="nature"
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-ink placeholder-ink-muted/60 focus:outline-none focus:border-accent transition-colors"
                     />
                   </div>
-                  {uploadProgress && <p className="text-xs text-slate-400">Uploading {uploadProgress.done} / {uploadProgress.total}…</p>}
+                  {uploadProgress && <p className="text-xs text-ink-muted">Uploading {uploadProgress.done} of {uploadProgress.total}…</p>}
                   {actionStatus && !uploadProgress && (
-                    <p className={`text-xs ${actionStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>{actionStatus.msg}</p>
+                    <p className={`text-xs ${actionStatus.ok ? "text-emerald-700" : "text-red-600"}`} role="status">{actionStatus.msg}</p>
                   )}
                   <button
                     type="submit" disabled={uploading || !uploadFiles.length}
-                    className="self-start flex items-center gap-2 px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-semibold uppercase tracking-wider transition-colors"
+                    className="self-start flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-lg bg-accent hover:bg-accent-hover disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
                   >
                     <Upload size={13} />
                     {uploading ? "Uploading…" : uploadFiles.length > 1 ? `Upload ${uploadFiles.length} photos` : "Upload"}
@@ -119,15 +113,15 @@ export default function GalleryPage() {
             <div>
               <button
                 onClick={() => { setDeleteMode(v => !v); setActionStatus(null); }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border text-xs font-semibold uppercase tracking-wider transition-colors ${deleteMode ? "border-rose-500 text-rose-400 bg-rose-500/10" : "border-slate-700 text-slate-400 hover:border-rose-500 hover:text-rose-400"}`}
+                className={`flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-lg border text-sm font-medium transition-colors ${deleteMode ? "border-red-500 text-red-600 bg-red-50" : "border-slate-200 text-ink-muted hover:border-red-400 hover:text-red-600"}`}
               >
                 <Trash2 size={14} />
-                {deleteMode ? "Done" : "Delete Photos"}
+                {deleteMode ? "Done deleting" : "Delete photos"}
               </button>
               {deleteMode && (
-                <div className="mt-4 p-5 bg-slate-900 border border-slate-800 rounded-xl flex flex-col gap-4 max-w-md">
-                  <p className="text-xs text-slate-400">Click the <span className="text-rose-400">✕</span> on any photo to delete it.</p>
-                  {actionStatus && <p className={`text-xs ${actionStatus.ok ? "text-emerald-400" : "text-rose-400"}`}>{actionStatus.msg}</p>}
+                <div className="mt-4 p-5 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-4 max-w-md">
+                  <p className="text-sm text-ink-muted">Select the ✕ on a photo to delete it.</p>
+                  {actionStatus && <p className={`text-xs ${actionStatus.ok ? "text-emerald-700" : "text-red-600"}`} role="status">{actionStatus.msg}</p>}
                 </div>
               )}
             </div>
@@ -139,7 +133,7 @@ export default function GalleryPage() {
           <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
           <input
             type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search photos…"
-            className="w-full bg-slate-900 border border-slate-800 rounded-lg pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition-colors"
+            className="w-full bg-white border border-slate-200 rounded-lg pl-10 pr-4 py-3 text-sm text-ink placeholder-ink-muted/60 focus:outline-none focus:border-accent transition-colors"
           />
         </div>
 
@@ -150,7 +144,7 @@ export default function GalleryPage() {
               <button
                 key={cat}
                 onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border transition-colors ${activeCategory === cat ? "border-rose-500 text-rose-400 bg-rose-500/10" : "border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white"}`}
+                className={`px-3 py-1.5 min-h-[44px] rounded-full text-xs font-medium border transition-colors ${activeCategory === cat ? "border-accent text-accent bg-accent-subtle" : "border-slate-200 text-ink-muted hover:border-slate-300 hover:text-ink"}`}
               >
                 {cat}
               </button>
@@ -159,7 +153,7 @@ export default function GalleryPage() {
         )}
 
         {(query || activeCategory) && (
-          <p className="text-sm text-slate-500 mb-6">Showing {filteredPhotos.length} of {photos.length} photos</p>
+            <p className="text-sm text-ink-muted mb-6">Showing {filteredPhotos.length} of {photos.length} photos</p>
         )}
       </main>
 
@@ -167,25 +161,26 @@ export default function GalleryPage() {
       <section className="px-6 pb-12">
         {loading ? (
           <div className="flex items-center justify-center py-32">
-            <span className="w-8 h-8 rounded-full border-2 border-slate-700 border-t-rose-500 animate-spin" />
+            <span className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-accent animate-spin" role="status" aria-label="Loading photos" />
           </div>
         ) : filteredPhotos.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-32 text-slate-600">
-            <Camera size={48} className="mb-4" />
-            <p className="text-sm uppercase tracking-widest">No photos match your search</p>
+          <div className="flex flex-col items-center justify-center py-32 text-ink-muted">
+            <Camera size={40} className="mb-4" aria-hidden="true" />
+            <p className="text-sm">No photos match your search.</p>
+            <p className="text-sm mt-1">Try a different keyword or clear the filters.</p>
           </div>
         ) : (
           <>
             <Gallery photos={filteredPhotos} deleteMode={deleteMode} deletingIds={deletingIds} onDelete={handleDelete} />
             {totalPages > 1 && (
               <div className="mt-10 flex flex-col items-center gap-3">
-                <p className="text-xs text-slate-600">Page {page} of {totalPages} · {total} photos</p>
+                <p className="text-xs text-ink-muted">Page {page} of {totalPages} · {total} photos</p>
                 <div className="flex items-center gap-1">
-                  <button onClick={() => goToPage(page - 1)} disabled={page === 1} className="px-3 py-1.5 rounded border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed text-xs transition-colors">←</button>
+                  <button type="button" onClick={() => goToPage(page - 1)} disabled={page === 1} aria-label="Previous page" className="px-3 py-1.5 min-h-[44px] min-w-[44px] rounded border border-slate-200 text-ink-muted hover:border-slate-300 hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed text-xs transition-colors">←</button>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                    <button key={p} onClick={() => goToPage(p)} className={`px-3 py-1.5 rounded border text-xs transition-colors ${p === page ? "border-rose-500 text-rose-400 bg-rose-500/10" : "border-slate-700 text-slate-500 hover:border-slate-500 hover:text-white"}`}>{p}</button>
+                    <button type="button" key={p} onClick={() => goToPage(p)} aria-current={p === page ? "page" : undefined} className={`px-3 py-1.5 min-h-[44px] min-w-[44px] rounded border text-xs transition-colors ${p === page ? "border-accent text-accent bg-accent-subtle" : "border-slate-200 text-ink-muted hover:border-slate-300 hover:text-ink"}`}>{p}</button>
                   ))}
-                  <button onClick={() => goToPage(page + 1)} disabled={page === totalPages} className="px-3 py-1.5 rounded border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed text-xs transition-colors">→</button>
+                  <button type="button" onClick={() => goToPage(page + 1)} disabled={page === totalPages} aria-label="Next page" className="px-3 py-1.5 min-h-[44px] min-w-[44px] rounded border border-slate-200 text-ink-muted hover:border-slate-300 hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed text-xs transition-colors">→</button>
                 </div>
               </div>
             )}

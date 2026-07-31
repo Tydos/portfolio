@@ -40,12 +40,21 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
     async (p: number) => {
       setLoading(true);
 
-      const { photos: data, total: t } = await fetchPhotos(p, pageSize);
-
-      setPhotos(data);
-      setTotal(t);
-      setPage(p);
-      setLoading(false);
+      try {
+        const { photos: data, total: t } = await fetchPhotos(p, pageSize);
+        setPhotos(data);
+        setTotal(t);
+        setPage(p);
+      } catch (err) {
+        console.warn(
+          "usePhotos:",
+          err instanceof Error ? err.message : "load failed",
+        );
+        setPhotos([]);
+        setTotal(0);
+      } finally {
+        setLoading(false);
+      }
     },
     [pageSize],
   );

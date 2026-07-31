@@ -1,61 +1,112 @@
-import { supabase } from "./supabase";
+import { supabase, isSupabaseConfigured } from "./supabase";
 import type { Photo } from "../types";
 
-const BUCKET = process.env.NEXT_PUBLIC_SUPABASE_BUCKET!;
+const BUCKET = process.env.NEXT_PUBLIC_SUPABASE_BUCKET ?? "";
 export const PHOTOS_PAGE_SIZE = 50;
 
-/**
- * Converts a raw database row into a typed Photo object.
- *
- * @param item - Raw row returned from Supabase query
- * @returns Normalized Photo object
- */
+const emptyResult = { photos: [] as Photo[], total: 0 };
+
 const toRow = (item: Record<string, unknown>): Photo => ({
   id: item.id as number,
   src: item.url as string,
   width: (item.width as number) || 2000,
   height: (item.height as number) || 2000,
-  title: item.filename as string,
-  category: item.category as string,
+  title: (item.filename as string) || (item.title as string) || "Photo",
+  category: (item.category as string) || "",
 });
 
+type ApiPhotoRecord = Record<string, unknown>;
+
+function normalizeApiPayload(
+  data: unknown,
+  page: number,
+  pageSize: number,
+): { photos: Photo[]; total: number } {
+  if (data && typeof data === "object" && "photos" in data && "total" in data) {
+    const payload = data as { photos: ApiPhotoRecord[]; total: number };
+    return {
+      photos: payload.photos.map((row) => toRow(row)),
+      total: payload.total,
+    };
+  }
+
+  if (Array.isArray(data)) {
+    return {
+      photos: data.map((row) => toRow(row as ApiPhotoRecord)),
+      total: data.length,
+    };
+  }
+
+  if (data && typeof data === "object") {
+    const entries = Object.entries(data as Record<string, ApiPhotoRecord>);
+    const offset = (page - 1) * pageSize;
+    const slice = entries.slice(offset, offset + pageSize);
+
+    return {
+      photos: slice.map(([id, item]) =>
+        toRow({
+          id: Number(id),
+          url: item.url,
+          filename: item.title ?? item.url,
+          category: item.category,
+          width: item.width ?? 2000,
+          height: item.height ?? 2000,
+        }),
+      ),
+      total: entries.length,
+    };
+  }
+
+  return emptyResult;
+}
+
+async function fetchPhotosFromApi(
+  page: number,
+  pageSize: number,
+): Promise<{ photos: Photo[]; total: number }> {
+  const offset = (page - 1) * pageSize;
+  const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
+  const url = base
+    ? `${base}/images?limit=${pageSize}&offset=${offset}`
+    : `/api/images?limit=${pageSize}&offset=${offset}`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.warn("fetchPhotosFromApi:", res.status, res.statusText);
+      return emptyResult;
+    }
+
+    const data: unknown = await res.json();
+    return normalizeApiPayload(data, page, pageSize);
+  } catch (err) {
+    console.warn(
+      "fetchPhotosFromApi:",
+      err instanceof Error ? err.message : "network error",
+    );
+    return emptyResult;
+  }
+}
+
 /**
- * Fetches paginated photos from the Supabase "photographs" table.
- *
- * Uses offset-based pagination and returns total row count for UI pagination.
- *
- * @param page - Page number (1-based)
- * @param pageSize - Number of items per page
- * @returns Object containing photos array and total count
+ * Fetches paginated photos via `/api/images` (Supabase → FastAPI → static fallback).
+ * Never throws; returns an empty list on failure.
  */
 export const fetchPhotos = async (
   page = 1,
   pageSize = PHOTOS_PAGE_SIZE,
 ): Promise<{ photos: Photo[]; total: number }> => {
-  const from = (page - 1) * pageSize;
-
-  const { data, error, count } = await supabase
-    .from("photographs")
-    .select("id, filename, url, category, width, height", { count: "exact" })
-    .order("id")
-    .range(from, from + pageSize - 1);
-
-  if (error) throw new Error(error.message);
-
-  return {
-    photos: (data ?? []).map(toRow),
-    total: count ?? 0,
-  };
+  try {
+    return await fetchPhotosFromApi(page, pageSize);
+  } catch (err) {
+    console.warn(
+      "fetchPhotos:",
+      err instanceof Error ? err.message : "unknown error",
+    );
+    return emptyResult;
+  }
 };
 
-/**
- * Reads image dimensions from a File object before upload.
- *
- * Falls back to default dimensions if the image fails to load.
- *
- * @param file - Image file selected by the user
- * @returns Promise resolving to image width and height
- */
 const getImageDimensions = (
   file: File,
 ): Promise<{ width: number; height: number }> =>
@@ -64,10 +115,7 @@ const getImageDimensions = (
     const url = URL.createObjectURL(file);
 
     img.onload = () => {
-      resolve({
-        width: img.naturalWidth,
-        height: img.naturalHeight,
-      });
+      resolve({ width: img.naturalWidth, height: img.naturalHeight });
       URL.revokeObjectURL(url);
     };
 
@@ -79,20 +127,15 @@ const getImageDimensions = (
     img.src = url;
   });
 
-/**
- * Uploads a photo to Supabase Storage and inserts metadata into the database.
- *
- * If the database insert fails, the uploaded file is removed to maintain consistency.
- *
- * @param file - Image file to upload
- * @param category - Photo category label
- */
 export const uploadPhoto = async (
   file: File,
   category: string,
 ): Promise<void> => {
-  const filename = `${Date.now()}_${file.name.toLowerCase()}`;
+  if (!isSupabaseConfigured || !BUCKET) {
+    throw new Error("Supabase is not configured.");
+  }
 
+  const filename = `${Date.now()}_${file.name.toLowerCase()}`;
   const { width, height } = await getImageDimensions(file);
 
   const { error: storageError } = await supabase.storage
@@ -119,17 +162,11 @@ export const uploadPhoto = async (
   }
 };
 
-/**
- * Deletes a photo from both the database and Supabase Storage.
- *
- * Order matters:
- * 1. Fetch filename
- * 2. Delete DB row
- * 3. Remove file from storage
- *
- * @param id - Photo database ID
- */
 export const deletePhoto = async (id: number): Promise<void> => {
+  if (!isSupabaseConfigured || !BUCKET) {
+    throw new Error("Supabase is not configured.");
+  }
+
   const { data, error: fetchError } = await supabase
     .from("photographs")
     .select("filename")
