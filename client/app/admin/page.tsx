@@ -14,20 +14,11 @@ export default function AdminPage() {
   const isAdmin = session?.user?.user_metadata?.user_name === GITHUB_USERNAME;
 
   useEffect(() => {
-    // #region agent log
-    fetch('http://127.0.0.1:7738/ingest/556434ca-3d4f-4d53-ba0d-c5ec3fd895de',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e8399b'},body:JSON.stringify({sessionId:'e8399b',location:'admin/page.tsx:useEffect',message:'Admin page mounted',data:{},timestamp:Date.now(),hypothesisId:'H-A'})}).catch(()=>{});
-    // #endregion
     getSession().then(({ data }) => {
-      // #region agent log
-      fetch('http://127.0.0.1:7738/ingest/556434ca-3d4f-4d53-ba0d-c5ec3fd895de',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e8399b'},body:JSON.stringify({sessionId:'e8399b',location:'admin/page.tsx:getSession',message:'getSession result',data:{hasSession:!!data.session,user:data.session?.user?.user_metadata?.user_name??null},timestamp:Date.now(),hypothesisId:'H-A'})}).catch(()=>{});
-      // #endregion
       setSession(data.session);
       setLoading(false);
     });
-    const { data: { subscription } } = onAuthStateChange((event, s) => {
-      // #region agent log
-      fetch('http://127.0.0.1:7738/ingest/556434ca-3d4f-4d53-ba0d-c5ec3fd895de',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'e8399b'},body:JSON.stringify({sessionId:'e8399b',location:'admin/page.tsx:authStateChange',message:'Auth state changed',data:{event,user:s?.user?.user_metadata?.user_name??null},timestamp:Date.now(),hypothesisId:'H-C'})}).catch(()=>{});
-      // #endregion
+    const { data: { subscription } } = onAuthStateChange((_event, s) => {
       setSession(s);
       setLoading(false);
     });
@@ -62,7 +53,7 @@ export default function AdminPage() {
       ) : (
         <div className="flex flex-col items-center gap-4 text-sm">
           <p className="text-emerald-400">Signed in as @{session.user.user_metadata?.user_name}</p>
-          <Link href="/gallery" className="text-slate-400 hover:text-white transition-colors underline underline-offset-4">
+          <Link href="/#creative-eye" className="text-slate-400 hover:text-white transition-colors underline underline-offset-4">
             Go to Gallery
           </Link>
           <button onClick={() => authSignOut()} className="flex items-center gap-1.5 text-slate-500 hover:text-white transition-colors">

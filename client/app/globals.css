@@ -51,3 +51,16 @@
 .github-calendar text {
   font-family: var(--font-geist-sans), sans-serif !important;
 }
+
+.github-calendar .react-activity-calendar {
+  width: 100%;
+}
+
+.github-calendar .react-activity-calendar__scroll-container {
+  overflow: visible;
+}
+
+.github-calendar .react-activity-calendar__calendar {
+  width: 100%;
+  height: auto;
+}

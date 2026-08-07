@@ -2,40 +2,6 @@
 
 Full-stack portfolio site — Next.js frontend + FastAPI backend.
 
-### Project Versions
-
-**v0 — Node + React (CRA)**  
-Initial setup with a separate Express backend and React frontend. Frequent CORS issues due to cross-domain API calls on Vercel.
-
-**v1 — FastAPI Backend**  
-Replaced Node with FastAPI for future ML integration. Added Pydantic validation, PostgreSQL (Supabase), and image uploads (Cloudinary → Supabase Storage). Included fallback data for reliability.
-
-**v2 — Next.js Migration**  
-Moved frontend to Next.js (later migrated to TypeScript) for taking advantage of image based optimisation. Introduced SSR, App Router, optimized images, and a full gallery system. GitHub Projects data became dynamic via API.
-
-**v3 — Unified Deployment**  
-Merged frontend and backend instances into a single Vercel project for easy management. Backend served at `/api/*`, eliminating CORS. Required build/config fixes for Python support.
-
-### Current Stack
-- **Frontend:** Next.js 14, TypeScript, Tailwind  
-- **Backend:** FastAPI (Python 3.11, Pydantic v2)  
-- **Storage:** Supabase (DB + storage)  
-- **Deployment:** Single Vercel project  
-- **CI:** GitHub Actions (Vitest, pytest, ruff)
-
-## Supabase Setup Notes
-
-Gallery **reads** go through `/api/images` on the Next.js server using `SUPABASE_URL` + `SUPABASE_KEY` (or `SUPABASE_ANON_KEY`) from `client/.env`. Those vars are server-only — do not copy the service-role key into `NEXT_PUBLIC_*`.
-
-- **Frontend public vars** (`client/.env.local`): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_BUCKET` (and anon key only if you add client-side Supabase auth later).
-- **Read-only RLS (recommended for anon key):** run [`supabase/read-only-photographs.sql`](supabase/read-only-photographs.sql) in the Supabase SQL editor.
-- **Storage:** keep the `images` bucket public, or add a Storage policy allowing `SELECT` for anonymous reads.
-
-## Prerequisites
-
-- Node.js 20+
-- Python 3.11+
-
 ## Setup
 
 Copy the example env file and fill in your values:

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import ProjectCard from "../cards/ProjectCard";
+import ProjectRow from "../cards/ProjectRow";
 import SectionTitle from "../ui/SectionTitle";
 import { ChevronDown, ChevronUp } from "react-feather";
 import type { Project } from "../../types";
@@ -28,7 +28,7 @@ function Projects({ projects }: ProjectsProps) {
     <div className="max-w-6xl mx-auto">
       <SectionTitle>Projects</SectionTitle>
 
-      <div className="github-calendar -mx-1 mb-8 flex justify-center overflow-x-auto px-1 md:mb-12">
+      <div className="github-calendar mb-8 w-full md:mb-12">
         <GitHubCalendar
           username={GITHUB_USERNAME}
           colorScheme="light"
@@ -41,9 +41,14 @@ function Projects({ projects }: ProjectsProps) {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
-        {visible.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
+      <div className="flex flex-col">
+        {visible.map((project, i) => (
+          <div
+            key={project.slug}
+            className={i > 0 ? "mt-10 pt-10 border-t border-slate-100 md:mt-16 md:pt-16" : ""}
+          >
+            <ProjectRow project={project} index={i} />
+          </div>
         ))}
       </div>
 

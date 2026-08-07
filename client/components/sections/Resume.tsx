@@ -2,6 +2,7 @@ import { ExternalLink } from "react-feather";
 import SectionTitle from "../ui/SectionTitle";
 import {
   RESUME_SUMMARY_PARAGRAPHS,
+  RESUME_SKILL_GROUPS,
   RESUME_EXPERIENCE,
   RESUME_EDUCATION,
   RESUME_PUBLICATION,
@@ -67,13 +68,36 @@ function Resume() {
         <div className="lg:col-span-8 flex flex-col gap-10">
           <ExperienceSection experience={RESUME_EXPERIENCE} />
 
+          <section>
+            <SubsectionTitle title={RESUME_SECTION_LABELS.skills} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {RESUME_SKILL_GROUPS.map((group) => (
+                <div key={group.title}>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted mb-2.5">
+                    {group.title}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.items.map((item) => (
+                      <span
+                        key={item}
+                        className="px-2.5 py-1 bg-slate-100 text-ink text-xs rounded-full"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2 border-t border-slate-100">
             <section>
               <SubsectionTitle title={RESUME_SECTION_LABELS.education} />
               <ul className="space-y-4">
                 {RESUME_EDUCATION.map((edu, idx) => (
                   <li key={idx}>
-                    <p className="font-medium text-ink">{edu.school}</p>
+                    <p className="text-base font-semibold text-ink">{edu.school}</p>
                     <p className="text-sm text-ink-muted mt-0.5">
                       {edu.degree} · {edu.period}
                     </p>
@@ -84,7 +108,7 @@ function Resume() {
 
             <section>
               <SubsectionTitle title={RESUME_SECTION_LABELS.publications} />
-              <p className="text-sm font-medium text-ink leading-snug">
+              <p className="text-base font-semibold text-ink leading-snug">
                 {RESUME_PUBLICATION.title}
               </p>
               <p className="text-sm text-ink-muted mt-1">
