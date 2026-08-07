@@ -18,7 +18,7 @@ export function parsePhotographPagination(
   limitParam: string | null,
   offsetParam: string | null,
 ): { limit: number; offset: number } {
-  const limit = Math.min(100, Math.max(1, Number(limitParam) || 50));
+  const limit = Math.min(100, Math.max(1, Number(limitParam) || 25));
   const offset = Math.max(0, Number(offsetParam) || 0);
   return { limit, offset };
 }

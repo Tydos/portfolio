@@ -1,7 +1,10 @@
-import { ExternalLink } from "react-feather";
+import { ExternalLink, Linkedin } from "react-feather";
 import SectionTitle from "../ui/SectionTitle";
+import Reveal from "../ui/Reveal";
+import { CONTACT } from "../../constants/config";
 import {
   RESUME_SUMMARY_PARAGRAPHS,
+  RESUME_SKILL_GROUPS,
   RESUME_EXPERIENCE,
   RESUME_EDUCATION,
   RESUME_PUBLICATION,
@@ -26,7 +29,7 @@ const ExperienceSection = ({ experience }: ExperienceSectionProps) => (
     <SubsectionTitle title={RESUME_SECTION_LABELS.experience} />
     <div className="relative border-l border-slate-200 ml-2 space-y-8 py-1">
       {experience.map((exp, idx) => (
-        <div key={idx} className="relative pl-8">
+        <Reveal key={idx} className="relative pl-8" delay={idx * 60}>
           <div className="absolute -left-[5px] top-1.5 w-2 h-2 rounded-full bg-accent" />
 
           <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
@@ -45,7 +48,7 @@ const ExperienceSection = ({ experience }: ExperienceSectionProps) => (
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       ))}
     </div>
   </section>
@@ -61,11 +64,43 @@ function Resume() {
             <p className="text-ink-muted text-sm leading-relaxed max-w-prose -mt-4">
               {RESUME_SUMMARY_PARAGRAPHS[0]}
             </p>
+            <a
+              href={CONTACT.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 mt-6 min-h-[44px] px-5 py-2.5 rounded-full border border-slate-200 bg-white text-sm font-medium text-ink hover:border-accent/40 hover:text-accent transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              <Linkedin size={16} aria-hidden="true" />
+              Connect on LinkedIn
+            </a>
           </div>
         </div>
 
         <div className="lg:col-span-8 flex flex-col gap-10">
           <ExperienceSection experience={RESUME_EXPERIENCE} />
+
+          <section>
+            <SubsectionTitle title={RESUME_SECTION_LABELS.skills} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {RESUME_SKILL_GROUPS.map((group) => (
+                <div key={group.title}>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted mb-2.5">
+                    {group.title}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.items.map((item) => (
+                      <span
+                        key={item}
+                        className="px-2.5 py-1 bg-slate-100 text-ink text-xs rounded-full"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2 border-t border-slate-100">
             <section>
@@ -73,7 +108,7 @@ function Resume() {
               <ul className="space-y-4">
                 {RESUME_EDUCATION.map((edu, idx) => (
                   <li key={idx}>
-                    <p className="font-medium text-ink">{edu.school}</p>
+                    <p className="text-base font-semibold text-ink">{edu.school}</p>
                     <p className="text-sm text-ink-muted mt-0.5">
                       {edu.degree} · {edu.period}
                     </p>
@@ -84,7 +119,7 @@ function Resume() {
 
             <section>
               <SubsectionTitle title={RESUME_SECTION_LABELS.publications} />
-              <p className="text-sm font-medium text-ink leading-snug">
+              <p className="text-base font-semibold text-ink leading-snug">
                 {RESUME_PUBLICATION.title}
               </p>
               <p className="text-sm text-ink-muted mt-1">

@@ -8,20 +8,22 @@ module.exports = {
     extend: {
       colors: {
         accent: {
-          DEFAULT: "#b45309",
-          hover: "#92400e",
-          light: "#fef3c7",
-          muted: "#d97706",
-          subtle: "#fffbeb",
+          DEFAULT: "#0071e3",
+          hover: "#0077ed",
+          light: "#e8f2fd",
+          muted: "#147ce5",
+          subtle: "#f5f9fe",
         },
         ink: {
-          DEFAULT: "#0f172a",
-          muted: "#475569",
+          DEFAULT: "#1d1d1f",
+          muted: "#6e6e73",
         },
       },
       fontSize: {
-        "nav": ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.08em" }],
-        "section": ["1.875rem", { lineHeight: "2.25rem", letterSpacing: "-0.02em" }],
+        "nav": ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.02em" }],
+        "section": ["2.25rem", { lineHeight: "2.5rem", letterSpacing: "-0.03em" }],
+        "hero": ["clamp(2.75rem, 6vw, 5.5rem)", { lineHeight: "1.05", letterSpacing: "-0.03em" }],
+        "display": ["clamp(1.5rem, 3vw, 2.25rem)", { lineHeight: "1.15", letterSpacing: "-0.02em" }],
       },
     },
   },

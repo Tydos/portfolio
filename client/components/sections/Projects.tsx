@@ -1,17 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import dynamic from "next/dynamic";
-import ProjectCard from "../cards/ProjectCard";
+import ProjectRow from "../cards/ProjectRow";
 import SectionTitle from "../ui/SectionTitle";
+import Reveal from "../ui/Reveal";
 import { ChevronDown, ChevronUp } from "react-feather";
 import type { Project } from "../../types";
 import { GITHUB_USERNAME } from "../../constants/config";
-
-const GitHubCalendar = dynamic(
-  () => import("react-github-calendar").then((m) => m.GitHubCalendar),
-  { ssr: false },
-);
 
 const INITIAL_COUNT = 4;
 
@@ -28,22 +23,26 @@ function Projects({ projects }: ProjectsProps) {
     <div className="max-w-6xl mx-auto">
       <SectionTitle>Projects</SectionTitle>
 
-      <div className="github-calendar -mx-1 mb-8 flex justify-center overflow-x-auto px-1 md:mb-12">
-        <GitHubCalendar
-          username={GITHUB_USERNAME}
-          colorScheme="light"
-          theme={{
-            light: ["#ecfdf5", "#bbf7d0", "#4ade80", "#16a34a", "#15803d"],
-          }}
-          fontSize={12}
-          blockRadius={3}
-          blockMargin={9}
-        />
-      </div>
+      <p className="mb-8 md:mb-10 text-sm text-ink-muted">
+        Curated work —{" "}
+        <a
+          href={`https://github.com/${GITHUB_USERNAME}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:text-accent-hover underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded"
+        >
+          @{GITHUB_USERNAME} on GitHub
+        </a>
+      </p>
 
-      <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
-        {visible.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
+      <div className="flex flex-col">
+        {visible.map((project, i) => (
+          <Reveal
+            key={project.slug}
+            className={i > 0 ? "mt-10 pt-10 border-t border-slate-100 md:mt-16 md:pt-16" : ""}
+          >
+            <ProjectRow project={project} index={i} />
+          </Reveal>
         ))}
       </div>
 

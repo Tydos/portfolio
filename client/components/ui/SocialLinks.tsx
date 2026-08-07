@@ -1,10 +1,9 @@
-import { Instagram, Linkedin } from "react-feather";
+import { Linkedin } from "react-feather";
 import GitHubIcon from "./GitHubIcon";
 import { SOCIAL_LINKS } from "../../constants/config";
 
 const ICONS = {
   GitHub: GitHubIcon,
-  Instagram,
   LinkedIn: Linkedin,
 } as const;
 

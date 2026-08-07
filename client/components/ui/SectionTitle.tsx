@@ -3,9 +3,9 @@ interface SectionTitleProps {
   className?: string;
 }
 
-function SectionTitle({ children, className = "" }: SectionTitleProps) {
+function SectionTitle({ children, className = "mb-8" }: SectionTitleProps) {
   return (
-    <h2 className={`text-section font-bold text-ink mb-8 ${className}`}>
+    <h2 className={`text-section font-semibold text-ink ${className}`}>
       {children}
     </h2>
   );

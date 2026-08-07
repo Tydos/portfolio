@@ -13,23 +13,60 @@ interface GalleryProps {
   onDelete?: (photo: Photo) => void;
 }
 
+function getFocusableElements(container: HTMLElement) {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((el) => !el.hasAttribute("disabled") && el.offsetParent !== null);
+}
+
 function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   const [loaded, setLoaded] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    setLoaded(false);
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     closeRef.current?.focus();
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (e.key !== "Tab" || !dialogRef.current) return;
+
+      const focusable = getFocusableElements(dialogRef.current);
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
+
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+      previousFocusRef.current?.focus();
+    };
   }, [onClose, photo]);
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={`Photo: ${photo.title}`}
@@ -58,7 +95,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
         alt={photo.title}
         width={photo.width}
         height={photo.height}
-        className={`max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
+        className={`max-h-[90vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl transition-all duration-500 ease-out ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
         style={{ width: "auto", height: "auto" }}
         onClick={(e) => e.stopPropagation()}
         onLoad={() => setLoaded(true)}
@@ -93,12 +130,12 @@ export default function Gallery({
         padding={0}
         spacing={0}
         columns={(containerWidth) => {
-          if (containerWidth < 500) return 1;
-          if (containerWidth < 900) return 2;
-          if (containerWidth < 1400) return 3;
+          if (containerWidth < 600) return 1;
+          if (containerWidth < 1000) return 2;
+          if (containerWidth < 1600) return 3;
           return 4;
         }}
-        breakpoints={[500, 900, 1400]}
+        breakpoints={[600, 1000, 1600]}
         componentsProps={() => ({ imageProps: { loading: "lazy" } })}
         renderPhoto={({ photo, layout, imageProps: { alt, style, src } }) => {
           const p = photo as Photo;
@@ -107,8 +144,8 @@ export default function Gallery({
 
           if (deleteMode) {
             return (
-              <div style={{ width: style?.width, padding: "6px" }}>
-                <div className="relative rounded-xl overflow-hidden shadow-sm">
+              <div style={{ width: style?.width, padding: "10px" }}>
+                <div className="relative rounded-2xl overflow-hidden">
                   <Image
                     src={src as string}
                     alt={label}
@@ -137,11 +174,11 @@ export default function Gallery({
           }
 
           return (
-            <div style={{ width: style?.width, padding: "6px" }}>
+            <div style={{ width: style?.width, padding: "10px" }}>
               <button
                 type="button"
                 onClick={() => setSelected(p)}
-                className="block w-full text-left rounded-xl overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="group block w-full text-left rounded-2xl overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 aria-label={`View ${label}`}
               >
                 <Image
@@ -150,6 +187,7 @@ export default function Gallery({
                   width={layout.width}
                   height={layout.height}
                   style={{ width: "100%", height: "auto", display: "block" }}
+                  className="transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.03]"
                 />
               </button>
             </div>

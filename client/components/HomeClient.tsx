@@ -19,8 +19,8 @@ function HomeClient({ projects }: HomeClientProps) {
       <main>
         <About />
 
-        <div id="work" className="scroll-mt-24">
-          <section id="resume" className="py-16 md:py-20 px-6 border-t border-slate-100">
+        <div className="border-t border-slate-100">
+          <section id="resume" className="py-16 md:py-20 px-6 scroll-mt-24">
             <Resume />
           </section>
 

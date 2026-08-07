@@ -32,7 +32,7 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /**
-   * Loads a specific page of photos from the backend.
+   * Loads a specific page of photos from `/api/images`.
    *
    * @param p - Page number (1-based)
    */

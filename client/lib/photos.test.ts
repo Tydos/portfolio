@@ -27,7 +27,7 @@ describe("fetchPhotos", () => {
 
     const { photos, total } = await fetchPhotos();
 
-    expect(fetchMock).toHaveBeenCalledWith("/api/images?limit=50&offset=0");
+    expect(fetchMock).toHaveBeenCalledWith("/api/images?limit=25&offset=0");
     expect(photos).toEqual([
       {
         id: 1,

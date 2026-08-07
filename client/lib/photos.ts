@@ -2,7 +2,7 @@ import { supabase, isSupabaseConfigured } from "./supabase";
 import type { Photo } from "../types";
 
 const BUCKET = process.env.NEXT_PUBLIC_SUPABASE_BUCKET ?? "";
-export const PHOTOS_PAGE_SIZE = 50;
+export const PHOTOS_PAGE_SIZE = 25;
 
 const emptyResult = { photos: [] as Photo[], total: 0 };
 
@@ -17,43 +17,12 @@ const toRow = (item: Record<string, unknown>): Photo => ({
 
 type ApiPhotoRecord = Record<string, unknown>;
 
-function normalizeApiPayload(
-  data: unknown,
-  page: number,
-  pageSize: number,
-): { photos: Photo[]; total: number } {
+function normalizeApiPayload(data: unknown): { photos: Photo[]; total: number } {
   if (data && typeof data === "object" && "photos" in data && "total" in data) {
     const payload = data as { photos: ApiPhotoRecord[]; total: number };
     return {
       photos: payload.photos.map((row) => toRow(row)),
       total: payload.total,
-    };
-  }
-
-  if (Array.isArray(data)) {
-    return {
-      photos: data.map((row) => toRow(row as ApiPhotoRecord)),
-      total: data.length,
-    };
-  }
-
-  if (data && typeof data === "object") {
-    const entries = Object.entries(data as Record<string, ApiPhotoRecord>);
-    const offset = (page - 1) * pageSize;
-    const slice = entries.slice(offset, offset + pageSize);
-
-    return {
-      photos: slice.map(([id, item]) =>
-        toRow({
-          id: Number(id),
-          url: item.url,
-          filename: item.title ?? item.url,
-          category: item.category,
-          width: item.width ?? 2000,
-          height: item.height ?? 2000,
-        }),
-      ),
-      total: entries.length,
     };
   }
 
@@ -78,7 +47,7 @@ async function fetchPhotosFromApi(
     }
 
     const data: unknown = await res.json();
-    return normalizeApiPayload(data, page, pageSize);
+    return normalizeApiPayload(data);
   } catch (err) {
     console.warn(
       "fetchPhotosFromApi:",
@@ -89,7 +58,7 @@ async function fetchPhotosFromApi(
 }
 
 /**
- * Fetches paginated photos via `/api/images` (Supabase → FastAPI → static fallback).
+ * Fetches paginated photos via `/api/images` (Supabase).
  * Never throws; returns an empty list on failure.
  */
 export const fetchPhotos = async (

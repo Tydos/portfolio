@@ -16,20 +16,20 @@ import "highlight.js/styles/github-dark.css";
 
 const mdComponents: Components = {
   h1: ({ children }) => (
-    <h1 className="text-2xl font-bold text-slate-900 mt-10 mb-4">{children}</h1>
+    <h1 className="text-2xl font-bold text-ink mt-10 mb-4">{children}</h1>
   ),
   h2: ({ children }) => (
-    <h2 className="text-xl font-bold text-slate-800 mt-8 mb-3 pb-2 border-b border-slate-100">
+    <h2 className="text-xl font-bold text-ink mt-8 mb-3 pb-2 border-b border-slate-100">
       {children}
     </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="text-base font-semibold text-slate-700 mt-6 mb-2">
+    <h3 className="text-base font-semibold text-ink mt-6 mb-2">
       {children}
     </h3>
   ),
   p: ({ children }) => (
-    <p className="text-slate-600 leading-relaxed mb-4">{children}</p>
+    <p className="text-ink-muted leading-relaxed mb-4">{children}</p>
   ),
   a: ({ href, children }) => (
     <a
@@ -42,12 +42,12 @@ const mdComponents: Components = {
     </a>
   ),
   ul: ({ children }) => (
-    <ul className="list-disc list-inside text-slate-600 space-y-1 mb-4 pl-2">
+    <ul className="list-disc list-inside text-ink-muted space-y-1 mb-4 pl-2">
       {children}
     </ul>
   ),
   ol: ({ children }) => (
-    <ol className="list-decimal list-inside text-slate-600 space-y-1 mb-4 pl-2">
+    <ol className="list-decimal list-inside text-ink-muted space-y-1 mb-4 pl-2">
       {children}
     </ol>
   ),
@@ -65,7 +65,7 @@ const mdComponents: Components = {
       </code>
     ) : (
       <code
-        className="bg-slate-100 text-slate-800 text-xs font-mono px-1.5 py-0.5 rounded"
+        className="bg-slate-100 text-ink text-xs font-mono px-1.5 py-0.5 rounded"
         {...props}
       >
         {children}
@@ -94,7 +94,7 @@ const mdComponents: Components = {
     </div>
   ),
   thead: ({ children }) => (
-    <thead className="bg-slate-50 text-slate-700">{children}</thead>
+    <thead className="bg-slate-50 text-ink">{children}</thead>
   ),
   th: ({ children }) => (
     <th className="px-4 py-2 text-left font-semibold border-b border-slate-200">
@@ -102,7 +102,7 @@ const mdComponents: Components = {
     </th>
   ),
   td: ({ children }) => (
-    <td className="px-4 py-2 border-b border-slate-100 text-slate-600">
+    <td className="px-4 py-2 border-b border-slate-100 text-ink-muted">
       {children}
     </td>
   ),
@@ -149,7 +149,7 @@ export default async function ProjectPage({
         </Link>
 
         {project.image && (
-          <div className="relative w-full h-64 rounded-2xl overflow-hidden mb-10 bg-slate-100">
+          <div className="relative w-full h-64 rounded-2xl overflow-hidden mb-10 bg-slate-100 border border-slate-200">
             <Image
               src={project.image}
               alt={project.title}
@@ -164,19 +164,19 @@ export default async function ProjectPage({
           {project.tags?.map((tag) => (
             <span
               key={tag}
-              className="px-2.5 py-1 bg-slate-100 text-slate-500 text-xs font-medium rounded-full"
+              className="px-2.5 py-1 bg-slate-100 text-ink-muted text-xs font-medium rounded-full"
             >
               {tag}
             </span>
           ))}
         </div>
 
-        <h1 className="text-3xl font-bold text-slate-900 mb-3">
+        <h1 className="text-3xl font-bold text-ink mb-3">
           {project.title}
         </h1>
 
         {project.description && (
-          <p className="text-slate-500 text-base mb-8 leading-relaxed">
+          <p className="text-ink-muted text-base mb-8 leading-relaxed">
             {project.description}
           </p>
         )}
@@ -187,7 +187,7 @@ export default async function ProjectPage({
               href={project.github}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-700 text-white text-sm font-semibold rounded-full transition-colors"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[44px] bg-accent hover:bg-accent-hover text-white text-sm font-semibold rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <Code size={14} />
               Source Code
@@ -198,7 +198,7 @@ export default async function ProjectPage({
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 border border-slate-200 hover:border-slate-400 text-slate-700 text-sm font-semibold rounded-full transition-colors"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 min-h-[44px] border border-slate-200 hover:border-slate-300 text-ink text-sm font-semibold rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               <ExternalLink size={14} />
               Live Demo
