@@ -1,0 +1,383 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-11T13:20:00Z",
+  "title": "Design System: Prasad Jawale — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "accent": {
+        "role": "primary",
+        "displayName": "System Link Blue",
+        "canonical": "#0071e3",
+        "tonalRamp": [
+          "#0a2a4d",
+          "#0d3d73",
+          "#0f5199",
+          "#1366bf",
+          "#0071e3",
+          "#3d94eb",
+          "#7ab6f2",
+          "#c5dff9"
+        ]
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "System Link Blue Hover",
+        "canonical": "#0077ed",
+        "tonalRamp": [
+          "#0a2c50",
+          "#0d4078",
+          "#1055a0",
+          "#146bc8",
+          "#0077ed",
+          "#3f9af0",
+          "#7cbaf4",
+          "#c7e1fa"
+        ]
+      },
+      "accent-muted": {
+        "role": "primary",
+        "displayName": "Signal Blue Muted",
+        "canonical": "#147ce5",
+        "tonalRamp": [
+          "#0b2d4f",
+          "#0e4275",
+          "#12579b",
+          "#156dc1",
+          "#147ce5",
+          "#4a9ceb",
+          "#80baf2",
+          "#c9e0f9"
+        ]
+      },
+      "accent-light": {
+        "role": "primary",
+        "displayName": "Signal Wash",
+        "canonical": "#e8f2fd",
+        "tonalRamp": [
+          "#1a3a5c",
+          "#2a5680",
+          "#4a7aa3",
+          "#7aa4c7",
+          "#a8c8e3",
+          "#c5dcf2",
+          "#e8f2fd",
+          "#f5f9fe"
+        ]
+      },
+      "accent-subtle": {
+        "role": "primary",
+        "displayName": "Signal Mist",
+        "canonical": "#f5f9fe",
+        "tonalRamp": [
+          "#1c3c5e",
+          "#2c5882",
+          "#4c7ca5",
+          "#7ca6c9",
+          "#aacae5",
+          "#d0e4f5",
+          "#e8f2fd",
+          "#f5f9fe"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Near-Black Ink",
+        "canonical": "#1d1d1f",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#2c2c2e",
+          "#3a3a3c",
+          "#48484a",
+          "#6e6e73",
+          "#8e8e93",
+          "#c7c7cc",
+          "#f5f5f7"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Soft Graphite",
+        "canonical": "#6e6e73",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#2c2c2e",
+          "#3a3a3c",
+          "#48484a",
+          "#6e6e73",
+          "#8e8e93",
+          "#c7c7cc",
+          "#f5f5f7"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Cool Paper Surface",
+        "canonical": "#f5f5f7",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#3a3a3c",
+          "#6e6e73",
+          "#8e8e93",
+          "#c7c7cc",
+          "#e5e5ea",
+          "#f5f5f7",
+          "#ffffff"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Page White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#3a3a3c",
+          "#6e6e73",
+          "#8e8e93",
+          "#c7c7cc",
+          "#e5e5ea",
+          "#f5f5f7",
+          "#ffffff"
+        ]
+      },
+      "border-soft": {
+        "role": "neutral",
+        "displayName": "Hairline Soft",
+        "canonical": "#f1f5f9",
+        "tonalRamp": [
+          "#0f172a",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#ffffff"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Hairline Border",
+        "canonical": "#e2e8f0",
+        "tonalRamp": [
+          "#0f172a",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#ffffff"
+        ]
+      },
+      "chip-bg": {
+        "role": "neutral",
+        "displayName": "Chip Mist",
+        "canonical": "#f1f5f9",
+        "tonalRamp": [
+          "#0f172a",
+          "#334155",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9",
+          "#ffffff"
+        ]
+      },
+      "chip-text": {
+        "role": "neutral",
+        "displayName": "Chip Graphite",
+        "canonical": "#64748b",
+        "tonalRamp": [
+          "#0f172a",
+          "#334155",
+          "#475569",
+          "#64748b",
+          "#94a3b8",
+          "#cbd5e1",
+          "#e2e8f0",
+          "#f1f5f9"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Hero / Display",
+        "purpose": "Name lockup on About only."
+      },
+      "headline": {
+        "displayName": "Section",
+        "purpose": "Section titles via SectionTitle."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Secondary display moments and large project titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Proof copy, supporting text, button labels."
+      },
+      "label": {
+        "displayName": "Nav / Label",
+        "purpose": "Compact nav wordmark and chip-scale labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "portrait-lift",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Circular hero portrait only (Tailwind shadow-lg)."
+      },
+      {
+        "name": "article-media",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "purpose": "Quiet separation for project detail images (shadow-sm)."
+      },
+      {
+        "name": "lightbox-stage",
+        "value": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+        "purpose": "Highest elevation for lightbox photograph (shadow-2xl)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "reveal",
+        "value": "0.7s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Scroll-enter opacity + translateY(24px) → rest; disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "color-transition",
+        "value": "transition-colors",
+        "purpose": "Default hover/focus color shifts on buttons, nav, and links."
+      },
+      {
+        "name": "lightbox-enter",
+        "value": "500ms ease-out opacity/scale",
+        "purpose": "Lightbox image settle from slight scale-down."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Filled accent pill for primary recruiter actions.",
+      "html": "<button class=\"ds-btn-primary\">View resume</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0.625rem 1.75rem; background: #0071e3; color: #ffffff; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 1rem; font-weight: 500; border: none; border-radius: 9999px; cursor: pointer; transition: background-color 0.15s ease; } .ds-btn-primary:hover { background: #0077ed; } .ds-btn-primary:focus-visible { outline: 2px solid #0071e3; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined pill for secondary navigation actions.",
+      "html": "<button class=\"ds-btn-secondary\">View projects</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0.625rem 1.25rem; background: #ffffff; color: #1d1d1f; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 1rem; font-weight: 500; border: 1px solid #e2e8f0; border-radius: 9999px; cursor: pointer; transition: border-color 0.15s ease; } .ds-btn-secondary:hover { border-color: #cbd5e1; } .ds-btn-secondary:focus-visible { outline: 2px solid #0071e3; outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Accent text pill for external profile links.",
+      "html": "<a class=\"ds-btn-ghost\" href=\"#\">GitHub</a>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 44px; padding: 0.625rem 1.25rem; background: transparent; color: #0071e3; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 1rem; font-weight: 500; border: none; border-radius: 9999px; text-decoration: none; cursor: pointer; transition: color 0.15s ease; } .ds-btn-ghost:hover { color: #0077ed; } .ds-btn-ghost:focus-visible { outline: 2px solid #0071e3; outline-offset: 2px; }"
+    },
+    {
+      "name": "Nav Pill",
+      "kind": "nav",
+      "refersTo": "nav-pill",
+      "description": "Sticky nav section link; active inverts to ink fill.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Primary\"><a class=\"ds-nav-pill\" href=\"#about\">About</a><a class=\"ds-nav-pill ds-nav-pill-active\" href=\"#resume\">Experience</a><a class=\"ds-nav-pill\" href=\"#technical-eye\">Projects</a></nav>",
+      "css": ".ds-nav { display: flex; flex-wrap: wrap; gap: 0.25rem; } .ds-nav-pill { display: inline-flex; align-items: center; min-height: 44px; padding: 0.5rem 1rem; border-radius: 9999px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; color: #6e6e73; text-decoration: none; transition: background-color 0.15s ease, color 0.15s ease; } .ds-nav-pill:hover { color: #1d1d1f; background: #f1f5f9; } .ds-nav-pill-active { background: #1d1d1f; color: #ffffff; } .ds-nav-pill-active:hover { background: #1d1d1f; color: #ffffff; } .ds-nav-pill:focus-visible { outline: 2px solid #0071e3; outline-offset: 2px; }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Skill and technology tags.",
+      "html": "<span class=\"ds-chip\">FastAPI</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; padding: 0.25rem 0.625rem; background: #f1f5f9; color: #64748b; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.75rem; font-weight: 500; border-radius: 9999px; }"
+    },
+    {
+      "name": "Project Media Frame",
+      "kind": "card",
+      "refersTo": null,
+      "description": "Rounded media container for project thumbnails — flat border, no card shadow.",
+      "html": "<div class=\"ds-media-frame\" role=\"img\" aria-label=\"Project thumbnail placeholder\"></div>",
+      "css": ".ds-media-frame { width: 100%; aspect-ratio: 16 / 10; border-radius: 1.75rem; border: 1px solid #e2e8f0; background: #f1f5f9; overflow: hidden; }"
+    },
+    {
+      "name": "Portfolio Field",
+      "kind": "input",
+      "refersTo": null,
+      "description": "Minimal underline field used in portfolio admin upload.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Category</span><input class=\"ds-field-input\" type=\"text\" placeholder=\"Travel\" /></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 0.25rem; width: 100%; max-width: 20rem; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-field-label { font-size: 0.875rem; color: #6e6e73; } .ds-field-input { width: 100%; padding: 0.5rem 0; border: none; border-bottom: 1px solid #e2e8f0; background: transparent; color: #1d1d1f; font-size: 0.875rem; outline: none; transition: border-color 0.15s ease; } .ds-field-input::placeholder { color: rgb(110 110 115 / 0.6); } .ds-field-input:focus { border-bottom-color: #0071e3; }"
+    },
+    {
+      "name": "Section Title",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Canonical section headline treatment.",
+      "html": "<h2 class=\"ds-section-title\">Experience</h2>",
+      "css": ".ds-section-title { margin: 0 0 2rem; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 2.25rem; line-height: 2.5rem; font-weight: 600; letter-spacing: -0.03em; color: #1d1d1f; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Cupertino Portfolio",
+    "overview": "A luxurious-minimal personal site in the Apple product-page tradition: white air, near-black type, one confident system blue, and pill controls that feel like soft hardware UI. Recruiter scanning is the primary job; photography is allowed to feel like a gallery without turning the rest of the site into chrome.\n\nDensity stays low. Sections breathe (py-16 / md:py-20), hero type is large and tight-tracked, and decorative widgets never outrank proof (resume, projects, publication, photos). Motion is a single reveal grammar plus color transitions — never ornamental noise.",
+    "keyCharacteristics": [
+      "Geist Sans everywhere; no serif pairing",
+      "Single accent blue on white / cool surface neutrals",
+      "Pill CTAs and nav; rounded media frames for projects and photos",
+      "Flat surfaces at rest; soft lift reserved for portrait, media, and lightbox",
+      "Focus rings in accent; 44px minimum interactive height"
+    ],
+    "rules": [
+      {
+        "name": "The One Signal Rule",
+        "body": "System Link Blue is for action and focus — not large backgrounds, not decorative blocks, not competing with photography.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Hierarchy Rule",
+        "body": "Near-Black Ink leads; Soft Graphite supports. Do not invent a third text color family on public pages.",
+        "section": "colors"
+      },
+      {
+        "name": "The Single Family Rule",
+        "body": "Do not introduce a second display face. Hierarchy comes from size, weight, and tracking — not font mixing.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "No card shadows on resume blocks, project rows, or section containers. Borders and whitespace do the separating.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Pill Chrome Rule",
+        "body": "Interactive chrome prefers pills; content media prefers large rounded rectangles. Do not square off primary CTAs.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do keep System Link Blue scarce and purposeful (CTAs, links, focus, small signals).",
+      "Do use Geist Sans with the established hero/section/body scale.",
+      "Do prefer pill controls and rounded media frames as implemented today.",
+      "Do honor prefers-reduced-motion for reveal and hover motion utilities.",
+      "Do maintain 44px minimum hit targets and accent focus-visible rings."
+    ],
+    "donts": [
+      "Don't replace the Cupertino Portfolio world with a new palette, serif display, or dark-default marketing theme unless explicitly redesigning.",
+      "Don't wrap resume/project content in heavy shadowed cards.",
+      "Don't flood sections with accent fills, glow, or dashboard widgets that compete with proof and photos.",
+      "Don't invent a second brand accent (emerald calendars, purple gradients, etc.) on public pages.",
+      "Don't drop below accessible focus treatment or unnamed linked images."
+    ]
+  }
+}
