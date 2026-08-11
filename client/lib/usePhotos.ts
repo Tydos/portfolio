@@ -9,7 +9,7 @@ import type { Photo } from "../types";
 
 /**
  * React hook providing paginated photo state and CRUD operations
- * backed by Supabase storage and database.
+ * Reads via Next `/api/images`; admin upload/delete via FastAPI.
  *
  * Handles:
  * - Pagination

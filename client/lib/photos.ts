@@ -1,7 +1,6 @@
-import { supabase, isSupabaseConfigured } from "./supabase";
+import { getSession } from "./auth";
 import type { Photo } from "../types";
 
-const BUCKET = process.env.NEXT_PUBLIC_SUPABASE_BUCKET ?? "";
 export const PHOTOS_PAGE_SIZE = 25;
 
 const emptyResult = { photos: [] as Photo[], total: 0 };
@@ -29,15 +28,49 @@ function normalizeApiPayload(data: unknown): { photos: Photo[]; total: number } 
   return emptyResult;
 }
 
+function getMutationApiBase(): string {
+  const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
+  if (!base) {
+    throw new Error(
+      "NEXT_PUBLIC_API_URL is not set. Admin upload/delete require the FastAPI base URL.",
+    );
+  }
+  return base;
+}
+
+async function getAdminAccessToken(): Promise<string> {
+  const { data } = await getSession();
+  const token = data.session?.access_token;
+  if (!token) {
+    throw new Error("Sign in required for photo upload/delete.");
+  }
+  return token;
+}
+
+function isJpegFilename(name: string): boolean {
+  const lower = name.toLowerCase();
+  return lower.endsWith(".jpg") || lower.endsWith(".jpeg");
+}
+
+async function readErrorDetail(res: Response): Promise<string> {
+  try {
+    const body: unknown = await res.json();
+    if (body && typeof body === "object" && "detail" in body) {
+      const detail = (body as { detail: unknown }).detail;
+      if (typeof detail === "string") return detail;
+    }
+  } catch {
+    /* ignore non-JSON */
+  }
+  return res.statusText || `HTTP ${res.status}`;
+}
+
 async function fetchPhotosFromApi(
   page: number,
   pageSize: number,
 ): Promise<{ photos: Photo[]; total: number }> {
   const offset = (page - 1) * pageSize;
-  const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
-  const url = base
-    ? `${base}/images?limit=${pageSize}&offset=${offset}`
-    : `/api/images?limit=${pageSize}&offset=${offset}`;
+  const url = `/api/images?limit=${pageSize}&offset=${offset}`;
 
   try {
     const res = await fetch(url);
@@ -58,7 +91,7 @@ async function fetchPhotosFromApi(
 }
 
 /**
- * Fetches paginated photos via `/api/images` (Supabase).
+ * Fetches paginated photos via Next.js `/api/images` (public read).
  * Never throws; returns an empty list on failure.
  */
 export const fetchPhotos = async (
@@ -76,80 +109,49 @@ export const fetchPhotos = async (
   }
 };
 
-const getImageDimensions = (
-  file: File,
-): Promise<{ width: number; height: number }> =>
-  new Promise((resolve) => {
-    const img = new Image();
-    const url = URL.createObjectURL(file);
-
-    img.onload = () => {
-      resolve({ width: img.naturalWidth, height: img.naturalHeight });
-      URL.revokeObjectURL(url);
-    };
-
-    img.onerror = () => {
-      resolve({ width: 2000, height: 2000 });
-      URL.revokeObjectURL(url);
-    };
-
-    img.src = url;
-  });
-
+/**
+ * Uploads a JPEG via FastAPI `POST /upload` with the admin Bearer JWT.
+ */
 export const uploadPhoto = async (
   file: File,
   category: string,
 ): Promise<void> => {
-  if (!isSupabaseConfigured || !BUCKET) {
-    throw new Error("Supabase is not configured.");
+  if (!isJpegFilename(file.name)) {
+    throw new Error("Only .jpg/.jpeg files are accepted.");
   }
 
+  const base = getMutationApiBase();
+  const token = await getAdminAccessToken();
   const filename = `${Date.now()}_${file.name.toLowerCase()}`;
-  const { width, height } = await getImageDimensions(file);
 
-  const { error: storageError } = await supabase.storage
-    .from(BUCKET)
-    .upload(filename, file, { contentType: "image/jpeg" });
+  const body = new FormData();
+  body.append("file", file, filename);
+  body.append("category", category);
 
-  if (storageError) throw new Error(storageError.message);
-
-  const { data: urlData } = supabase.storage
-    .from(BUCKET)
-    .getPublicUrl(filename);
-
-  const { error: dbError } = await supabase.from("photographs").insert({
-    filename,
-    url: urlData.publicUrl,
-    category,
-    width,
-    height,
+  const res = await fetch(`${base}/upload`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body,
   });
 
-  if (dbError) {
-    await supabase.storage.from(BUCKET).remove([filename]);
-    throw new Error(dbError.message);
+  if (!res.ok) {
+    throw new Error(await readErrorDetail(res));
   }
 };
 
+/**
+ * Deletes a photo via FastAPI `DELETE /delete/{id}` with the admin Bearer JWT.
+ */
 export const deletePhoto = async (id: number): Promise<void> => {
-  if (!isSupabaseConfigured || !BUCKET) {
-    throw new Error("Supabase is not configured.");
+  const base = getMutationApiBase();
+  const token = await getAdminAccessToken();
+
+  const res = await fetch(`${base}/delete/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    throw new Error(await readErrorDetail(res));
   }
-
-  const { data, error: fetchError } = await supabase
-    .from("photographs")
-    .select("filename")
-    .eq("id", id)
-    .single();
-
-  if (fetchError) throw new Error(fetchError.message);
-
-  const { error: deleteError } = await supabase
-    .from("photographs")
-    .delete()
-    .eq("id", id);
-
-  if (deleteError) throw new Error(deleteError.message);
-
-  await supabase.storage.from(BUCKET).remove([data.filename]);
 };

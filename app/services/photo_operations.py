@@ -42,8 +42,12 @@ class PhotoStorageService:
         )
         try:
             photo_id = self._db.upload_photo_to_db(photo)
+        except ValueError:
+            # Duplicate filename (and other validation) — roll back storage, re-raise for 409
+            self._uploader.delete(result["storage_key"])
+            raise
         except Exception:
-            # detelting the uploaded file since DB upload failed to avoid orphaned files
+            # Delete the uploaded file since DB upload failed to avoid orphaned files
             self._uploader.delete(result["storage_key"])
             logger.exception(
                 "DB upload failed, deleted uploaded file to avoid orphan: %s", filename
