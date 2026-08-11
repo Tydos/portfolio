@@ -20,6 +20,7 @@ interface ExperienceSectionProps {
   experience: Experience[];
 }
 
+/** Small heading used inside resume subsections. */
 const SubsectionTitle = ({ title }: SubsectionTitleProps) => (
   <h3 className="text-base font-semibold text-ink mb-5">{title}</h3>
 );
@@ -54,6 +55,7 @@ const ExperienceSection = ({ experience }: ExperienceSectionProps) => (
   </section>
 );
 
+/** Experience section: summary, skills, roles, education, and publication. */
 function Resume() {
   return (
     <div className="max-w-6xl mx-auto">

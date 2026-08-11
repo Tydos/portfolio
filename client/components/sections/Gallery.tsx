@@ -13,6 +13,7 @@ interface GalleryProps {
   onDelete?: (photo: Photo) => void;
 }
 
+/** Collects keyboard-focusable descendants inside a lightbox container. */
 function getFocusableElements(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll<HTMLElement>(
@@ -109,6 +110,14 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
   );
 }
 
+/**
+ * Responsive photo album with lightbox; optional admin delete mode.
+ *
+ * @param props.photos - Photos to render in the album.
+ * @param props.deleteMode - When true, shows per-photo delete controls.
+ * @param props.deletingIds - Photo ids currently being deleted.
+ * @param props.onDelete - Invoked when an admin confirms delete.
+ */
 export default function Gallery({
   photos,
   deleteMode,

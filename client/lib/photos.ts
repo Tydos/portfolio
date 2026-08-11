@@ -1,10 +1,12 @@
 import { getSession } from "./auth";
 import type { Photo } from "../types";
 
+/** Default page size for public gallery fetches. */
 export const PHOTOS_PAGE_SIZE = 25;
 
 const emptyResult = { photos: [] as Photo[], total: 0 };
 
+/** Maps an API photograph row into the gallery `Photo` shape. */
 const toRow = (item: Record<string, unknown>): Photo => ({
   id: item.id as number,
   src: item.url as string,
@@ -16,6 +18,12 @@ const toRow = (item: Record<string, unknown>): Photo => ({
 
 type ApiPhotoRecord = Record<string, unknown>;
 
+/**
+ * Normalizes a `/api/images` JSON body into gallery photos.
+ *
+ * @param data - Parsed JSON from the images API.
+ * @returns Photos and total count, or an empty result for unexpected shapes.
+ */
 function normalizeApiPayload(data: unknown): { photos: Photo[]; total: number } {
   if (data && typeof data === "object" && "photos" in data && "total" in data) {
     const payload = data as { photos: ApiPhotoRecord[]; total: number };
@@ -28,6 +36,12 @@ function normalizeApiPayload(data: unknown): { photos: Photo[]; total: number } 
   return emptyResult;
 }
 
+/**
+ * Resolves the FastAPI base URL used for admin upload/delete.
+ *
+ * @returns Base URL without a trailing slash.
+ * @throws If `NEXT_PUBLIC_API_URL` is unset.
+ */
 function getMutationApiBase(): string {
   const base = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
   if (!base) {
@@ -38,6 +52,12 @@ function getMutationApiBase(): string {
   return base;
 }
 
+/**
+ * Reads the admin Bearer token from the current Supabase session.
+ *
+ * @returns Access token for authorized mutation requests.
+ * @throws If the user is not signed in.
+ */
 async function getAdminAccessToken(): Promise<string> {
   const { data } = await getSession();
   const token = data.session?.access_token;
@@ -47,11 +67,18 @@ async function getAdminAccessToken(): Promise<string> {
   return token;
 }
 
+/** Returns true when `name` ends with `.jpg` or `.jpeg` (case-insensitive). */
 function isJpegFilename(name: string): boolean {
   const lower = name.toLowerCase();
   return lower.endsWith(".jpg") || lower.endsWith(".jpeg");
 }
 
+/**
+ * Extracts a human-readable error message from a failed API response.
+ *
+ * @param res - Failed `fetch` response.
+ * @returns FastAPI `detail` string when present, otherwise status text.
+ */
 async function readErrorDetail(res: Response): Promise<string> {
   try {
     const body: unknown = await res.json();
@@ -65,6 +92,13 @@ async function readErrorDetail(res: Response): Promise<string> {
   return res.statusText || `HTTP ${res.status}`;
 }
 
+/**
+ * Fetches one page of photos from the Next.js `/api/images` proxy.
+ *
+ * @param page - 1-based page index.
+ * @param pageSize - Maximum number of photos to request.
+ * @returns Photos plus total count; empty result on network or HTTP failure.
+ */
 async function fetchPhotosFromApi(
   page: number,
   pageSize: number,
@@ -91,8 +125,14 @@ async function fetchPhotosFromApi(
 }
 
 /**
- * Fetches paginated photos via Next.js `/api/images` (public read).
+ * Fetch a page of photographs for the public gallery via `/api/images`.
+ *
  * Never throws; returns an empty list on failure.
+ *
+ * @param page - 1-based page index (default 1).
+ * @param pageSize - Maximum number of photos to return (default
+ *     {@link PHOTOS_PAGE_SIZE}).
+ * @returns Photos plus total count for pagination.
  */
 export const fetchPhotos = async (
   page = 1,
@@ -110,7 +150,14 @@ export const fetchPhotos = async (
 };
 
 /**
- * Uploads a JPEG via FastAPI `POST /upload` with the admin Bearer JWT.
+ * Upload a JPEG photograph through FastAPI `POST /upload`.
+ *
+ * Requires `NEXT_PUBLIC_API_URL` and a signed-in Supabase session.
+ *
+ * @param file - Image file; must be `.jpg` or `.jpeg`.
+ * @param category - Category label stored with the photograph.
+ * @throws If the file type is invalid, env/session is missing, or the API
+ *     rejects the upload.
  */
 export const uploadPhoto = async (
   file: File,
@@ -140,7 +187,12 @@ export const uploadPhoto = async (
 };
 
 /**
- * Deletes a photo via FastAPI `DELETE /delete/{id}` with the admin Bearer JWT.
+ * Delete a photograph through FastAPI `DELETE /delete/{id}`.
+ *
+ * Requires `NEXT_PUBLIC_API_URL` and a signed-in Supabase session.
+ *
+ * @param id - Database id of the photograph to remove.
+ * @throws If env/session is missing or the API rejects the delete.
  */
 export const deletePhoto = async (id: number): Promise<void> => {
   const base = getMutationApiBase();

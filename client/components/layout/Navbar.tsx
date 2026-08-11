@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useId } from "react";
 import { Menu, X } from "react-feather";
@@ -6,6 +6,7 @@ import { NAV_ITEMS } from "../../constants/config";
 
 const NAV_OFFSET_PX = 96;
 
+/** Builds nav pill classes for the active vs inactive state. */
 const navPillClass = (active: boolean) =>
   `min-h-[44px] px-4 py-2 text-sm font-medium rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
     active
@@ -13,13 +14,17 @@ const navPillClass = (active: boolean) =>
       : "text-ink-muted hover:text-ink hover:bg-slate-100"
   }`;
 
+/** Smooth-scrolls to a section id, respecting reduced-motion preferences. */
 function scrollToSection(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
   el.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
 }
 
+/** Sticky top navigation with section highlighting and mobile menu. */
 function Navbar() {
   const [activeSection, setActiveSection] = useState(NAV_ITEMS[0]?.id ?? "about");
   const [isScrolled, setIsScrolled] = useState(false);

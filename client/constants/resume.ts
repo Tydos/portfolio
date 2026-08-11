@@ -1,5 +1,6 @@
 import type { SkillGroup, Experience, Education, Publication } from "../types";
 
+/** Skill groups shown in the Experience / resume section. */
 export const RESUME_SKILL_GROUPS: SkillGroup[] = [
   {
     title: "Languages",
@@ -19,10 +20,12 @@ export const RESUME_SKILL_GROUPS: SkillGroup[] = [
   },
 ];
 
+/** Short summary paragraphs for the About / resume intro. */
 export const RESUME_SUMMARY_PARAGRAPHS: string[] = [
   "Software engineer building Python backends with FastAPI and Flask, ML/NLP systems with PyTorch and BERT, and production deployments on AWS and Docker.",
 ];
 
+/** Work experience entries in reverse chronological order. */
 export const RESUME_EXPERIENCE: Experience[] = [
   {
     role: "Software Engineering (AI) Intern",
@@ -56,6 +59,7 @@ export const RESUME_EXPERIENCE: Experience[] = [
   },
 ];
 
+/** Education entries shown in the resume section. */
 export const RESUME_EDUCATION: Education[] = [
   {
     school: "University of Wisconsin - Madison",
@@ -69,6 +73,7 @@ export const RESUME_EDUCATION: Education[] = [
   },
 ];
 
+/** Featured publication linked from the resume section. */
 export const RESUME_PUBLICATION: Publication = {
   title:
     "LightGBM and Gradient Boosting for Optimizing Shipment Mode in Pharmaceutical Supply Chains",
@@ -76,6 +81,7 @@ export const RESUME_PUBLICATION: Publication = {
   url: "https://link.springer.com/chapter/10.1007/978-981-96-2179-8_36",
 };
 
+/** UI labels for resume subsections. */
 export const RESUME_SECTION_LABELS: Record<string, string> = {
   summary: "Summary",
   skills: "Skills",

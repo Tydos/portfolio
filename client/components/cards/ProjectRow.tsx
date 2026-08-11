@@ -14,6 +14,12 @@ interface ProjectRowProps {
 
 const MAX_VISIBLE_TAGS = 4;
 
+/**
+ * Alternating project row with media, tags, and links to the detail page.
+ *
+ * @param props.project - Project content to display.
+ * @param props.index - Row index; odd indices reverse the media/text layout.
+ */
 function ProjectRow({ project, index }: ProjectRowProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();

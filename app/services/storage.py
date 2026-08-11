@@ -1,29 +1,54 @@
-# Implemented a basic storage upload interface and a Supabase implementation.
+"""Object storage upload interface and Supabase implementation."""
+
+import logging
 from abc import ABC, abstractmethod
 from io import BytesIO
-import logging
 
 import httpx
 from PIL import Image
-from supabase import create_client, Client
+from supabase import Client, create_client
 
 from schemas.config import settings
 
 logger = logging.getLogger(__name__)
 
 
-# Abstract base class from which all storage uploaders should inherit. This allows us to swap out the underlying storage implementation without changing the rest of the codebase
 class StorageUploader(ABC):
-    @abstractmethod
-    def upload(self, file_bytes: bytes, filename: str) -> dict: ...
+    """Abstract storage uploader used by photo orchestration services."""
 
     @abstractmethod
-    def delete(self, storage_key: str) -> bool: ...
+    def upload(self, file_bytes: bytes, filename: str) -> dict:
+        """Upload bytes and return public URL plus dimensions.
+
+        Args:
+            file_bytes: Raw image contents.
+            filename: Object key / filename in the bucket.
+
+        Returns:
+            Dict with ``url``, ``width``, ``height``, and ``storage_key``.
+        """
+
+    @abstractmethod
+    def delete(self, storage_key: str) -> bool:
+        """Delete an object from storage.
+
+        Args:
+            storage_key: Object key previously returned from ``upload``.
+
+        Returns:
+            True on success; False when deletion fails.
+        """
 
 
-# Abstract Supabase Logic and expose upload/delete methods.
 class SupabaseUploader(StorageUploader):
-    def __init__(self):
+    """Supabase Storage implementation of ``StorageUploader``."""
+
+    def __init__(self) -> None:
+        """Create a Supabase client for the configured bucket.
+
+        Raises:
+            ValueError: If Supabase URL or key settings are missing.
+        """
         if not settings.SUPABASE_URL or not settings.SUPABASE_KEY:
             raise ValueError("SUPABASE_URL and SUPABASE_KEY must be set")
 
@@ -33,6 +58,18 @@ class SupabaseUploader(StorageUploader):
         self._bucket = settings.SUPABASE_BUCKET
 
     def upload(self, file_bytes: bytes, filename: str) -> dict:
+        """Upload a JPEG to Supabase Storage and return its public metadata.
+
+        Args:
+            file_bytes: Raw JPEG contents.
+            filename: Destination object key in the bucket.
+
+        Returns:
+            Dict with ``url``, ``width``, ``height``, and ``storage_key``.
+
+        Raises:
+            RuntimeError: If the Supabase Storage HTTP upload fails.
+        """
         key = filename
         with Image.open(BytesIO(file_bytes)) as img:
             width, height = img.size
@@ -54,6 +91,14 @@ class SupabaseUploader(StorageUploader):
         return {"url": public_url, "width": width, "height": height, "storage_key": key}
 
     def delete(self, storage_key: str) -> bool:
+        """Remove an object from the configured Supabase bucket.
+
+        Args:
+            storage_key: Object key to delete.
+
+        Returns:
+            True when removal succeeds; False when an exception occurs.
+        """
         try:
             self._client.storage.from_(self._bucket).remove([storage_key])
             logger.info("Deleted %s from Supabase", storage_key)

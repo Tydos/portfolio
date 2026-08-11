@@ -1,5 +1,6 @@
 import SocialLinks from "../ui/SocialLinks";
 
+/** Site footer with copyright and social icon links. */
 function Footer() {
   return (
     <footer className="py-12 px-6 border-t border-black/5">

@@ -6,6 +6,11 @@ interface SkillStackProps {
   group: SkillGroup;
 }
 
+/**
+ * Card listing skills for a single resume skill group.
+ *
+ * @param props.group - Title and skill item labels.
+ */
 function SkillStack({ group }: SkillStackProps) {
   return (
     <div className="flex h-full flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5">

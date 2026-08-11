@@ -1,7 +1,6 @@
-"""Admin authentication dependency."""
+"""Admin authentication dependency for protected API routes."""
 
 import time
-from typing import Optional
 
 import httpx
 import jwt
@@ -14,17 +13,35 @@ _JWKS_TTL = 3600
 
 
 def _get_jwks() -> list[dict]:
+    """Fetch Supabase JWKS, using a short in-memory cache.
+
+    Returns:
+        A list of JWK dicts from the Supabase auth well-known endpoint.
+    """
     if time.time() - _jwks_cache["fetched_at"] < _JWKS_TTL and _jwks_cache["keys"]:
         return _jwks_cache["keys"]
-    r = httpx.get(f"{settings.SUPABASE_URL}/auth/v1/.well-known/jwks.json", timeout=5)
-    r.raise_for_status()
-    keys = r.json().get("keys", [])
+    response = httpx.get(
+        f"{settings.SUPABASE_URL}/auth/v1/.well-known/jwks.json", timeout=5
+    )
+    response.raise_for_status()
+    keys = response.json().get("keys", [])
     _jwks_cache["keys"] = keys
     _jwks_cache["fetched_at"] = time.time()
     return keys
 
 
 def _decode_supabase_token(token: str) -> dict:
+    """Decode and verify a Supabase ES256 access token.
+
+    Args:
+        token: Bearer JWT string (without the ``Bearer `` prefix).
+
+    Returns:
+        The verified JWT payload.
+
+    Raises:
+        jwt.InvalidTokenError: If no matching JWKS key is found or decode fails.
+    """
     kid = jwt.get_unverified_header(token).get("kid")
     keys = _get_jwks()
     key_data = next((k for k in keys if k.get("kid") == kid), keys[0] if keys else None)
@@ -35,18 +52,33 @@ def _decode_supabase_token(token: str) -> dict:
 
 
 def verify_admin_key(
-    authorization: Optional[str] = Header(None, alias="Authorization"),
-    x_api_key: Optional[str] = Header(None, alias="X-API-Key"),
+    authorization: str | None = Header(None, alias="Authorization"),
+    x_api_key: str | None = Header(None, alias="X-API-Key"),
 ) -> None:
+    """Verify admin credentials via Bearer JWT or deprecated API key.
+
+    Prefers a Supabase Bearer JWT whose ``user_metadata.user_name`` matches
+    ``ADMIN_GITHUB_USERNAME``. Falls back to ``X-API-Key`` for scripts.
+
+    Args:
+        authorization: Optional ``Authorization`` header value.
+        x_api_key: Optional deprecated ``X-API-Key`` header value.
+
+    Raises:
+        HTTPException: 401 for missing/invalid credentials; 403 when the JWT
+            belongs to a non-admin GitHub user.
+    """
     # Primary: Supabase Bearer JWT (GitHub OAuth, ES256)
     if authorization and authorization.startswith("Bearer "):
         token = authorization.removeprefix("Bearer ")
         try:
             payload = _decode_supabase_token(token)
-        except jwt.ExpiredSignatureError:
-            raise HTTPException(status_code=401, detail="Token expired")
+        except jwt.ExpiredSignatureError as exc:
+            raise HTTPException(status_code=401, detail="Token expired") from exc
         except jwt.InvalidTokenError as exc:
-            raise HTTPException(status_code=401, detail=f"Invalid token: {exc}")
+            raise HTTPException(
+                status_code=401, detail=f"Invalid token: {exc}"
+            ) from exc
 
         username = (payload.get("user_metadata") or {}).get("user_name", "")
         if username != settings.ADMIN_GITHUB_USERNAME:

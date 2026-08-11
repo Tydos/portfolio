@@ -6,6 +6,7 @@ import { CONTACT, HERO, SITE, SOCIAL_LINKS } from "../../constants/config";
 
 const githubHref = SOCIAL_LINKS.find((link) => link.label === "GitHub")?.href ?? "https://github.com/Tydos";
 
+/** Hero / identity section: portrait, name, role, and contact CTAs. */
 function About() {
   return (
     <section

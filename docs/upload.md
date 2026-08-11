@@ -105,4 +105,3 @@ Prefer Bearer JWT from a real admin session when calling from the browser.
 
 - Locking down Supabase RLS so the anon key cannot write even if someone bypasses the UI.
 - Batch upload endpoint on FastAPI (not present in current routes).
-- Aligning older README paths that mention `/api/upload` prefixes with the live FastAPI mount (`/upload`, `/delete/{id}`, `/images`).

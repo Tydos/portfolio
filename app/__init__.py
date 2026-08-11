@@ -1,4 +1,4 @@
-"""Portfolio Backend Application Package."""
+"""Portfolio backend application package."""
 
 import logging
 import os

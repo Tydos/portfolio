@@ -3,6 +3,12 @@ interface GitHubIconProps {
   className?: string;
 }
 
+/**
+ * Inline GitHub mark used in social link rows.
+ *
+ * @param props.size - Icon width/height in pixels.
+ * @param props.className - Optional SVG class names.
+ */
 function GitHubIcon({ size = 24, className }: GitHubIconProps) {
   return (
     <svg

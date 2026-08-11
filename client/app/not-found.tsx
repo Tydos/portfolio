@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import { ArrowLeft, Home } from "react-feather";
 
+/** Custom 404 page with home and browser-back actions. */
 function ErrorPage() {
   return (
     <main className="grid min-h-screen place-items-center bg-white px-6 py-24 sm:py-32 lg:px-8">

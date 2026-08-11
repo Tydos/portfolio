@@ -1,0 +1,47 @@
+name: Production API Health
+
+on:
+  schedule:
+    # Once a day at 13:00 UTC (after the Supabase ping at 12:00)
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+env:
+  API_BASE: https://www.prasadjawale.live/api
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Check GET /
+        run: |
+          set -euo pipefail
+          body=$(curl -sS -f -L --max-time 30 "${API_BASE}/")
+          echo "$body" | jq .
+          echo "$body" | jq -e '.message | type == "string"' >/dev/null
+
+      - name: Check GET /health
+        run: |
+          set -euo pipefail
+          body=$(curl -sS -f -L --max-time 30 "${API_BASE}/health")
+          echo "$body" | jq .
+          echo "$body" | jq -e '
+            .message == "server active"
+            and .database == "connected"
+          ' >/dev/null
+
+      - name: Check GET /images
+        run: |
+          set -euo pipefail
+          body=$(curl -sS -f -L --max-time 30 \
+            "${API_BASE}/images?limit=1&offset=0")
+          echo "$body" | jq .
+          # FastAPI returns a list; Next /api/images returns {photos,total}.
+          # Accept either shape as long as the response is valid JSON.
+          echo "$body" | jq -e '
+            (type == "array")
+            or (type == "object" and (.photos | type) == "array" and (.total | type) == "number")
+          ' >/dev/null

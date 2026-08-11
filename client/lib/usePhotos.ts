@@ -8,13 +8,14 @@ import {
 import type { Photo } from "../types";
 
 /**
- * React hook providing paginated photo state and CRUD operations
- * Reads via Next `/api/images`; admin upload/delete via FastAPI.
+ * React hook providing paginated photo state and admin CRUD operations.
  *
- * Handles:
- * - Pagination
- * - Upload batching with progress tracking
- * - Deletion with optimistic UI tracking
+ * Public reads go through Next `/api/images`; upload/delete call FastAPI with
+ * the admin Bearer JWT. Handles pagination, upload progress, and optimistic
+ * delete tracking.
+ *
+ * @param pageSize - Photos per page (default {@link PHOTOS_PAGE_SIZE}).
+ * @returns Gallery state plus `goToPage`, `upload`, and `remove` actions.
  */
 export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
   const [photos, setPhotos] = useState<Photo[]>([]);
@@ -32,9 +33,9 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /**
-   * Loads a specific page of photos from `/api/images`.
+   * Load a specific page of photos from `/api/images`.
    *
-   * @param p - Page number (1-based)
+   * @param p - Page number (1-based).
    */
   const goToPage = useCallback(
     async (p: number) => {
@@ -59,21 +60,19 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
     [pageSize],
   );
 
-  /**
-   * Initial load: fetch first page once the hook is mounted.
-   */
+  /** Initial load: fetch the first page once the hook is mounted. */
   useEffect(() => {
     goToPage(1);
   }, [goToPage]);
 
   /**
-   * Uploads multiple image files sequentially with progress tracking.
+   * Upload multiple image files sequentially with progress tracking.
    *
-   * Updates the gallery after completion and resets file input state.
+   * Refreshes the gallery after completion and resets the file input.
    *
-   * @param files - Array of image files to upload
-   * @param category - Category label assigned to each photo
-   * @returns Summary of success/failure results
+   * @param files - Image files to upload.
+   * @param category - Category label assigned to each photo.
+   * @returns Summary of success/failure for the batch.
    */
   const upload = useCallback(
     async (
@@ -131,12 +130,12 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
   );
 
   /**
-   * Deletes a photo and refreshes the current page.
+   * Delete a photo and refresh the current page.
    *
-   * Tracks deletion state per photo ID to support UI spinners/disabled states.
+   * Tracks deletion state per photo id for UI spinners/disabled states.
    *
-   * @param photo - Photo entity to delete
-   * @returns Result message indicating success or failure
+   * @param photo - Photo entity to delete.
+   * @returns Result message indicating success or failure.
    */
   const remove = useCallback(
     async (photo: Photo): Promise<{ ok: boolean; msg: string }> => {

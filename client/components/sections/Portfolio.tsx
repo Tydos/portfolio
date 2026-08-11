@@ -75,6 +75,9 @@ function Scrubber({
   );
 }
 
+/**
+ * Photography portfolio section with paginated gallery and admin controls.
+ */
 function Portfolio() {
   const { photos, total, page, totalPages, loading, uploading, uploadProgress, deletingIds, fileInputRef, goToPage, upload, remove } = usePhotos();
 

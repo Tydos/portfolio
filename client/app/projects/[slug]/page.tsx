@@ -109,11 +109,22 @@ const mdComponents: Components = {
   hr: () => <hr className="my-8 border-slate-100" />,
 };
 
+/**
+ * Prebuild static paths for every curated project slug.
+ *
+ * @returns Path params for `generateStaticParams`.
+ */
 export async function generateStaticParams() {
   const projects = await fetchGithubProjects();
   return projects.map((p) => ({ slug: p.slug }));
 }
 
+/**
+ * Per-project page title metadata.
+ *
+ * @param props.params - Route params containing the project slug.
+ * @returns Metadata object with the project title when found.
+ */
 export async function generateMetadata({
   params,
 }: {
@@ -125,6 +136,12 @@ export async function generateMetadata({
   return { title: project.title };
 }
 
+/**
+ * Project detail page: hero media, links, and cleaned GitHub README.
+ *
+ * @param props.params - Route params containing the project slug.
+ * @returns Project detail UI, or triggers `notFound` for unknown slugs.
+ */
 export default async function ProjectPage({
   params,
 }: {

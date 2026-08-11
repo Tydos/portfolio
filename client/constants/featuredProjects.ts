@@ -1,6 +1,10 @@
 import type { Project } from "../types";
 
-/** Curated projects shown on the site, in display order. */
+/**
+ * Curated projects shown on the home page and project detail routes.
+ *
+ * Order is display order for the Projects section.
+ */
 export const FEATURED_PROJECTS: Project[] = [
   {
     slug: "cyberbullying-detection",

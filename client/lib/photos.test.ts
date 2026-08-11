@@ -68,6 +68,27 @@ describe("fetchPhotos", () => {
     expect(photos).toEqual([]);
     expect(total).toBe(0);
   });
+
+  it("returns empty result on network error or unexpected payload", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockRejectedValue(new Error("offline")),
+    );
+    await expect(fetchPhotos()).resolves.toEqual({ photos: [], total: 0 });
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ unexpected: true }),
+      }),
+    );
+    await expect(fetchPhotos(2, 10)).resolves.toEqual({
+      photos: [],
+      total: 0,
+    });
+    expect(fetch).toHaveBeenCalledWith("/api/images?limit=10&offset=10");
+  });
 });
 
 describe("uploadPhoto", () => {

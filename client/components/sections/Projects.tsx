@@ -14,6 +14,11 @@ interface ProjectsProps {
   projects: Project[];
 }
 
+/**
+ * Featured projects list with optional expand/collapse for long catalogs.
+ *
+ * @param props.projects - Curated projects to display.
+ */
 function Projects({ projects }: ProjectsProps) {
   const [showAll, setShowAll] = useState(false);
   const visible = showAll ? projects : projects.slice(0, INITIAL_COUNT);

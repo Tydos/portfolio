@@ -1,6 +1,9 @@
+"""FastAPI application entrypoint for the portfolio backend."""
+
 import logging
 import os
 import sys
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -10,8 +13,11 @@ from api.routes import router
 from schemas.config import settings
 from services.database import db
 
+logger = logging.getLogger(__name__)
+
 
 def _configure_logging() -> None:
+    """Configure the root logger for stdout-friendly runtime logs."""
     root = logging.getLogger()
     level_name = os.environ.get("LOG_LEVEL", "INFO").upper()
     root.setLevel(getattr(logging, level_name, logging.INFO))
@@ -27,11 +33,18 @@ _configure_logging()
 
 
 @asynccontextmanager
-async def lifespan(application: FastAPI):
-    """Manage startup and shutdown lifecycle events."""
-    logging.info("Starting up — initializing resources")
+async def lifespan(application: FastAPI) -> AsyncIterator[None]:
+    """Manage startup and shutdown lifecycle events.
+
+    Args:
+        application: The FastAPI application instance.
+
+    Yields:
+        Control to the running application until shutdown.
+    """
+    logger.info("Starting up — initializing resources")
     yield
-    logging.info("Shutting down — closing database pool")
+    logger.info("Shutting down — closing database pool")
     db.close_pool()
 
 

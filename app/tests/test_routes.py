@@ -29,13 +29,11 @@ def test_get_images(client):
     assert r.json() == photos
 
 
-def test_get_images_falls_back_to_static_on_db_error(client):
+def test_get_images_returns_503_on_db_error(client):
     with patch("api.routes.db.fetch_photographs", side_effect=Exception("db down")):
         r = client.get("/images")
-    assert r.status_code == 200
-    body = r.json()
-    assert body  # static fallback is non-empty
-    assert "1" in body or 1 in body
+    assert r.status_code == 503
+    assert r.json()["detail"] == "Database unavailable"
 
 
 def test_get_images_query_validation(client):
@@ -86,7 +84,9 @@ def test_upload_with_api_key(client, admin_headers):
         "height": 1920,
         "category": "nature",
     }
-    with patch("api.routes._upload_service.upload_one", return_value=created) as mock_up:
+    with patch(
+        "api.routes._upload_service.upload_one", return_value=created
+    ) as mock_up:
         r = client.post(
             "/upload",
             files=[("file", ("test.jpg", BytesIO(b"img"), "image/jpeg"))],

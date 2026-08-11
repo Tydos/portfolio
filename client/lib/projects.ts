@@ -2,7 +2,10 @@ import { FEATURED_PROJECTS } from "../constants/featuredProjects";
 import type { Project } from "../types";
 
 /**
- * Extracts GitHub repository owner and name from a repository URL.
+ * Extract GitHub repository owner and name from a repository URL.
+ *
+ * @param url - Full GitHub repository URL.
+ * @returns Owner and repo name, or `null` if the URL is invalid.
  */
 function parseGithubUrl(url: string): { owner: string; repo: string } | null {
   try {
@@ -18,14 +21,19 @@ function parseGithubUrl(url: string): { owner: string; repo: string } | null {
 }
 
 /**
- * Returns curated featured projects in display order.
+ * Return curated featured projects in display order.
+ *
+ * @returns Featured project list used by the home Projects section.
  */
 export async function fetchGithubProjects(): Promise<Project[]> {
   return FEATURED_PROJECTS;
 }
 
 /**
- * Returns a curated project by slug, or null if not featured.
+ * Return a curated project by slug, or null if it is not featured.
+ *
+ * @param slug - Project URL slug.
+ * @returns Matching project, or `null` when the slug is unknown.
  */
 export async function fetchGithubProject(
   slug: string,
@@ -34,7 +42,11 @@ export async function fetchGithubProject(
 }
 
 /**
- * Fetches the raw README file from a GitHub repository.
+ * Fetch the raw README markdown for a GitHub repository.
+ *
+ * @param githubUrl - Repository URL (`https://github.com/{owner}/{repo}`).
+ * @returns README markdown text, or `null` when the URL is invalid or GitHub
+ *     returns a non-OK response.
  */
 export async function fetchReadme(githubUrl: string): Promise<string | null> {
   const parsed = parseGithubUrl(githubUrl);
@@ -57,12 +69,13 @@ export async function fetchReadme(githubUrl: string): Promise<string | null> {
 }
 
 /**
- * Cleans raw README markdown by:
- * - Removing duplicate title headers
- * - Stripping badge/shield image lines
- * - Removing inline badge images
- * - Converting HTML breaks to newlines
- * - Collapsing excessive blank lines
+ * Clean raw README markdown for project detail pages.
+ *
+ * Removes duplicate title headers, badge/shield image lines, and inline badge
+ * images; converts HTML breaks to newlines; collapses excessive blank lines.
+ *
+ * @param raw - Raw README markdown from GitHub.
+ * @returns Cleaned markdown suitable for MDX rendering.
  */
 export function cleanReadme(raw: string): string {
   return (

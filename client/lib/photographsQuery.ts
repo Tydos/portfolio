@@ -1,5 +1,6 @@
 import { createSupabaseReadClient, isSupabaseReadConfigured } from "./supabaseRead";
 
+/** Row shape returned from the `photographs` table for gallery reads. */
 export interface PhotographRow {
   id: number;
   filename: string;
@@ -9,11 +10,19 @@ export interface PhotographRow {
   height: number;
 }
 
+/** Paginated photograph query result. */
 export interface PhotographsQueryResult {
   photos: PhotographRow[];
   total: number;
 }
 
+/**
+ * Parse and clamp photograph list pagination query params.
+ *
+ * @param limitParam - Raw `limit` query string (defaults to 25, clamped 1–100).
+ * @param offsetParam - Raw `offset` query string (defaults to 0, min 0).
+ * @returns Sanitized `limit` and `offset` for the database query.
+ */
 export function parsePhotographPagination(
   limitParam: string | null,
   offsetParam: string | null,
@@ -24,8 +33,13 @@ export function parsePhotographPagination(
 }
 
 /**
- * Reads paginated rows from Supabase (server-side).
- * Returns null when unconfigured; empty `{ photos: [], total: 0 }` when configured but no rows.
+ * Read paginated photograph rows from Supabase (server-side only).
+ *
+ * @param limit - Maximum number of rows to return (1–100 at the API layer).
+ * @param offset - Number of rows to skip.
+ * @returns Paginated rows and total count; `null` when Supabase is
+ *     unconfigured, the client cannot be created, or the query errors.
+ *     Configured empty tables return `{ photos: [], total: 0 }`.
  */
 export async function queryPhotographsFromSupabase(
   limit: number,

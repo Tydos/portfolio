@@ -1,5 +1,13 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
+/**
+ * Resolve Supabase URL and anon/publishable key for server-side reads.
+ *
+ * Prefers public URL env vars, then server-only fallbacks. Key preference:
+ * `SUPABASE_ANON_KEY`, then public anon/publishable keys, then `SUPABASE_KEY`.
+ *
+ * @returns URL and key strings (empty when unset).
+ */
 export function getSupabaseReadConfig(): { url: string; key: string } {
   const url =
     process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL ?? "";
@@ -13,12 +21,23 @@ export function getSupabaseReadConfig(): { url: string; key: string } {
   return { url, key };
 }
 
+/**
+ * Whether server-side Supabase read credentials are present.
+ *
+ * @returns True when both URL and key resolve to non-empty strings.
+ */
 export function isSupabaseReadConfigured(): boolean {
   const { url, key } = getSupabaseReadConfig();
   return Boolean(url && key);
 }
 
-/** Server/API read client. Never import this from client components. */
+/**
+ * Create a Supabase client for server/API photograph reads.
+ *
+ * Never import this from client components — session persistence is disabled.
+ *
+ * @returns Configured client, or `null` when credentials are missing.
+ */
 export function createSupabaseReadClient(): SupabaseClient | null {
   const { url, key } = getSupabaseReadConfig();
   if (!url || !key) {

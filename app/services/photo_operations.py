@@ -1,22 +1,41 @@
-# Generic photo upload script that is database and storage agnostic. It relies on the uploader and database manager to handle the specifics of each service.
+"""Database- and storage-agnostic photograph upload/delete orchestration."""
 
 import logging
 
 from psycopg2 import DatabaseError
+
 from schemas.photo import Photo
-from services.storage import StorageUploader
 from services.database import DatabaseManager
+from services.storage import StorageUploader
 
 logger = logging.getLogger(__name__)
 
 
 class PhotoStorageService:
-    def __init__(self, uploader: StorageUploader, database: DatabaseManager):
+    """Coordinate photograph uploads and deletes across storage and the DB."""
+
+    def __init__(self, uploader: StorageUploader, database: DatabaseManager) -> None:
+        """Store collaborators used for upload/delete workflows.
+
+        Args:
+            uploader: Object storage adapter (e.g. Supabase).
+            database: Database manager for photograph metadata.
+        """
         self._uploader = uploader
         self._db = database
 
-    # delete from DB first to avoid orphaned storage if DB delete fails. If storage delete fails, we log the error.
     def delete_one(self, photo_id: int) -> None:
+        """Delete a photograph from the DB first, then storage.
+
+        Deleting the DB row first avoids orphaned metadata if storage delete
+        fails; storage failures are logged for manual cleanup.
+
+        Args:
+            photo_id: Primary key of the photograph to delete.
+
+        Raises:
+            ValueError: If the photograph id is not found in the database.
+        """
         filename = self._db.delete_photo_by_id(photo_id)
 
         storage_deleted = self._uploader.delete(filename)
@@ -26,8 +45,25 @@ class PhotoStorageService:
                 filename,
             )
 
-    # upload to storage first to avoid broken photo entries in DB. If DB upload fails, we delete the uploaded file from storage to avoid orphans.
     def upload_one(self, file_bytes: bytes, filename: str, category: str) -> dict:
+        """Upload bytes to storage, then persist metadata in the database.
+
+        Storage is written first so failed DB inserts can roll back the object
+        and avoid broken gallery entries.
+
+        Args:
+            file_bytes: Raw image contents.
+            filename: Original filename (normalized to lowercase).
+            category: Photograph category label.
+
+        Returns:
+            Created photograph metadata including the new database id.
+
+        Raises:
+            RuntimeError: If storage returns no result without raising.
+            ValueError: If the filename is a duplicate (after storage rollback).
+            DatabaseError: If metadata insert fails for a non-duplicate reason.
+        """
         filename = filename.lower()
         result = self._uploader.upload(file_bytes, filename)
         if result is None:
@@ -46,13 +82,13 @@ class PhotoStorageService:
             # Duplicate filename (and other validation) — roll back storage, re-raise for 409
             self._uploader.delete(result["storage_key"])
             raise
-        except Exception:
+        except Exception as exc:
             # Delete the uploaded file since DB upload failed to avoid orphaned files
             self._uploader.delete(result["storage_key"])
             logger.exception(
                 "DB upload failed, deleted uploaded file to avoid orphan: %s", filename
             )
-            raise DatabaseError("Failed to upload photo metadata to database")
+            raise DatabaseError("Failed to upload photo metadata to database") from exc
 
         return {
             "id": photo_id,

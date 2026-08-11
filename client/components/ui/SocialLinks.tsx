@@ -11,6 +11,11 @@ interface SocialLinksProps {
   variant?: "icons" | "pills";
 }
 
+/**
+ * Renders configured social profile links as icons or pill buttons.
+ *
+ * @param props.variant - Visual style: `icons` (footer) or `pills` (about).
+ */
 function SocialLinks({ variant = "pills" }: SocialLinksProps) {
   return (
     <div

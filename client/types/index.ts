@@ -1,13 +1,16 @@
+/** Single top-nav destination (section id + label). */
 export interface NavItem {
   id: string;
   label: string;
 }
 
+/** Named skill group for the resume Skills subsection. */
 export interface SkillGroup {
   title: string;
   items: string[];
 }
 
+/** One work experience entry. */
 export interface Experience {
   role: string;
   company: string;
@@ -15,18 +18,21 @@ export interface Experience {
   details: string[];
 }
 
+/** One education entry. */
 export interface Education {
   school: string;
   degree: string;
   period: string;
 }
 
+/** Linked publication shown on the resume. */
 export interface Publication {
   title: string;
   publisher: string;
   url: string;
 }
 
+/** Featured project shown on home and project detail routes. */
 export interface Project {
   slug: string;
   title: string;
@@ -37,6 +43,7 @@ export interface Project {
   link?: string;
 }
 
+/** Gallery photograph in the shape expected by `react-photo-album`. */
 export interface Photo {
   id?: number;
   src: string;
@@ -46,6 +53,7 @@ export interface Photo {
   category: string;
 }
 
+/** Subset of the GitHub repository API used by project helpers. */
 export interface GithubRepo {
   name: string;
   description: string | null;

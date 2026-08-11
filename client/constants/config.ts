@@ -1,13 +1,15 @@
 import type { NavItem } from "../types";
 
+/** GitHub username used for profile links and calendars. */
 export const GITHUB_USERNAME = "Tydos";
 
+/** External profile links shown in the footer and about section. */
 export const SOCIAL_LINKS = [
   { href: "https://github.com/Tydos", label: "GitHub" },
   { href: "https://linkedin.com/in/prasadjawale", label: "LinkedIn" },
 ] as const;
 
-/** Recruiter-first nav: identity → experience → projects → creative portfolio */
+/** Recruiter-first nav: identity → experience → projects → creative portfolio. */
 export const NAV_ITEMS: NavItem[] = [
   { id: "about", label: "About" },
   { id: "resume", label: "Experience" },
@@ -15,10 +17,12 @@ export const NAV_ITEMS: NavItem[] = [
   { id: "creative-eye", label: "Portfolio" },
 ];
 
+/** Primary contact destinations. */
 export const CONTACT = {
   linkedin: "https://linkedin.com/in/prasadjawale",
 } as const;
 
+/** Hero identity copy on the home page. */
 export const HERO = {
   name: "Prasad Jawale",
   role: "Software Engineer / AIML",
@@ -26,6 +30,7 @@ export const HERO = {
     "Building production NLP pipelines at UW–Madison; published ML research with Springer.",
 } as const;
 
+/** Site-wide metadata used by the root layout. */
 export const SITE = {
   title: "Prasad Jawale — Portfolio",
   description:

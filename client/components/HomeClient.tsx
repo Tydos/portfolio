@@ -12,6 +12,11 @@ interface HomeClientProps {
   projects: Project[];
 }
 
+/**
+ * Client shell for the home page: nav, recruiter sections, gallery, footer.
+ *
+ * @param props.projects - Featured projects rendered in the Projects section.
+ */
 function HomeClient({ projects }: HomeClientProps) {
   return (
     <div className="text-ink selection:bg-accent selection:text-white font-sans">

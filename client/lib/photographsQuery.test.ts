@@ -13,6 +13,11 @@ const { mockRange, mockOrder, mockSelect, mockFrom, mockClient } = vi.hoisted(()
   return { mockRange, mockOrder, mockSelect, mockFrom, mockClient };
 });
 
+import {
+  isSupabaseReadConfigured,
+  createSupabaseReadClient,
+} from "./supabaseRead";
+
 vi.mock("./supabaseRead", () => ({
   isSupabaseReadConfigured: vi.fn(() => true),
   createSupabaseReadClient: vi.fn(() => mockClient),
@@ -20,6 +25,10 @@ vi.mock("./supabaseRead", () => ({
 
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.mocked(isSupabaseReadConfigured).mockReturnValue(true);
+  vi.mocked(createSupabaseReadClient).mockReturnValue(
+    mockClient as never,
+  );
 });
 
 describe("parsePhotographPagination", () => {
@@ -33,9 +42,31 @@ describe("parsePhotographPagination", () => {
       offset: 0,
     });
   });
+
+  it("defaults when params are null or non-numeric", () => {
+    expect(parsePhotographPagination(null, null)).toEqual({
+      limit: 25,
+      offset: 0,
+    });
+    expect(parsePhotographPagination("abc", "xyz")).toEqual({
+      limit: 25,
+      offset: 0,
+    });
+  });
 });
 
 describe("queryPhotographsFromSupabase", () => {
+  it("returns null when Supabase is not configured", async () => {
+    vi.mocked(isSupabaseReadConfigured).mockReturnValue(false);
+    expect(await queryPhotographsFromSupabase(25, 0)).toBeNull();
+    expect(createSupabaseReadClient).not.toHaveBeenCalled();
+  });
+
+  it("returns null when the client cannot be created", async () => {
+    vi.mocked(createSupabaseReadClient).mockReturnValue(null);
+    expect(await queryPhotographsFromSupabase(25, 0)).toBeNull();
+  });
+
   it("returns paginated rows and total count", async () => {
     mockRange.mockResolvedValue({
       data: [

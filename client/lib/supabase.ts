@@ -9,6 +9,14 @@ const supabaseAnonKey =
 /** True when public Supabase env vars are set (safe for browser + SSR). */
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
+/**
+ * Build the browser/SSR Supabase client used for auth.
+ *
+ * When env vars are missing, returns a stub client; callers must guard with
+ * {@link isSupabaseConfigured} before using auth APIs.
+ *
+ * @returns Supabase JS client instance.
+ */
 function createSupabaseClient(): SupabaseClient {
   if (isSupabaseConfigured) {
     return createClient(supabaseUrl, supabaseAnonKey);
@@ -17,4 +25,5 @@ function createSupabaseClient(): SupabaseClient {
   return createClient("http://127.0.0.1", "public-anon-key");
 }
 
+/** Shared Supabase client for browser auth and session helpers. */
 export const supabase = createSupabaseClient();
