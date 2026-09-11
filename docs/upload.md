@@ -10,8 +10,7 @@ How photography reads, uploads, and deletes work on this portfolio.
 ```mermaid
 flowchart LR
   subgraph publicRead [Public read]
-    Gallery["Gallery UI"] --> NextImages["Next /api/images"]
-    NextImages --> SupabaseRead["Supabase read"]
+    Gallery["Gallery UI"] --> SupabaseRead["Supabase JS read"]
   end
 
   subgraph adminWrite [Admin write]
@@ -24,10 +23,10 @@ flowchart LR
 
 ## Public browse (no login)
 
-1. Gallery loads on the home page (`#creative-eye`).
-2. `fetchPhotos` in `client/lib/photos.ts` calls Next.js **`GET /api/images`**.
-3. That route (`client/app/api/images/route.ts`) reads from Supabase and returns `{ photos, total }`.
-4. No FastAPI and no auth for this path.
+1. Gallery loads on the photography home page (`#gallery`).
+2. `fetchPhotos` in `web/photography/lib/photos.ts` calls **`queryPhotographsFromSupabase`** (Supabase JS + anon key).
+3. RLS on the `photographs` table must allow public `SELECT`.
+4. No FastAPI and no auth for gallery reads.
 
 ## Admin upload
 
@@ -46,7 +45,7 @@ flowchart LR
    - Inserts a row in `photographs`
    - On DB failure, deletes the storage object
    - On duplicate filename → **409**
-7. Frontend refreshes the gallery via `/api/images`.
+7. Frontend refreshes the gallery via another Supabase read.
 
 ## Admin delete
 
@@ -59,22 +58,22 @@ flowchart LR
 
 | Piece | Role |
 |-------|------|
-| Next frontend (`localhost:3000`) | Gallery UI + public `/api/images` |
+| Photography Next app (`localhost:3001`) | Gallery UI + Supabase reads |
 | FastAPI (`localhost:8000`) | Authenticated upload/delete |
 | Supabase | Storage bucket + `photographs` table |
 | `NEXT_PUBLIC_API_URL` | Browser base URL for mutations (e.g. `http://localhost:8000`, no trailing slash) |
 
-Public gallery reads use the Next/Supabase read env vars (`SUPABASE_*` / `NEXT_PUBLIC_SUPABASE_*` as documented in `client/.env.local.example`). Mutations need the FastAPI process configured with `DATABASE_URL`, `SUPABASE_*`, and admin auth settings (see root `.env.example`).
+Public gallery reads use `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (see `web/photography/.env.local.example`). Mutations need the FastAPI process configured with `DATABASE_URL`, `SUPABASE_*`, and admin auth settings (see root `.env.example`).
 
 ## Key files
 
 | Concern | Location |
 |---------|----------|
-| Fetch / upload / delete client | `client/lib/photos.ts` |
-| Gallery hook + progress | `client/lib/usePhotos.ts` |
-| Admin upload UI | `client/components/sections/Portfolio.tsx` |
-| Admin sign-in | `client/app/admin/page.tsx` |
-| Public images API | `client/app/api/images/route.ts` |
+| Fetch / upload / delete client | `web/photography/lib/photos.ts` |
+| Gallery hook + progress | `web/photography/lib/usePhotos.ts` |
+| Admin upload UI | `web/photography/components/sections/Portfolio.tsx` |
+| Admin sign-in | `web/photography/app/admin/page.tsx` |
+| Supabase gallery query | `web/photography/lib/photographsQuery.ts` |
 | FastAPI routes | `app/api/routes.py` |
 | Upload/delete service | `app/services/photo_operations.py` |
 | Storage | `app/services/storage.py` |

@@ -1,43 +1,71 @@
-# Personal Portfolio
+# Personal Portfolio (monorepo)
 
-Full-stack portfolio for **Prasad Jawale** — Next.js frontend (`client/`) + FastAPI backend (`app/`).
+Full-stack portfolio for **Prasad Jawale** — two Next.js frontends plus a shared FastAPI backend for photography.
+
+| App | Path | Purpose |
+|-----|------|---------|
+| Recruiter | [`web/recruiter/`](web/recruiter/) | Resume, projects, publication proof |
+| Photography | [`web/photography/`](web/photography/) | Gallery (Supabase reads), admin + FastAPI mutations |
+| API | [`app/`](app/) | FastAPI (upload/delete; deployed with photography on Vercel) |
+| Design tokens | [`packages/theme/`](packages/theme/) | Shared Tailwind preset and base CSS |
 
 - Product: [`PRODUCT.md`](PRODUCT.md)
 - Design: [`DESIGN.md`](DESIGN.md)
 - Changelog: [`docs/CHANGELOG.md`](docs/CHANGELOG.md)
 - Photography pipeline: [`docs/upload.md`](docs/upload.md)
-- Frontend details: [`client/README.md`](client/README.md)
-- Backend details: [`app/README.md`](app/README.md)
+- Recruiter frontend: [`web/recruiter/README.md`](web/recruiter/README.md)
+- Photography frontend: [`web/photography/README.md`](web/photography/README.md)
+- Backend: [`app/README.md`](app/README.md)
 
 ## Setup
 
 ```bash
 cp .env.example .env
-# Frontend env: cp client/.env.local.example client/.env.local
+npm install
+cp web/recruiter/.env.local.example web/recruiter/.env.local
+cp web/photography/.env.local.example web/photography/.env.local
 ```
+
+Set cross-links in production:
+
+- `NEXT_PUBLIC_PHOTOGRAPHY_URL` on the recruiter project
+- `NEXT_PUBLIC_RECRUITER_URL` on the photography project
 
 ## Running locally
 
-**Frontend** (http://localhost:3000):
+**Recruiter** (http://localhost:3000):
 
 ```bash
-cd client && npm install && npm run dev
+npm run dev:recruiter
 ```
 
-**Backend** (http://localhost:8000):
+**Photography** (http://localhost:3001):
+
+```bash
+npm run dev:photography
+```
+
+**Backend** (http://localhost:8000 — required for photo admin):
 
 ```bash
 pip install -r app/requirements.txt
 cd app && uvicorn main:app --reload --port 8000
 ```
 
-On Vercel, both services deploy from this monorepo (`vercel.json`): web at `/`, API under `/api`.
+## Vercel (two projects)
+
+Create **two** Vercel projects from this repo:
+
+1. **Recruiter** — Root Directory: `web/recruiter` (Next.js only; root `vercel.json` also targets this app).
+2. **Photography** — Root Directory: `web/photography` (uses [`web/photography/vercel.json`](web/photography/vercel.json) for Next.js + FastAPI under `/api`).
+
+Configure env vars on each project as in the respective `.env.local.example` files.
 
 ## Tests / lint
 
 ```bash
-# Frontend
-cd client && npm run lint && npm run test:run
+npm run lint
+npm run test
 
 # Backend
 cd app && ruff check . && ruff format . && pytest tests/ -v

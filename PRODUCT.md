@@ -22,7 +22,8 @@ Recruiter-first portfolio of a practicing SWE/AIML engineer who ships production
 
 ## Operating Context
 
-- Single-page home with anchored sections: About → Experience → Projects → Portfolio (photography).
+- Recruiter site (`web/recruiter`): About → Experience → Projects, with a link to the photography site.
+- Photography site (`web/photography`): intro → gallery; admin for assets.
 - Project detail pages for deeper technical write-ups.
 - Admin tools for managing photography assets (Supabase-backed).
 - Public links to GitHub, LinkedIn, and published research (Springer).
@@ -34,7 +35,7 @@ Recruiter-first portfolio of a practicing SWE/AIML engineer who ships production
 - Confirmed sections and content sources: hero/identity, resume (experience, education, skills, publication), featured projects, photography gallery with lightbox.
 - Admin route for photo management; auth-gated.
 - **Preserve the current visual design** as the incumbent system — future work should refine within it, not replace the look without an explicit redesign request.
-- Undecided: whether photography-first visitors get a distinct entry path beyond the Portfolio section.
+- Photography-first visitors use the dedicated photography deployment (separate URL from the recruiter site).
 
 ## Brand Commitments
 

@@ -1,13 +1,8 @@
 {
   "experimentalServices": {
     "web": {
-      "entrypoint": "client",
+      "entrypoint": "web/recruiter",
       "routePrefix": "/"
-    },
-    "api": {
-      "entrypoint": "app/main.py",
-      "routePrefix": "/api",
-      "framework": "fastapi"
     }
   }
 }

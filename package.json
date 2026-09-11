@@ -1,0 +1,14 @@
+{
+  "name": "portfolio-monorepo",
+  "private": true,
+  "workspaces": [
+    "web/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:recruiter": "npm run dev -w @portfolio/recruiter",
+    "dev:photography": "npm run dev -w @portfolio/photography",
+    "lint": "npm run lint -w @portfolio/recruiter && npm run lint -w @portfolio/photography",
+    "test": "npm run test:run -w @portfolio/recruiter && npm run test:run -w @portfolio/photography"
+  }
+}

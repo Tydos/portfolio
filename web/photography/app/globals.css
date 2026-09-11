@@ -1,0 +1,14 @@
+@import "../../../packages/theme/globals.css";
+
+/* Wired editorial theme overrides for the photography site only. */
+.photo-theme {
+  --color-accent: #fcee0a;
+  --color-accent-hover: #fffb00;
+  --color-ink: #000000;
+  --color-muted: #757575;
+}
+
+.photo-theme ::selection {
+  background: #000000;
+  color: #fcee0a;
+}

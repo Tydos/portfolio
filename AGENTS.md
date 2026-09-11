@@ -4,7 +4,7 @@ Guidance for AI agents working in this repository.
 
 ## What this is
 
-Personal portfolio for **Prasad Jawale** (SWE / AIML): recruiter-first proof (resume, projects, publication) plus a photography gallery. Full-stack — Next.js frontend (`client/`) and FastAPI backend (`app/`).
+Personal portfolio for **Prasad Jawale** (SWE / AIML): recruiter-first proof (`web/recruiter/`) and a separate photography gallery (`web/photography/`), plus FastAPI backend (`app/`) for photo admin.
 
 Canonical product and design intent live in:
 
@@ -21,12 +21,11 @@ Do not silently rebrand or invent credentials, metrics, employers, or testimonia
 portfolio/
 ├── PRODUCT.md / DESIGN.md   # Product + design source of truth
 ├── docs/                    # CHANGELOG.md, upload.md, …
-├── client/                  # Next.js 14 (App Router) frontend
-│   ├── app/                 # Routes: home, projects/[slug], admin, api/images
-│   ├── components/          # sections/, layout/, cards/, ui/
-│   ├── constants/           # resume, featured projects, site config
-│   ├── lib/                 # photos, projects, supabase, auth, hooks
-│   └── types/
+├── web/
+│   ├── recruiter/           # Next.js — About, Experience, Projects
+│   └── photography/         # Next.js — gallery, admin, Supabase reads
+├── packages/
+│   └── theme/               # Shared Tailwind preset + base CSS
 └── app/                     # FastAPI backend
     ├── main.py              # Entry
     ├── api/                 # Routes
@@ -36,12 +35,12 @@ portfolio/
     └── tests/
 ```
 
-Vercel deploys **both** frontend and backend from this monorepo via root [`vercel.json`](vercel.json) (`experimentalServices`):
+Vercel: **two projects** — recruiter (`web/recruiter`, root [`vercel.json`](vercel.json)) and photography (`web/photography` + [`web/photography/vercel.json`](web/photography/vercel.json) for Next + FastAPI):
 
-| Service | Entrypoint | Route prefix |
-|---------|------------|--------------|
-| `web` | `client` (Next.js) | `/` |
-| `api` | `app/main.py` (FastAPI) | `/api` |
+| Project | Web entry | API |
+|---------|-----------|-----|
+| Recruiter | `web/recruiter` | — |
+| Photography | `web/photography` | `app/main.py` at `/api` |
 
 Locally the FastAPI app is usually `http://localhost:8000` with routes like `/images` and `/upload`. On Vercel those same routes are served under the `/api` prefix (e.g. `/api/images`, `/api/upload`).
 
@@ -51,13 +50,14 @@ Locally the FastAPI app is usually `http://localhost:8000` with routes like `/im
 # Env (repo root)
 cp .env.example .env
 
-# Frontend — http://localhost:3000
-cd client && npm install && npm run dev
-cd client && npm run lint
-cd client && npm run lint -- --fix   # autofix when safe
-cd client && npm run test:run
-cd client && npm run test:coverage
-cd client && npm run build
+# Frontends (npm workspaces at repo root)
+npm install
+npm run dev:recruiter    # http://localhost:3000
+npm run dev:photography  # http://localhost:3001
+npm run lint
+npm run test
+npm run build -w @portfolio/recruiter
+npm run build -w @portfolio/photography
 
 # Backend — http://localhost:8000
 pip install -r app/requirements.txt
@@ -68,25 +68,27 @@ cd app && ruff check . && ruff format .
 cd app && pytest tests/ -v   # coverage via pytest-cov (see app/pyproject.toml)
 ```
 
-Frontend: public gallery reads via Next `/api/images`; admin upload/delete need `NEXT_PUBLIC_API_URL` (see `client/.env.local.example`). Backend secrets: `DATABASE_URL`, `ADMIN_API_KEY`, `SUPABASE_*` (see `.env.example`). Never commit `.env` / `.env.local`.
+Photography app: public gallery reads via Supabase JS (`NEXT_PUBLIC_SUPABASE_*`); admin upload/delete use FastAPI (see `web/photography/.env.local.example`). Cross-links: `NEXT_PUBLIC_PHOTOGRAPHY_URL` (recruiter), `NEXT_PUBLIC_RECRUITER_URL` (photography). Backend secrets: `DATABASE_URL`, `ADMIN_API_KEY`, `SUPABASE_*` (see `.env.example`). Never commit `.env` / `.env.local`.
 
 ## Stack conventions
 
-### Frontend (`client/`)
+### Frontends (`web/recruiter/`, `web/photography/`)
 
-- Next.js 14 App Router, React 18, TypeScript, Tailwind 3, Geist Sans
-- Home is one scroll: About → Experience → Projects → Portfolio (photography)
-- Content constants in `client/constants/`; project MDX/detail via `client/lib/projects.ts`
-- Photos: public reads via Next `/api/images` (`lib/photos.ts`); admin upload/delete via FastAPI with Bearer JWT; gallery UI in `components/sections/`
+- Next.js 14 App Router, React 18, TypeScript, Tailwind 3, Geist Sans; shared tokens in `packages/theme/`
+- Recruiter home: About → Experience → Projects (link out to photography site)
+- Photography home: intro → gallery; admin at `/admin`
+- Recruiter content in `web/recruiter/constants/`; project MDX via `web/recruiter/lib/projects.ts`
+- Photos: `web/photography/lib/photographsQuery.ts`, `photos.ts`; gallery UI in `web/photography/components/sections/`
+- Recruiter external API: GitHub REST only (`web/recruiter/lib/projects.ts`)
 - Prefer existing tokens (`accent`, `ink`, `text-hero`, `text-section`) over new palette or fonts
 - Preserve incumbent look unless the user explicitly asks for a redesign
 - Match existing component patterns under `components/`; keep sections focused and scannable
 
-#### TypeScript / JavaScript style (required for all `client/` changes)
+#### TypeScript / JavaScript style (required for all frontend app changes)
 
-When writing or changing TypeScript or JavaScript in this repo:
+When writing or changing TypeScript or JavaScript under `web/recruiter/` or `web/photography/`:
 
-1. **Lint and format** — Always run `npm run lint` under `client/` before finishing and fix issues. Apply safe autofixes with `npm run lint -- --fix`. Match indentation, quotes, and import style of surrounding files (ESLint / `eslint-config-next`); do not leave inconsistent formatting.
+1. **Lint and format** — Run `npm run lint` in the app you changed (or `npm run lint` at repo root) before finishing. Apply safe autofixes with `npm run lint -- --fix` in that app. Match indentation, quotes, and import style of surrounding files (ESLint / `eslint-config-next`); do not leave inconsistent formatting.
 2. **Tests** — Add or update Vitest coverage near the code you touch (`*.test.ts` / `*.test.tsx` beside the module, usually under `lib/`). New behavior needs tests; bug fixes should include a regression test when practical. Run `npm run test:run` (or `npm run test:coverage`) and keep it green.
 3. **Conventions** — Prefer TypeScript over plain JS for new code. Use clear `camelCase` for values/functions, `PascalCase` for React components and types, `UPPER_SNAKE_CASE` for true constants. Favor explicit types on exported APIs; avoid `any` unless unavoidable and localized. Keep modules focused; follow existing App Router / React patterns in `app/` and `components/`.
 4. **JSDoc (Google style)** — Document exported functions, classes, and non-obvious helpers with [Google-style JSDoc](https://google.github.io/styleguide/jsguide.html#jsdoc) (`@param`, `@returns`, `@throws` when they apply). Types belong in TypeScript signatures; JSDoc explains behavior and constraints. Private/local helpers may use a short one-liner when the name is sufficient.
@@ -166,11 +168,11 @@ def fetch_photographs(self, limit: int, offset: int) -> list[dict]:
 
 | Task | Start here |
 |------|------------|
-| Home sections / copy | `client/components/sections/`, `client/constants/resume.ts` |
-| Featured projects | `client/constants/featuredProjects.ts`, `client/lib/projects.ts` |
-| Gallery / lightbox | `client/components/sections/Portfolio.tsx`, `Gallery.tsx`, `client/lib/photos.ts` |
+| Recruiter sections / copy | `web/recruiter/components/sections/`, `web/recruiter/constants/resume.ts` |
+| Featured projects | `web/recruiter/constants/featuredProjects.ts`, `web/recruiter/lib/projects.ts` |
+| Gallery / lightbox | `web/photography/components/sections/`, `web/photography/lib/photos.ts` |
 | Photo pipeline docs | `docs/upload.md` |
-| Admin photo tools | `client/app/admin/`, backend `app/api/routes.py` |
+| Admin photo tools | `web/photography/app/admin/`, backend `app/api/routes.py` |
 | Changelog | `docs/CHANGELOG.md` |
-| Design tokens | `client/tailwind.config.js`, `DESIGN.md` |
+| Design tokens | `packages/theme/`, `DESIGN.md` |
 | Product constraints | `PRODUCT.md` |

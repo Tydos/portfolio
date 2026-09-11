@@ -2,7 +2,7 @@
 
 FastAPI service for portfolio photography: public image listing, admin JPEG upload, and admin delete. Postgres (Supabase) holds metadata; Supabase Storage holds files.
 
-Part of the monorepo at the repo root. Pipeline docs: [`../docs/upload.md`](../docs/upload.md). Frontend counterpart: [`../client/README.md`](../client/README.md).
+Part of the monorepo at the repo root. Pipeline docs: [`../docs/upload.md`](../docs/upload.md). Deployed with the photography frontend: [`../web/photography/README.md`](../web/photography/README.md).
 
 ## Stack
 
@@ -45,7 +45,7 @@ Locally the app listens on `http://localhost:8000` **without** an `/api` prefix:
 | `POST` | `/upload` | Bearer JWT or `X-API-Key` | Upload one `.jpg`/`.jpeg` |
 | `DELETE` | `/delete/{id}` | Bearer JWT or `X-API-Key` | Delete photograph by id |
 
-On Vercel, the same routes are served under the `/api` prefix (`/api/images`, `/api/upload`, …) via root [`vercel.json`](../vercel.json).
+On Vercel, deploy only with the **photography** project: routes are under `/api` (`/api/images`, `/api/upload`, …) via [`web/photography/vercel.json`](../web/photography/vercel.json). The recruiter project has no FastAPI service.
 
 There is **no** batch-upload endpoint; the gallery UI uploads files one at a time.
 
@@ -132,7 +132,7 @@ pytest tests/ -v
 
 Coverage is enabled via `pyproject.toml` (`pytest-cov`).
 
-Production uptime is checked daily by `.github/workflows/production-api-health.yml` against `https://www.prasadjawale.live/api` (manual run via **Actions → Production API Health → Run workflow**).
+Production uptime is checked by `.github/workflows/production-api-health.yml`. Set `API_BASE` in that workflow to your **photography** deployment URL (e.g. `https://photos.example.com/api`), not the recruiter-only site.
 
 ## Style / tests
 
