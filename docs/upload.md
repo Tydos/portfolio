@@ -24,7 +24,7 @@ flowchart LR
 
 ## Public browse (no login)
 
-1. Gallery loads on the home page (`#creative-eye`).
+1. Gallery loads at `/portfolio` (linked from the header when photography is enabled).
 2. `fetchPhotos` in `client/lib/photos.ts` calls Next.js **`GET /api/images`**.
 3. That route (`client/app/api/images/route.ts`) reads from Supabase and returns `{ photos, total }`.
 4. No FastAPI and no auth for this path.

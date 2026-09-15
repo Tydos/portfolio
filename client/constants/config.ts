@@ -41,8 +41,11 @@ const RECRUITER_NAV: NavItem[] = [
 
 /** Recruiter-first nav; photography link omitted when {@link INCLUDE_PHOTOGRAPHY} is false. */
 export const NAV_ITEMS: NavItem[] = INCLUDE_PHOTOGRAPHY
-  ? [...RECRUITER_NAV, { id: "creative-eye", label: "Portfolio" }]
+  ? [...RECRUITER_NAV, { id: "portfolio", label: "Portfolio", href: "/portfolio" }]
   : RECRUITER_NAV;
+
+/** Photography gallery route (404 when {@link INCLUDE_PHOTOGRAPHY} is false). */
+export const PORTFOLIO_PATH = "/portfolio" as const;
 
 /** Primary contact destinations. */
 export const CONTACT = {

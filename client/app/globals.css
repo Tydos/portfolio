@@ -97,3 +97,20 @@
   width: 100%;
   height: auto;
 }
+
+/* Wired editorial theme (photography `/portfolio` only). */
+.photo-theme {
+  --color-accent: #fcee0a;
+  --color-accent-hover: #fffb00;
+  --color-ink: #000000;
+  --color-muted: #757575;
+}
+
+.photo-theme ::selection {
+  background: #000000;
+  color: #fcee0a;
+}
+
+html:has(.photo-theme) {
+  scroll-padding-top: 6rem;
+}

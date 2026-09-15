@@ -1,8 +1,12 @@
 "use client";
 
 import { useState, useEffect, useId } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "react-feather";
 import { NAV_ITEMS, RESUME_URL } from "../../constants/config";
+import { isNavItemActive, navItemHref } from "../../lib/nav";
+import type { NavItem } from "../../types";
 
 const resumeButtonClassName =
   "inline-flex items-center justify-center min-h-[36px] px-3 py-1 text-xs font-medium rounded-full text-ink-muted hover:text-ink hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-colors shrink-0";
@@ -13,7 +17,7 @@ const NAV_OFFSET_PX = 80;
 
 /** Builds nav pill classes for the active vs inactive state. */
 const navPillClass = (active: boolean) =>
-  `min-h-[36px] px-3 py-1 text-xs font-medium rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+  `inline-flex items-center justify-center min-h-[36px] px-3 py-1 text-xs font-medium whitespace-nowrap rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
     active
       ? "bg-ink text-white"
       : "text-ink-muted hover:text-ink hover:bg-slate-100"
@@ -31,34 +35,52 @@ function scrollToSection(id: string) {
 
 /** Sticky top navigation with section highlighting and mobile menu. */
 function Navbar() {
+  const pathname = usePathname();
   const [activeSection, setActiveSection] = useState(NAV_ITEMS[0]?.id ?? "resume");
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuId = useId();
 
   useEffect(() => {
+    const sectionIds = new Set(
+      NAV_ITEMS.filter((item) => !item.href).map((item) => item.id),
+    );
+
+    const syncActiveFromHash = () => {
+      if (pathname !== "/") return;
+      const id = window.location.hash.replace("#", "");
+      if (sectionIds.has(id)) {
+        setActiveSection(id);
+      }
+    };
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      if (pathname !== "/") return;
 
       let current = NAV_ITEMS[0]?.id ?? "resume";
-      for (const { id } of NAV_ITEMS) {
-        const el = document.getElementById(id);
+      for (const item of NAV_ITEMS) {
+        if (item.href) continue;
+        const el = document.getElementById(item.id);
         if (!el) continue;
         if (el.getBoundingClientRect().top <= NAV_OFFSET_PX) {
-          current = id;
+          current = item.id;
         }
       }
       setActiveSection(current);
     };
 
+    syncActiveFromHash();
     handleScroll();
+    window.addEventListener("hashchange", syncActiveFromHash);
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);
     return () => {
+      window.removeEventListener("hashchange", syncActiveFromHash);
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -76,6 +98,37 @@ function Navbar() {
     scrollToSection(id);
   };
 
+  const renderNavItem = (item: NavItem, className: string) => {
+    const active = isNavItemActive(item, pathname, activeSection);
+    const href = navItemHref(item, pathname);
+
+    if (href) {
+      return (
+        <Link
+          key={item.id}
+          href={href}
+          onClick={() => setMobileMenuOpen(false)}
+          aria-current={active ? "page" : undefined}
+          className={className}
+        >
+          {item.label}
+        </Link>
+      );
+    }
+
+    return (
+      <button
+        key={item.id}
+        type="button"
+        onClick={() => handleNavClick(item.id)}
+        aria-current={active ? "true" : undefined}
+        className={className}
+      >
+        {item.label}
+      </button>
+    );
+  };
+
   return (
     <nav
       aria-label="Main"
@@ -86,26 +139,23 @@ function Navbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-3.5 flex justify-between items-center gap-2">
-        <a
-          href="#resume"
-          className="min-w-0 text-sm font-semibold text-ink truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded"
+        <Link
+          href="/#resume"
+          onClick={(e) => {
+            if (pathname !== "/") return;
+            e.preventDefault();
+            handleNavClick("resume");
+          }}
+          className="min-w-0 max-w-[45%] sm:max-w-none text-sm font-semibold text-ink truncate focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded"
         >
           Prasad Jawale
-        </a>
+        </Link>
 
         <div className="hidden md:flex shrink-0 items-center gap-2">
           <div className="flex items-center gap-1">
-            {NAV_ITEMS.map(({ id, label }) => (
-              <button
-                key={id}
-                type="button"
-                onClick={() => handleNavClick(id)}
-                aria-current={activeSection === id ? "true" : undefined}
-                className={navPillClass(activeSection === id)}
-              >
-                {label}
-              </button>
-            ))}
+            {NAV_ITEMS.map((item) =>
+              renderNavItem(item, navPillClass(isNavItemActive(item, pathname, activeSection))),
+            )}
           </div>
           <a
             href={RESUME_URL}
@@ -146,17 +196,12 @@ function Navbar() {
           id={menuId}
           className="md:hidden bg-white/95 backdrop-blur-xl border-b border-black/5 px-4 sm:px-6 py-4 flex flex-col gap-1.5"
         >
-          {NAV_ITEMS.map(({ id, label }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => handleNavClick(id)}
-              aria-current={activeSection === id ? "true" : undefined}
-              className={`text-left ${navPillClass(activeSection === id)}`}
-            >
-              {label}
-            </button>
-          ))}
+          {NAV_ITEMS.map((item) =>
+            renderNavItem(
+              item,
+              `text-left ${navPillClass(isNavItemActive(item, pathname, activeSection))}`,
+            ),
+          )}
         </div>
       )}
     </nav>

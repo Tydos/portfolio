@@ -2,6 +2,8 @@
 export interface NavItem {
   id: string;
   label: string;
+  /** When set, nav links to this route instead of scrolling on the home page. */
+  href?: string;
 }
 
 /** Named skill group for the resume Skills subsection. */

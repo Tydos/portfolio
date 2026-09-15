@@ -5,6 +5,7 @@ import {
   deletePhoto,
   PHOTOS_PAGE_SIZE,
 } from "./photos";
+import type { GalleryReadError } from "./photos";
 import type { Photo } from "../types";
 
 /**
@@ -22,6 +23,7 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [readError, setReadError] = useState<GalleryReadError | null>(null);
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{
@@ -42,9 +44,10 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
       setLoading(true);
 
       try {
-        const { photos: data, total: t } = await fetchPhotos(p, pageSize);
+        const { photos: data, total: t, error } = await fetchPhotos(p, pageSize);
         setPhotos(data);
         setTotal(t);
+        setReadError(error ?? null);
         setPage(p);
       } catch (err) {
         console.warn(
@@ -53,6 +56,7 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
         );
         setPhotos([]);
         setTotal(0);
+        setReadError("query_failed");
       } finally {
         setLoading(false);
       }
@@ -174,6 +178,7 @@ export function usePhotos(pageSize = PHOTOS_PAGE_SIZE) {
     page,
     totalPages,
     loading,
+    readError,
 
     uploading,
     uploadProgress,

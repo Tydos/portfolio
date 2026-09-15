@@ -75,7 +75,7 @@ export default function AdminPage() {
           </p>
           {INCLUDE_PHOTOGRAPHY ? (
             <Link
-              href="/#creative-eye"
+              href="/portfolio"
               className="text-slate-400 hover:text-white transition-colors underline underline-offset-4"
             >
               Go to Gallery

@@ -18,12 +18,29 @@ module.exports = {
           DEFAULT: "#1d1d1f",
           muted: "#6e6e73",
         },
+        wired: {
+          black: "#000000",
+          yellow: "#fcee0a",
+          gray: "#757575",
+          paper: "#ffffff",
+        },
       },
       fontSize: {
         "nav": ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.02em" }],
         "section": ["2.25rem", { lineHeight: "2.5rem", letterSpacing: "-0.03em" }],
         "hero": ["clamp(2.75rem, 6vw, 5.5rem)", { lineHeight: "1.05", letterSpacing: "-0.03em" }],
         "display": ["clamp(1.5rem, 3vw, 2.25rem)", { lineHeight: "1.15", letterSpacing: "-0.02em" }],
+      },
+      fontFamily: {
+        display: [
+          "var(--font-display)",
+          "Anton",
+          "Impact",
+          "sans-serif",
+        ],
+      },
+      letterSpacing: {
+        wired: "-0.05em",
       },
     },
   },

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Home **Portfolio** teaser after Projects mirrors the `/portfolio` editorial hero carousel (same slides, controls, wired styling) with a link to the full gallery.
+- `/portfolio` uses the gallery branch wired editorial UI (black/yellow theme, Anton display type, dedicated header/footer, splash hero, masonry gallery).
 - Header **Résumé** button linking to `RESUME_URL` in `client/constants/config.ts` (Google Drive PDF).
 - LeetCode profile link (`leetcode.com/u/prsdjwl`) in hero strip, footer, and `SOCIAL_LINKS` (brand-colored icon).
 - CodeChef profile link (`codechef.com/users/tydos`) in hero strip, footer, and `SOCIAL_LINKS` (brand-colored icon).
@@ -32,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Photography header restored to a minimal bar (Photography + Engineering link only).
+- Photography lives on `/portfolio` (removed from the home scroll); nav **Portfolio** links there; Experience/Projects from that page link back to `/#resume` and `/#projects`.
+- Photography gallery layout (from `gallery` branch): tighter masonry spacing, hover title/category captions, editorial category filters and prev/next pagination.
 - Social profile links are minimal inline rows (icon + label, muted text, 44px tap height, `nav` landmark) in the hero and footer.
 - GitHub and LinkedIn social icons use brand marks (Simple Icons) instead of generic stroke icons.
 - Home Projects section anchor is `#projects` (replaces `#technical-eye`).

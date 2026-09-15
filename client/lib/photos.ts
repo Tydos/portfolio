@@ -4,7 +4,16 @@ import type { Photo } from "../types";
 /** Default page size for public gallery fetches. */
 export const PHOTOS_PAGE_SIZE = 25;
 
-const emptyResult = { photos: [] as Photo[], total: 0 };
+/** Why a gallery fetch returned no rows (distinct from an empty table). */
+export type GalleryReadError = "not_configured" | "query_failed";
+
+export interface FetchPhotosResult {
+  photos: Photo[];
+  total: number;
+  error?: GalleryReadError;
+}
+
+const emptyResult: FetchPhotosResult = { photos: [], total: 0 };
 
 /** Maps an API photograph row into the gallery `Photo` shape. */
 const toRow = (item: Record<string, unknown>): Photo => ({
@@ -102,7 +111,7 @@ async function readErrorDetail(res: Response): Promise<string> {
 async function fetchPhotosFromApi(
   page: number,
   pageSize: number,
-): Promise<{ photos: Photo[]; total: number }> {
+): Promise<FetchPhotosResult> {
   const offset = (page - 1) * pageSize;
   const url = `/api/images?limit=${pageSize}&offset=${offset}`;
 
@@ -110,7 +119,22 @@ async function fetchPhotosFromApi(
     const res = await fetch(url);
     if (!res.ok) {
       console.warn("fetchPhotosFromApi:", res.status, res.statusText);
-      return emptyResult;
+      let error: GalleryReadError = "query_failed";
+      try {
+        const body: unknown = await res.json();
+        if (
+          body &&
+          typeof body === "object" &&
+          "error" in body &&
+          typeof (body as { error: unknown }).error === "string" &&
+          (body as { error: string }).error.includes("not configured")
+        ) {
+          error = "not_configured";
+        }
+      } catch {
+        /* ignore */
+      }
+      return { ...emptyResult, error };
     }
 
     const data: unknown = await res.json();
@@ -120,7 +144,7 @@ async function fetchPhotosFromApi(
       "fetchPhotosFromApi:",
       err instanceof Error ? err.message : "network error",
     );
-    return emptyResult;
+    return { ...emptyResult, error: "query_failed" };
   }
 }
 
@@ -134,10 +158,41 @@ async function fetchPhotosFromApi(
  *     {@link PHOTOS_PAGE_SIZE}).
  * @returns Photos plus total count for pagination.
  */
+/**
+ * Fetch nature (or curated) photographs for the portfolio splash hero.
+ *
+ * Never throws; returns an empty list on failure.
+ *
+ * @returns Up to four hero photos when the hero API succeeds.
+ */
+export async function fetchHeroNaturePhotos(): Promise<Photo[]> {
+  try {
+    const res = await fetch("/api/images/hero");
+    if (!res.ok) {
+      console.warn("fetchHeroNaturePhotos:", res.status, res.statusText);
+      return [];
+    }
+
+    const data: unknown = await res.json();
+    if (!data || typeof data !== "object" || !("photos" in data)) {
+      return [];
+    }
+
+    const photos = (data as { photos: ApiPhotoRecord[] }).photos;
+    return photos.map((row) => toRow(row));
+  } catch (err) {
+    console.warn(
+      "fetchHeroNaturePhotos:",
+      err instanceof Error ? err.message : "network error",
+    );
+    return [];
+  }
+}
+
 export const fetchPhotos = async (
   page = 1,
   pageSize = PHOTOS_PAGE_SIZE,
-): Promise<{ photos: Photo[]; total: number }> => {
+): Promise<FetchPhotosResult> => {
   try {
     return await fetchPhotosFromApi(page, pageSize);
   } catch (err) {
@@ -145,7 +200,7 @@ export const fetchPhotos = async (
       "fetchPhotos:",
       err instanceof Error ? err.message : "unknown error",
     );
-    return emptyResult;
+    return { ...emptyResult, error: "query_failed" };
   }
 };
 

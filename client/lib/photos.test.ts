@@ -6,7 +6,12 @@ vi.mock("./auth", () => ({
   getSession: () => getSessionMock(),
 }));
 
-import { deletePhoto, fetchPhotos, uploadPhoto } from "./photos";
+import {
+  deletePhoto,
+  fetchHeroNaturePhotos,
+  fetchPhotos,
+  uploadPhoto,
+} from "./photos";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -74,7 +79,11 @@ describe("fetchPhotos", () => {
       "fetch",
       vi.fn().mockRejectedValue(new Error("offline")),
     );
-    await expect(fetchPhotos()).resolves.toEqual({ photos: [], total: 0 });
+    await expect(fetchPhotos()).resolves.toEqual({
+      photos: [],
+      total: 0,
+      error: "query_failed",
+    });
 
     vi.stubGlobal(
       "fetch",
@@ -88,6 +97,49 @@ describe("fetchPhotos", () => {
       total: 0,
     });
     expect(fetch).toHaveBeenCalledWith("/api/images?limit=10&offset=10");
+  });
+});
+
+describe("fetchHeroNaturePhotos", () => {
+  it("reads hero rows from /api/images/hero", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        photos: [
+          {
+            id: 9,
+            filename: "peak.jpg",
+            url: "https://example.com/peak.jpg",
+            category: "nature",
+            width: 1200,
+            height: 800,
+          },
+        ],
+      }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const photos = await fetchHeroNaturePhotos();
+
+    expect(fetchMock).toHaveBeenCalledWith("/api/images/hero");
+    expect(photos).toEqual([
+      {
+        id: 9,
+        src: "https://example.com/peak.jpg",
+        width: 1200,
+        height: 800,
+        title: "peak.jpg",
+        category: "nature",
+      },
+    ]);
+  });
+
+  it("returns an empty list on failure", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 503, statusText: "n/a" }),
+    );
+    await expect(fetchHeroNaturePhotos()).resolves.toEqual([]);
   });
 });
 

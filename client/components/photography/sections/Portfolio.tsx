@@ -3,11 +3,10 @@
 import { useState, useEffect } from "react";
 import { Camera, ChevronLeft, ChevronRight } from "react-feather";
 import Gallery from "./Gallery";
-import SectionTitle from "../ui/SectionTitle";
-import { usePhotos } from "../../lib/usePhotos";
-import { getSession, onAuthStateChange } from "../../lib/auth";
-import type { Photo } from "../../types";
-import { GITHUB_USERNAME } from "../../constants/config";
+import { usePhotos } from "../../../lib/usePhotos";
+import { getSession, onAuthStateChange } from "../../../lib/auth";
+import type { Photo } from "../../../types";
+import { GITHUB_USERNAME } from "../../../constants/config";
 
 function Scrubber({
   page,
@@ -18,64 +17,35 @@ function Scrubber({
   totalPages: number;
   onChange: (p: number) => void;
 }) {
-  // Ticks are absolutely positioned, so cap each hit area at its own slot to
-  // stop neighbours from stacking and swallowing taps on narrow screens.
-  const tickWidth =
-    totalPages > 1 ? `min(1.5rem, ${100 / (totalPages - 1)}%)` : "1.5rem";
-
   return (
-    <div className="mt-12 flex flex-col items-center gap-4 px-4 sm:px-6">
-      <p className="text-sm tabular-nums tracking-wide text-ink-muted">
-        <span className="text-ink font-medium">{String(page).padStart(2, "0")}</span>
+    <div className="mt-12 flex items-center justify-center gap-6 px-6">
+      <button
+        type="button"
+        onClick={() => onChange(page - 1)}
+        disabled={page === 1}
+        aria-label="Previous page"
+        className="flex items-center justify-center min-h-[44px] min-w-[44px] text-wired-black hover:text-wired-yellow disabled:opacity-30 disabled:cursor-not-allowed transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      >
+        <ChevronLeft size={20} aria-hidden="true" />
+      </button>
+
+      <p className="text-sm font-bold tabular-nums tracking-wide text-wired-black">
+        <span className="inline-block bg-wired-yellow px-1.5 py-0.5">
+          {String(page).padStart(2, "0")}
+        </span>
         {" / "}
         {String(totalPages).padStart(2, "0")}
       </p>
 
-      <div className="flex items-center gap-4 w-full max-w-sm">
-        <button
-          type="button"
-          onClick={() => onChange(page - 1)}
-          disabled={page === 1}
-          aria-label="Previous page"
-          className="flex items-center justify-center min-h-[44px] min-w-[44px] text-ink-muted hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-        >
-          <ChevronLeft size={18} />
-        </button>
-
-        <div className="relative flex-1 h-px bg-slate-200">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-            const percent = totalPages > 1 ? ((p - 1) / (totalPages - 1)) * 100 : 0;
-            const isActive = p === page;
-            return (
-              <button
-                key={p}
-                type="button"
-                onClick={() => onChange(p)}
-                aria-label={`Go to page ${p}`}
-                aria-current={isActive ? "true" : undefined}
-                style={{ left: `${percent}%`, width: tickWidth }}
-                className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center h-6 group"
-              >
-                <span
-                  className={`block w-px transition-all duration-300 ${
-                    isActive ? "h-3 bg-ink" : "h-2 bg-slate-300 group-hover:bg-slate-500 group-hover:h-2.5"
-                  }`}
-                />
-              </button>
-            );
-          })}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => onChange(page + 1)}
-          disabled={page === totalPages}
-          aria-label="Next page"
-          className="flex items-center justify-center min-h-[44px] min-w-[44px] text-ink-muted hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
+      <button
+        type="button"
+        onClick={() => onChange(page + 1)}
+        disabled={page === totalPages}
+        aria-label="Next page"
+        className="flex items-center justify-center min-h-[44px] min-w-[44px] text-wired-black hover:text-wired-yellow disabled:opacity-30 disabled:cursor-not-allowed transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+      >
+        <ChevronRight size={20} aria-hidden="true" />
+      </button>
     </div>
   );
 }
@@ -84,7 +54,20 @@ function Scrubber({
  * Photography portfolio section with paginated gallery and admin controls.
  */
 function Portfolio() {
-  const { photos, total, page, totalPages, loading, uploading, uploadProgress, deletingIds, fileInputRef, goToPage, upload, remove } = usePhotos();
+  const {
+    photos,
+    page,
+    totalPages,
+    loading,
+    readError,
+    uploading,
+    uploadProgress,
+    deletingIds,
+    fileInputRef,
+    goToPage,
+    upload,
+    remove,
+  } = usePhotos();
 
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -120,35 +103,25 @@ function Portfolio() {
 
   const categories = [...new Set(photos.map((p) => p.category).filter(Boolean))];
   const filteredPhotos = photos.filter(
-    (p) => !activeCategory || p.category === activeCategory
+    (p) => !activeCategory || p.category === activeCategory,
   );
 
   return (
     <>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 mb-12 md:mb-16 text-center">
-        <SectionTitle className="mb-3">Portfolio</SectionTitle>
-        {total > 0 && (
-          <p className="text-base text-ink-muted">
-            {total} photograph{total === 1 ? "" : "s"}
-          </p>
-        )}
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Admin controls */}
+      <div className="max-w-6xl mx-auto px-6">
         {isAdmin && (
           <div className="mb-8 flex flex-col gap-3">
             <div className="flex items-center gap-4 text-xs uppercase tracking-wide">
               <button
                 onClick={() => { setShowUpload((v) => !v); setActionStatus(null); }}
-                className="text-ink-muted hover:text-ink underline-offset-4 hover:underline transition-colors min-h-[44px] flex items-center"
+                className="text-ink-muted hover:text-ink underline-offset-4 hover:underline transition-colors min-h-[44px] flex items-center font-semibold uppercase tracking-wide"
               >
                 {showUpload ? "Close upload" : "Upload photos"}
               </button>
-              <span className="text-slate-300">·</span>
+              <span className="text-wired-gray">/</span>
               <button
                 onClick={() => { setDeleteMode((v) => !v); setActionStatus(null); }}
-                className={`underline-offset-4 hover:underline transition-colors min-h-[44px] flex items-center ${deleteMode ? "text-red-600" : "text-ink-muted hover:text-ink"}`}
+                className={`underline-offset-4 hover:underline transition-colors min-h-[44px] flex items-center font-semibold uppercase tracking-wide ${deleteMode ? "text-red-600" : "text-ink-muted hover:text-ink"}`}
               >
                 {deleteMode ? "Done deleting" : "Delete photos"}
               </button>
@@ -163,7 +136,7 @@ function Portfolio() {
                     ref={fileInputRef}
                     type="file" accept=".jpg,.jpeg" multiple required
                     onChange={(e) => setUploadFiles(Array.from(e.target.files ?? []))}
-                    className="w-full text-sm text-ink file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-white file:text-ink file:border file:border-slate-200 cursor-pointer"
+                    className="w-full text-sm text-ink file:mr-3 file:py-1.5 file:px-3 file:rounded-none file:border-0 file:text-xs file:font-medium file:bg-wired-paper file:text-ink file:border file:border-wired-gray/30 cursor-pointer"
                   />
                   {uploadFiles.length > 1 && <p className="mt-1 text-xs text-ink-muted">{uploadFiles.length} files selected</p>}
                 </div>
@@ -181,7 +154,7 @@ function Portfolio() {
                 )}
                 <button
                   type="submit" disabled={uploading || !uploadFiles.length}
-                  className="self-start text-xs uppercase tracking-wide font-medium text-ink hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed underline-offset-4 hover:underline transition-colors min-h-[44px] flex items-center"
+                  className="self-start px-5 py-2.5 bg-wired-black text-wired-yellow text-xs uppercase tracking-wide font-semibold hover:bg-wired-gray disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-[44px] flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   {uploading ? "Uploading…" : uploadFiles.length > 1 ? `Upload ${uploadFiles.length} photos` : "Upload"}
                 </button>
@@ -197,16 +170,17 @@ function Portfolio() {
           </div>
         )}
 
-        {/* Category filters */}
         {categories.length > 0 && (
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm mb-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 mb-6">
             {categories.map((cat, i) => (
-              <span key={cat} className="flex items-center gap-4">
-                {i > 0 && <span className="text-slate-300">·</span>}
+              <span key={cat} className="flex items-center gap-3">
+                {i > 0 && <span className="text-wired-gray">/</span>}
                 <button
                   onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
-                  className={`underline-offset-4 transition-colors min-h-[44px] flex items-center ${
-                    activeCategory === cat ? "text-accent underline" : "text-ink-muted hover:text-ink"
+                  className={`text-xs font-semibold uppercase tracking-wider underline-offset-4 transition-colors min-h-[44px] flex items-center ${
+                    activeCategory === cat
+                      ? "text-wired-black underline"
+                      : "text-wired-gray hover:text-wired-black"
                   }`}
                 >
                   {cat}
@@ -221,17 +195,37 @@ function Portfolio() {
         )}
       </div>
 
-      {/* Gallery — full-bleed, breaks out of the narrow text column */}
       {loading ? (
         <div className="flex items-center justify-center py-24 px-6" role="status" aria-live="polite">
           <span className="w-8 h-8 rounded-full border-2 border-slate-200 border-t-accent animate-spin" />
           <span className="sr-only">Loading photos</span>
         </div>
       ) : filteredPhotos.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 px-6 text-ink-muted">
+        <div className="flex flex-col items-center justify-center py-24 px-6 text-ink-muted text-center max-w-lg mx-auto">
           <Camera size={40} className="mb-4" aria-hidden="true" />
-          <p className="text-base">{photos.length === 0 ? "No photos to show yet." : "No photos in this category."}</p>
-          <p className="text-sm mt-2">{photos.length === 0 ? "Check back soon for new work." : "Try selecting a different category."}</p>
+          {readError === "not_configured" ? (
+            <>
+              <p className="text-base text-ink">Gallery cannot load without Supabase.</p>
+              <p className="text-sm mt-2">
+                Add <code className="text-xs">NEXT_PUBLIC_SUPABASE_URL</code> and{" "}
+                <code className="text-xs">NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code> to{" "}
+                <code className="text-xs">client/.env.local</code>, then restart the dev server.
+              </p>
+            </>
+          ) : readError === "query_failed" ? (
+            <>
+              <p className="text-base text-ink">Could not read photos from Supabase.</p>
+              <p className="text-sm mt-2">
+                Check the browser console, confirm the project is awake, and that RLS allows public{" "}
+                <code className="text-xs">SELECT</code> on <code className="text-xs">photographs</code>.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-base">{photos.length === 0 ? "No photos to show yet." : "No photos in this category."}</p>
+              <p className="text-sm mt-2">{photos.length === 0 ? "Check back soon for new work." : "Try selecting a different category."}</p>
+            </>
+          )}
         </div>
       ) : (
         <>

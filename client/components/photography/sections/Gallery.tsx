@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { PhotoAlbum } from "react-photo-album";
 import { X } from "react-feather";
-import type { Photo } from "../../types";
+import type { Photo } from "../../../types";
 
 interface GalleryProps {
   photos: Photo[];
@@ -30,11 +30,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
-    // iOS Safari ignores `overflow: hidden` on <body> alone.
-    const root = document.documentElement;
-    const previousRootOverflow = root.style.overflow;
-    const previousBodyOverflow = document.body.style.overflow;
-    root.style.overflow = "hidden";
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
 
@@ -64,8 +60,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
     window.addEventListener("keydown", onKey);
     return () => {
       window.removeEventListener("keydown", onKey);
-      root.style.overflow = previousRootOverflow;
-      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.overflow = previousOverflow;
       previousFocusRef.current?.focus();
     };
   }, [onClose, photo]);
@@ -76,7 +71,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
       role="dialog"
       aria-modal="true"
       aria-label={`Photo: ${photo.title}`}
-      className="fixed inset-x-0 top-0 viewport-height z-50 bg-black/90 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <button
@@ -101,7 +96,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
         alt={photo.title}
         width={photo.width}
         height={photo.height}
-        className={`max-h-[88%] max-w-full object-contain rounded-2xl shadow-2xl transition-all duration-500 ease-out ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+        className={`max-h-[90vh] max-w-[90vw] object-contain transition-all duration-500 ease-out ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
         style={{ width: "auto", height: "auto" }}
         onClick={(e) => e.stopPropagation()}
         onLoad={() => setLoaded(true)}
@@ -158,8 +153,8 @@ export default function Gallery({
 
           if (deleteMode) {
             return (
-              <div style={{ width: style?.width, padding: "10px" }}>
-                <div className="relative rounded-2xl overflow-hidden">
+              <div style={{ width: style?.width, padding: "4px" }}>
+                <div className="relative overflow-hidden">
                   <Image
                     src={src as string}
                     alt={label}
@@ -188,11 +183,11 @@ export default function Gallery({
           }
 
           return (
-            <div style={{ width: style?.width, padding: "10px" }}>
+            <div style={{ width: style?.width, padding: "4px" }}>
               <button
                 type="button"
                 onClick={() => setSelected(p)}
-                className="group block w-full text-left rounded-2xl overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                className="group relative block w-full text-left overflow-hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 aria-label={`View ${label}`}
               >
                 <Image
@@ -201,8 +196,22 @@ export default function Gallery({
                   width={layout.width}
                   height={layout.height}
                   style={{ width: "100%", height: "auto", display: "block" }}
-                  className="transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.03]"
+                  className="transition-transform duration-700 ease-out motion-safe:group-hover:scale-[1.02]"
                 />
+                {(p.title || p.category) && (
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {p.title && (
+                      <p className="text-xs font-semibold uppercase tracking-wide text-white">
+                        {p.title}
+                      </p>
+                    )}
+                    {p.category && (
+                      <p className="text-[0.65rem] uppercase tracking-wider text-white/70">
+                        {p.category}
+                      </p>
+                    )}
+                  </div>
+                )}
               </button>
             </div>
           );
