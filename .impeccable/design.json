@@ -292,7 +292,7 @@
       "kind": "nav",
       "refersTo": "nav-pill",
       "description": "Sticky nav section link; active inverts to ink fill.",
-      "html": "<nav class=\"ds-nav\" aria-label=\"Primary\"><a class=\"ds-nav-pill\" href=\"#about\">About</a><a class=\"ds-nav-pill ds-nav-pill-active\" href=\"#resume\">Experience</a><a class=\"ds-nav-pill\" href=\"#technical-eye\">Projects</a></nav>",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Primary\"><a class=\"ds-nav-pill\" href=\"#about\">About</a><a class=\"ds-nav-pill ds-nav-pill-active\" href=\"#resume\">Experience</a><a class=\"ds-nav-pill\" href=\"#projects\">Projects</a></nav>",
       "css": ".ds-nav { display: flex; flex-wrap: wrap; gap: 0.25rem; } .ds-nav-pill { display: inline-flex; align-items: center; min-height: 44px; padding: 0.5rem 1rem; border-radius: 9999px; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 500; color: #6e6e73; text-decoration: none; transition: background-color 0.15s ease, color 0.15s ease; } .ds-nav-pill:hover { color: #1d1d1f; background: #f1f5f9; } .ds-nav-pill-active { background: #1d1d1f; color: #ffffff; } .ds-nav-pill-active:hover { background: #1d1d1f; color: #ffffff; } .ds-nav-pill:focus-visible { outline: 2px solid #0071e3; outline-offset: 2px; }"
     },
     {

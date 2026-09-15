@@ -1,13 +1,19 @@
 import { FEATURED_PROJECTS } from "../constants/featuredProjects";
 import type { Project } from "../types";
 
+const GITHUB_API_HEADERS = {
+  Accept: "application/vnd.github+json",
+} as const;
+
+const REVALIDATE_SECONDS = 3600;
+
 /**
  * Extract GitHub repository owner and name from a repository URL.
  *
  * @param url - Full GitHub repository URL.
  * @returns Owner and repo name, or `null` if the URL is invalid.
  */
-function parseGithubUrl(url: string): { owner: string; repo: string } | null {
+export function parseGithubUrl(url: string): { owner: string; repo: string } | null {
   try {
     const { pathname } = new URL(url);
     const [, owner, repo] = pathname.split("/");
@@ -21,12 +27,76 @@ function parseGithubUrl(url: string): { owner: string; repo: string } | null {
 }
 
 /**
- * Return curated featured projects in display order.
+ * Fetches the ISO timestamp of the latest commit on the repo default branch.
+ *
+ * @param githubUrl - Repository URL (`https://github.com/{owner}/{repo}`).
+ * @returns Committer date from the newest commit, or `null` when unavailable.
+ */
+export async function fetchLatestCommitDate(
+  githubUrl: string,
+): Promise<string | null> {
+  const parsed = parseGithubUrl(githubUrl);
+  if (!parsed) return null;
+
+  const { owner, repo } = parsed;
+
+  const res = await fetch(
+    `https://api.github.com/repos/${owner}/${repo}/commits?per_page=1`,
+    {
+      headers: GITHUB_API_HEADERS,
+      next: { revalidate: REVALIDATE_SECONDS },
+    },
+  );
+
+  if (!res.ok) return null;
+
+  const commits: unknown = await res.json();
+  if (!Array.isArray(commits) || commits.length === 0) return null;
+
+  const commit = commits[0] as {
+    commit?: { committer?: { date?: string } };
+  };
+  const date = commit.commit?.committer?.date;
+  return typeof date === "string" ? date : null;
+}
+
+/**
+ * Sorts featured projects by latest GitHub commit date (newest first).
+ *
+ * @param projects - Curated projects with optional `github` URLs.
+ * @returns Sorted copy; original catalog order breaks ties when dates missing.
+ */
+export async function sortProjectsByLatestCommit(
+  projects: Project[],
+): Promise<Project[]> {
+  const dated = await Promise.all(
+    projects.map(async (project, index) => {
+      const commitDate = project.github
+        ? await fetchLatestCommitDate(project.github)
+        : null;
+      return { project, commitDate, index };
+    }),
+  );
+
+  return dated
+    .sort((a, b) => {
+      if (a.commitDate && b.commitDate) {
+        const byDate = b.commitDate.localeCompare(a.commitDate);
+        if (byDate !== 0) return byDate;
+      } else if (a.commitDate) return -1;
+      else if (b.commitDate) return 1;
+      return a.index - b.index;
+    })
+    .map(({ project }) => project);
+}
+
+/**
+ * Return curated featured projects sorted by latest GitHub commit (newest first).
  *
  * @returns Featured project list used by the home Projects section.
  */
 export async function fetchGithubProjects(): Promise<Project[]> {
-  return FEATURED_PROJECTS;
+  return sortProjectsByLatestCommit(FEATURED_PROJECTS);
 }
 
 /**
@@ -59,7 +129,7 @@ export async function fetchReadme(githubUrl: string): Promise<string | null> {
     `https://api.github.com/repos/${owner}/${repo}/readme`,
     {
       headers: { Accept: "application/vnd.github.raw+json" },
-      next: { revalidate: 3600 },
+      next: { revalidate: REVALIDATE_SECONDS },
     },
   );
 

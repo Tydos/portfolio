@@ -1,7 +1,6 @@
-import { ExternalLink, Linkedin } from "react-feather";
+import { ExternalLink } from "react-feather";
 import SectionTitle from "../ui/SectionTitle";
 import Reveal from "../ui/Reveal";
-import { CONTACT } from "../../constants/config";
 import {
   RESUME_SUMMARY_PARAGRAPHS,
   RESUME_SKILL_GROUPS,
@@ -61,20 +60,11 @@ function Resume() {
     <div className="max-w-6xl mx-auto">
       <div className="grid lg:grid-cols-12 gap-10 lg:gap-14">
         <div className="lg:col-span-4">
-          <div className="lg:sticky lg:top-28">
-            <SectionTitle>Resume</SectionTitle>
+          <div className="lg:sticky lg:top-[5.25rem]">
+            <SectionTitle>Overview</SectionTitle>
             <p className="text-ink-muted text-sm leading-relaxed max-w-prose -mt-4">
               {RESUME_SUMMARY_PARAGRAPHS[0]}
             </p>
-            <a
-              href={CONTACT.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-6 min-h-[44px] px-5 py-2.5 rounded-full border border-slate-200 bg-white text-sm font-medium text-ink hover:border-accent/40 hover:text-accent transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            >
-              <Linkedin size={16} aria-hidden="true" />
-              Connect on LinkedIn
-            </a>
           </div>
         </div>
 

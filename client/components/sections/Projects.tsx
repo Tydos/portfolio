@@ -1,57 +1,96 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ProjectRow from "../cards/ProjectRow";
 import SectionTitle from "../ui/SectionTitle";
 import Reveal from "../ui/Reveal";
 import { ChevronDown, ChevronUp } from "react-feather";
 import type { Project } from "../../types";
-import { GITHUB_USERNAME } from "../../constants/config";
+import {
+  PROJECT_FILTER_OPTIONS,
+  filterProjectsByCategory,
+  type ProjectFilterId,
+} from "../../lib/projectFilters";
 
 const INITIAL_COUNT = 4;
+
+const filterPillClass = (active: boolean) =>
+  `min-h-[36px] px-3.5 py-1 text-xs font-medium rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+    active
+      ? "bg-ink text-white"
+      : "text-ink-muted hover:text-ink bg-slate-50 hover:bg-slate-100 border border-slate-200/80"
+  }`;
 
 interface ProjectsProps {
   projects: Project[];
 }
 
 /**
- * Featured projects list with optional expand/collapse for long catalogs.
+ * Featured projects list with category filters and optional expand/collapse.
  *
  * @param props.projects - Curated projects to display.
  */
 function Projects({ projects }: ProjectsProps) {
+  const [filter, setFilter] = useState<ProjectFilterId>("all");
   const [showAll, setShowAll] = useState(false);
-  const visible = showAll ? projects : projects.slice(0, INITIAL_COUNT);
-  const hasMore = projects.length > INITIAL_COUNT;
+
+  const filtered = useMemo(
+    () => filterProjectsByCategory(projects, filter),
+    [projects, filter],
+  );
+
+  const visible = showAll ? filtered : filtered.slice(0, INITIAL_COUNT);
+  const hasMore = filtered.length > INITIAL_COUNT;
+
+  const handleFilterChange = (id: ProjectFilterId) => {
+    setFilter(id);
+    setShowAll(false);
+  };
 
   return (
     <div className="max-w-6xl mx-auto">
       <SectionTitle>Projects</SectionTitle>
 
-      <p className="mb-8 md:mb-10 text-sm text-ink-muted">
-        Curated work —{" "}
-        <a
-          href={`https://github.com/${GITHUB_USERNAME}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-accent hover:text-accent-hover underline underline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded"
-        >
-          @{GITHUB_USERNAME} on GitHub
-        </a>
-      </p>
-
-      <div className="flex flex-col">
-        {visible.map((project, i) => (
-          <Reveal
-            key={project.slug}
-            className={i > 0 ? "mt-10 pt-10 border-t border-slate-100 md:mt-16 md:pt-16" : ""}
+      <div
+        className="flex flex-wrap gap-2 -mt-4 mb-8 md:mb-10"
+        role="group"
+        aria-label="Filter projects by category"
+      >
+        {PROJECT_FILTER_OPTIONS.map(({ id, label }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => handleFilterChange(id)}
+            aria-pressed={filter === id}
+            className={filterPillClass(filter === id)}
           >
-            <ProjectRow project={project} index={i} />
-          </Reveal>
+            {label}
+          </button>
         ))}
       </div>
 
-      {hasMore && (
+      {filtered.length === 0 ? (
+        <p className="text-sm text-ink-muted py-8">
+          No projects in this category yet.
+        </p>
+      ) : (
+        <div className="flex flex-col">
+          {visible.map((project, i) => (
+            <Reveal
+              key={project.slug}
+              className={
+                i > 0
+                  ? "mt-8 pt-8 border-t border-slate-100 md:mt-10 md:pt-10"
+                  : ""
+              }
+            >
+              <ProjectRow project={project} />
+            </Reveal>
+          ))}
+        </div>
+      )}
+
+      {hasMore && filtered.length > 0 ? (
         <div className="flex justify-center mt-8 md:mt-10">
           <button
             type="button"
@@ -65,13 +104,13 @@ function Projects({ projects }: ProjectsProps) {
               </>
             ) : (
               <>
-                Show {projects.length - INITIAL_COUNT} more projects{" "}
+                Show {filtered.length - INITIAL_COUNT} more projects{" "}
                 <ChevronDown size={15} aria-hidden="true" />
               </>
             )}
           </button>
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

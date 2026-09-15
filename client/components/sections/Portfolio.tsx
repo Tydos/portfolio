@@ -18,8 +18,13 @@ function Scrubber({
   totalPages: number;
   onChange: (p: number) => void;
 }) {
+  // Ticks are absolutely positioned, so cap each hit area at its own slot to
+  // stop neighbours from stacking and swallowing taps on narrow screens.
+  const tickWidth =
+    totalPages > 1 ? `min(1.5rem, ${100 / (totalPages - 1)}%)` : "1.5rem";
+
   return (
-    <div className="mt-12 flex flex-col items-center gap-4 px-6">
+    <div className="mt-12 flex flex-col items-center gap-4 px-4 sm:px-6">
       <p className="text-sm tabular-nums tracking-wide text-ink-muted">
         <span className="text-ink font-medium">{String(page).padStart(2, "0")}</span>
         {" / "}
@@ -48,8 +53,8 @@ function Scrubber({
                 onClick={() => onChange(p)}
                 aria-label={`Go to page ${p}`}
                 aria-current={isActive ? "true" : undefined}
-                style={{ left: `${percent}%` }}
-                className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-6 h-6 group"
+                style={{ left: `${percent}%`, width: tickWidth }}
+                className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center h-6 group"
               >
                 <span
                   className={`block w-px transition-all duration-300 ${
@@ -120,7 +125,7 @@ function Portfolio() {
 
   return (
     <>
-      <div className="max-w-3xl mx-auto px-6 mb-12 md:mb-16 text-center">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 mb-12 md:mb-16 text-center">
         <SectionTitle className="mb-3">Portfolio</SectionTitle>
         {total > 0 && (
           <p className="text-base text-ink-muted">
@@ -129,7 +134,7 @@ function Portfolio() {
         )}
       </div>
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Admin controls */}
         {isAdmin && (
           <div className="mb-8 flex flex-col gap-3">

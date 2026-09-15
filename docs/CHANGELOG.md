@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Header **Résumé** button linking to `RESUME_URL` in `client/constants/config.ts` (Google Drive PDF).
+- LeetCode profile link (`leetcode.com/u/prsdjwl`) in hero strip, footer, and `SOCIAL_LINKS` (brand-colored icon).
+- CodeChef profile link (`codechef.com/users/tydos`) in hero strip, footer, and `SOCIAL_LINKS` (brand-colored icon).
+- Kaggle profile link (`kaggle.com/prasadjawale`) in hero strip, footer, and `SOCIAL_LINKS` (brand-colored icon).
+- Recruiter-only frontend mode: set `NEXT_PUBLIC_INCLUDE_PHOTOGRAPHY=false` (or `npm run dev:recruiter` in `client/`) to omit the photography section and Portfolio nav item.
 - GitHub Actions cron workflow (`.github/workflows/production-api-health.yml`) that probes production `https://www.prasadjawale.live/api` (`/`, `/health`, `/images`) once a day.
 - GitHub Actions cron workflow (`.github/workflows/keep-supabase-alive.yml`) that pings Postgres daily via `DATABASE_URL` to keep the Supabase project from pausing.
 - `docs/upload.md` documenting the photography read / upload / delete pipeline.
@@ -18,10 +23,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Duplicate photo uploads again return **409**: `PhotoStorageService` re-raises `ValueError` from the DB layer instead of wrapping it as a generic database error.
+- Cmd/Ctrl/Shift-clicking a project row now opens the project the way the browser expects (new tab/window) instead of being hijacked into same-tab navigation.
+- Nav pill highlighting after clicking a section: `scroll-padding-top` on `html` stacked with each section's `scroll-mt`, landing sections ~168px down and leaving the previous section marked active.
+- Header no longer overflows horizontally on very narrow phones (~320px and below); the name truncates instead of pushing the résumé button and menu off-screen.
+- Photo lightbox uses dynamic viewport height (`dvh`, with a `vh` fallback), so tall photos and the category caption are no longer clipped by mobile browser toolbars; background scroll is locked on iOS Safari.
+- Gallery pagination ticks no longer overlap each other as the photo count grows, so taps land on the intended page.
+- Page gutters are consistent across header, hero, sections, gallery, and footer (`px-4 sm:px-6`), so content lines up at every breakpoint.
 
 ### Changed
 
+- Social profile links are minimal inline rows (icon + label, muted text, 44px tap height, `nav` landmark) in the hero and footer.
+- GitHub and LinkedIn social icons use brand marks (Simple Icons) instead of generic stroke icons.
+- Home Projects section anchor is `#projects` (replaces `#technical-eye`).
+- Projects: category filters (All, AIML, SWE, Android, MLOps), sort by latest GitHub commit, skim summaries, text-left / image-right layout.
+- Slim fixed header bar and identity strip; home opens on Experience (no full-screen About hero).
+- Hero role and proof: location (New York, United States) and personal interests.
 - Gallery upload and delete now call FastAPI (`POST /upload`, `DELETE /delete/{id}`) with the admin Supabase Bearer JWT instead of writing to Supabase from the browser.
 - Public gallery reads always use Next.js `GET /api/images` (no longer redirected when `NEXT_PUBLIC_API_URL` is set).
 - Changelog lives at `docs/CHANGELOG.md`.

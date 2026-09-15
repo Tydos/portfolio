@@ -158,7 +158,7 @@ export default async function ProjectPage({
     <main className="min-h-screen bg-white">
       <div className="max-w-3xl mx-auto px-6 py-16">
         <Link
-          href="/#technical-eye"
+          href="/#projects"
           className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded transition-colors mb-12"
         >
           <ArrowLeft size={15} />

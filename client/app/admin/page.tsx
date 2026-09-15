@@ -10,7 +10,7 @@ import {
   signInWithGithub,
   signOut as authSignOut,
 } from "../../lib/auth";
-import { GITHUB_USERNAME } from "../../constants/config";
+import { GITHUB_USERNAME, INCLUDE_PHOTOGRAPHY } from "../../constants/config";
 
 /**
  * Admin gate: GitHub OAuth sign-in restricted to {@link GITHUB_USERNAME}.
@@ -73,12 +73,19 @@ export default function AdminPage() {
           <p className="text-emerald-400">
             Signed in as @{session.user.user_metadata?.user_name}
           </p>
-          <Link
-            href="/#creative-eye"
-            className="text-slate-400 hover:text-white transition-colors underline underline-offset-4"
-          >
-            Go to Gallery
-          </Link>
+          {INCLUDE_PHOTOGRAPHY ? (
+            <Link
+              href="/#creative-eye"
+              className="text-slate-400 hover:text-white transition-colors underline underline-offset-4"
+            >
+              Go to Gallery
+            </Link>
+          ) : (
+            <p className="text-slate-500 text-center max-w-sm">
+              Photography is disabled on this build. Upload/delete requires a
+              full-site deploy with gallery enabled.
+            </p>
+          )}
           <button
             onClick={() => authSignOut()}
             className="flex items-center gap-1.5 text-slate-500 hover:text-white transition-colors"

@@ -21,7 +21,8 @@
     "remark-gfm": "^4.0.1"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 5000",
+    "dev:recruiter": "NEXT_PUBLIC_INCLUDE_PHOTOGRAPHY=false next dev -p 5000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

@@ -30,7 +30,11 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
 
   useEffect(() => {
     previousFocusRef.current = document.activeElement as HTMLElement | null;
-    const previousOverflow = document.body.style.overflow;
+    // iOS Safari ignores `overflow: hidden` on <body> alone.
+    const root = document.documentElement;
+    const previousRootOverflow = root.style.overflow;
+    const previousBodyOverflow = document.body.style.overflow;
+    root.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
 
@@ -60,7 +64,8 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
     window.addEventListener("keydown", onKey);
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previousOverflow;
+      root.style.overflow = previousRootOverflow;
+      document.body.style.overflow = previousBodyOverflow;
       previousFocusRef.current?.focus();
     };
   }, [onClose, photo]);
@@ -71,7 +76,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
       role="dialog"
       aria-modal="true"
       aria-label={`Photo: ${photo.title}`}
-      className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+      className="fixed inset-x-0 top-0 viewport-height z-50 bg-black/90 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <button
@@ -96,7 +101,7 @@ function Lightbox({ photo, onClose }: { photo: Photo; onClose: () => void }) {
         alt={photo.title}
         width={photo.width}
         height={photo.height}
-        className={`max-h-[90vh] max-w-[90vw] object-contain rounded-2xl shadow-2xl transition-all duration-500 ease-out ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+        className={`max-h-[88%] max-w-full object-contain rounded-2xl shadow-2xl transition-all duration-500 ease-out ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
         style={{ width: "auto", height: "auto" }}
         onClick={(e) => e.stopPropagation()}
         onLoad={() => setLoaded(true)}

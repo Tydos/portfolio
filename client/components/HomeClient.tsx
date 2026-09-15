@@ -1,11 +1,12 @@
 "use client";
 
-import About from "./sections/About";
 import Footer from "./layout/Footer";
 import Navbar from "./layout/Navbar";
+import HeroStrip from "./sections/HeroStrip";
 import Portfolio from "./sections/Portfolio";
 import Projects from "./sections/Projects";
 import Resume from "./sections/Resume";
+import { INCLUDE_PHOTOGRAPHY } from "../constants/config";
 import type { Project } from "../types";
 
 interface HomeClientProps {
@@ -22,27 +23,31 @@ function HomeClient({ projects }: HomeClientProps) {
     <div className="text-ink selection:bg-accent selection:text-white font-sans">
       <Navbar />
       <main>
-        <About />
+        <section
+          id="resume"
+          className="pt-[5.25rem] pb-16 md:pb-20 px-4 sm:px-6 scroll-mt-[4.5rem]"
+        >
+          <HeroStrip />
+          <Resume />
+        </section>
 
         <div className="border-t border-slate-100">
-          <section id="resume" className="py-16 md:py-20 px-6 scroll-mt-24">
-            <Resume />
-          </section>
-
           <section
-            id="technical-eye"
-            className="py-16 md:py-20 px-6 scroll-mt-24"
+            id="projects"
+            className="py-16 md:py-20 px-4 sm:px-6 scroll-mt-[4.5rem]"
           >
             <Projects projects={projects} />
           </section>
         </div>
 
-        <section
-          id="creative-eye"
-          className="py-16 md:py-20 scroll-mt-24 overflow-hidden border-t border-slate-100"
-        >
-          <Portfolio />
-        </section>
+        {INCLUDE_PHOTOGRAPHY ? (
+          <section
+            id="creative-eye"
+            className="py-16 md:py-20 scroll-mt-[4.5rem] overflow-hidden border-t border-slate-100"
+          >
+            <Portfolio />
+          </section>
+        ) : null}
       </main>
 
       <Footer />

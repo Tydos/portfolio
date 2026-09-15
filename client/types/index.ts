@@ -32,12 +32,18 @@ export interface Publication {
   url: string;
 }
 
+/** Home Projects filter buckets. */
+export type ProjectCategory = "aiml" | "swe" | "mlops" | "android";
+
 /** Featured project shown on home and project detail routes. */
 export interface Project {
   slug: string;
   title: string;
   tags: string[];
+  categories: ProjectCategory[];
   image?: string;
+  /** One-line teaser on the home Projects list (skim-friendly). */
+  summary?: string;
   description?: string;
   github?: string;
   link?: string;
