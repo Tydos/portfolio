@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- SEO for `/portfolio` and home: page titles and descriptions, canonical URLs, Open Graph and Twitter cards (photography page uses hero or fallback nature preview images), Schema.org Person JSON-LD with confirmed profile links only, and `/sitemap.xml` plus `/robots.txt` for indexing.
 - Home **Portfolio** teaser after Projects mirrors the `/portfolio` editorial hero carousel (same slides, controls, wired styling) with a link to the full gallery.
 - `/portfolio` uses the gallery branch wired editorial UI (black/yellow theme, Anton display type, dedicated header/footer, splash hero, masonry gallery).
 - Header **Résumé** button linking to `RESUME_URL` in `client/constants/config.ts` (Google Drive PDF).

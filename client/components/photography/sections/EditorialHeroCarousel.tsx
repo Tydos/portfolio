@@ -198,11 +198,15 @@ export default function EditorialHeroCarousel({
       >
         <div aria-live="polite" aria-atomic="true">
           {size === "page" ? (
-            <h1
-              className="font-display uppercase tracking-wired text-[clamp(4rem,14vw,12rem)] leading-[0.85] text-white text-balance"
-            >
-              {title}
-            </h1>
+            <>
+              <h1 className="sr-only">Photography</h1>
+              <p
+                className="font-display uppercase tracking-wired text-[clamp(4rem,14vw,12rem)] leading-[0.85] text-white text-balance"
+                aria-hidden="true"
+              >
+                {title}
+              </p>
+            </>
           ) : (
             <h2
               className="font-display uppercase tracking-wired text-[clamp(2.75rem,10vw,7rem)] leading-[0.85] text-white text-balance"

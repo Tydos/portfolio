@@ -3,12 +3,9 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 import { SITE } from "../constants/config";
+import { getSiteUrl } from "../lib/siteUrl";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3000");
+const siteUrl = getSiteUrl();
 
 /** Root document metadata (title, Open Graph, Twitter card). */
 export const metadata: Metadata = {

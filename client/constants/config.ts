@@ -69,9 +69,9 @@ const SITE_DESCRIPTION_BASE =
 
 /** Site-wide metadata used by the root layout. */
 export const SITE = {
-  title: "Prasad Jawale — Portfolio",
+  title: "Prasad Jawale — Software Engineer and Photographer",
   description: INCLUDE_PHOTOGRAPHY
-    ? `${SITE_DESCRIPTION_BASE} Photography portfolio.`
+    ? `${SITE_DESCRIPTION_BASE} Nature, travel, and urban photography.`
     : SITE_DESCRIPTION_BASE,
   ogImage:
     "https://res.cloudinary.com/duws62b88/image/upload/v1737421606/myimg_x0kuyo.jpg",
